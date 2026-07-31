@@ -15,14 +15,7 @@ APIRouter.get("/", async (req, res) => {
   });
 
   const data = await resp.json();
-  res.json(data.photos[Math.round(Math.random()*14)].src.medium);
-});
-
-APIRouter.get("/Image", async (req, res) => {
-});
-
-APIRouter.get("/:WantedValue", (req, res) => {
-  res.send(req.params.WantedValue);
+  res.json(data.photos[Math.round(Math.random()*14)].src.original);
 });
 
 export default APIRouter;

@@ -1,15 +1,14 @@
 :root {
-    --headerSize: 32;
-    --subHeaderSize: 24;
-    --textSize: 16;
-    --subTextSize: 8;
+    --headerSize: 32px;
+    --subHeaderSize: 24px;
+    --textSize: 16px;
+    --subTextSize: 8px;
 
-    --gapMini: 4;
-    --gapMedium: 8;
-    --gapHuge: 12;
-    --gapMassive: 16;
+    --gapMini: 4px;
+    --gapMedium: 8px;
+    --gapHuge: 12px;
+    --gapMassive: 16px;
 }
-
 
 .container {
     align-items: center;
@@ -19,10 +18,39 @@
     flex-direction: column;
 }
 
+.styleChoiceContainer {
+    align-items: center;
+    justify-content: center;
+    gap: var(--gapMassive);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+    margin: 32px;
+}
+
+.miniPresentation {
+    width: 320px;
+    height: 180px;
+    box-shadow: 0px 0px 10px gray;
+    position: relative;
+}
+
 .headerText {
     font-size: var(--headerSize);
     text-align: center;
-    padding-bottom: var(--gapHuge);
+    margin-bottom: var(--gapHuge);
+}
+
+.presentationBackground {
+    width: 800px;
+    height: 450px;
+    margin: var(--gapMassive);
+    box-shadow: 0px 0px 10px gray;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .responseImage {
@@ -32,11 +60,11 @@
 .infoText {
     font-size: var(--textSize);
     text-align: center;
-    padding-bottom: var(--gapMedium);
+    margin-bottom: var(--gapMedium);
 }
 
 .textInput {
-    padding-bottom: var(--gapMini);
+    margin-bottom: var(--gapMini);
     border-radius: 8;
 }
 
