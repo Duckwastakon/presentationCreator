@@ -1,20 +1,41 @@
 import { useState, useEffect } from "react";
+import "./styling/appStyle.css";
 
 function App() {
-  const [testString, updateTestString] = useState("");
+  const [imageUrl, updateimageUrl] = useState("");
 
-  useEffect(() => {
-    fetch("/API")
+  function getNewImage(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const query = formData.get("query");
+
+    fetchImage(query);
+  }
+
+  function fetchImage(query) {
+    fetch(`/API?query=${query}`, {
+      method: "get",
+    })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
-        updateTestString(data.message)});
-  }, []);
+        console.log(data);
+        updateimageUrl(data);
+      });
+  }
+
+  useEffect(() => {}, []);
 
   return (
-    <div style={{ alignItems: "center", justifyContent: "center" }}>
-      <h1>This is main file</h1>
-      <p>hello world: {testString}</p>
+    <div className="container">
+      <p className="headerText">This is main file</p>
+      <img src={imageUrl} />
+      <p className="infoText">input imageName</p>
+      <form onSubmit={getNewImage}>
+        <input name="query" type="text" />
+        <button type="submit">submit</button>
+      </form>
     </div>
   );
 }

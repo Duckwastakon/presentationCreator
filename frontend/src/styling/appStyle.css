@@ -1,0 +1,45 @@
+:root {
+    --headerSize: 32;
+    --subHeaderSize: 24;
+    --textSize: 16;
+    --subTextSize: 8;
+
+    --gapMini: 4;
+    --gapMedium: 8;
+    --gapHuge: 12;
+    --gapMassive: 16;
+}
+
+
+.container {
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerText {
+    font-size: var(--headerSize);
+    text-align: center;
+    padding-bottom: var(--gapHuge);
+}
+
+.responseImage {
+
+}
+
+.infoText {
+    font-size: var(--textSize);
+    text-align: center;
+    padding-bottom: var(--gapMedium);
+}
+
+.textInput {
+    padding-bottom: var(--gapMini);
+    border-radius: 8;
+}
+
+.submitButton {
+    border-radius: 8;
+}
