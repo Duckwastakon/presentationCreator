@@ -30,7 +30,7 @@ const designs = {
           w: 3,
           h: 0.5,
           fontSize: 24,
-          text: "Hey",
+          text: "broski",
         },
         1: {
           x: 1,
@@ -38,11 +38,31 @@ const designs = {
           w: 1.5,
           h: 0.5,
           fontSize: 16,
-          text: "Hi",
+          text: "good design",
         },
       },
     },
-        2: {
+    2: {
+      text: {
+        0: {
+          x: 1,
+          y: 2,
+          w: 3,
+          h: 0.5,
+          fontSize: 24,
+          text: "Title",
+        },
+        1: {
+          x: 1,
+          y: 3,
+          w: 1.5,
+          h: 0.5,
+          fontSize: 16,
+          text: "Name",
+        },
+      },
+    },
+    3: {
       text: {
         0: {
           x: 1,

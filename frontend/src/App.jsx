@@ -5,33 +5,69 @@ const MainPresentationDisplay = (vars, ind) => {
   console.log(vars.vars.vars[1].text);
 
   return (
-  <div
-    className="presentationBackground"
-    style={{ backgroundImage: `url(${vars.imageUrl})` }}
-    key={ind}
-  >
-    {Object.entries(vars.vars.vars[1].text).map((variables, indv) => {
-      console.log(variables[1]);
-      return (
-      <p
-        key={indv}
-        style={{
-          position: "absolute",
-          top: (450 * (variables[1].y / 7.5)).toString() + "px",
-          left: (800 * (variables[1].x / 13.333)).toString() + "px",
-          fontSize: (variables[1].fontSize*2.5).toString() + "px",
-        }}
-      >
-        {variables[1].text}
-      </p>)
-})}
-  </div>)
+    <div
+      className="presentationBackground"
+      style={{ backgroundImage: `url(${vars.imageUrl})` }}
+      key={ind}
+    >
+      {Object.entries(vars.vars.vars[1].text).map((variables, indv) => {
+        console.log(variables[1]);
+        return (
+          <p
+            key={indv}
+            style={{
+              position: "absolute",
+              top: (450 * (variables[1].y / 7.5)).toString() + "px",
+              left: (800 * (variables[1].x / 13.333)).toString() + "px",
+              fontSize: (variables[1].fontSize * 2.5).toString() + "px",
+            }}
+          >
+            {variables[1].text}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
+const SlideTab = (slides) => {
+  console.log(Object.entries(slides.slides));
+  return (
+    <button>
+      <div className="slideTab">
+        {Object.entries(slides.slides).map((slideVal, ind) => {
+          console.log(slideVal);
+          const vars = slideVal[1][1];
+          console.log(vars);
+          return (
+            <div key={ind} className="miniSlideTab">
+              {Object.entries(vars.text).map((variables, indv) => {
+                console.log(variables);
+                return (
+                  <p
+                    key={indv}
+                    style={{
+                      position: "absolute",
+                      top: (90 * (variables[1].y / 7.5)).toString() + "px",
+                      left: (160 * (variables[1].x / 13.333)).toString() + "px",
+                      fontSize: (variables[1].fontSize / 2).toString() + "px",
+                    }}
+                  >
+                    {variables[1].text}
+                  </p>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </button>
+  );
 };
 
 function App() {
   const [imageUrl, updateimageUrl] = useState("");
-  const [currentSlide, updateCurrentSlide] = useState(0);
-
+  const [slides, updateSlides] = useState({});
   const [currentPrefab, updateCurrentPrefab] = useState({});
   const [styleOptions, updateStyleOptions] = useState({});
 
@@ -71,10 +107,17 @@ function App() {
     console.log(vars.vars[1].text);
     return (
       <button
-      key={ind}
+        key={ind}
         onClick={() => {
+          console.log(vars)
           updateCurrentPrefab(vars);
-          console.log(currentPrefab);
+          updateSlides((previous) => ({
+            ...previous,
+            [Object.entries(slides).length]: vars.vars
+
+          }));
+          console.log(slides)
+          console.log(Object.entries(slides).length)
         }}
       >
         <div className="miniPresentation">
@@ -100,24 +143,19 @@ function App() {
     fetchStyles("intro");
   }, []);
 
-  if (Object.keys(currentPrefab).length > 0) {
+  if (Object.keys(currentPrefab).length > 2) {
     return (
       <div className="container">
-        <p className="headerText">This is main file</p>
-        <MainPresentationDisplay vars={currentPrefab} imageUrl={imageUrl} />
-        <p className="infoText">what would you like in the background?</p>
-        <form onSubmit={getNewImage}>
-          <input name="query" type="text" />
-          <button type="submit">submit</button>
-        </form>
-        <div>
-          <button onClick={() => updateCurrentSlide(currentSlide - 1)}>
-            Back
-          </button>
-          <button onClick={() => updateCurrentSlide(currentSlide + 1)}>
-            Next
-          </button>
+        <div className="editorWindow">
+          <p className="headerText">This is main file</p>
+          <MainPresentationDisplay vars={currentPrefab} imageUrl={imageUrl} />
+          <p className="infoText">what would you like in the background?</p>
+          <form onSubmit={getNewImage}>
+            <input name="query" type="text" />
+            <button type="submit">submit</button>
+          </form>
         </div>
+        <SlideTab slides={slides} />
       </div>
     );
   } else {
@@ -128,6 +166,7 @@ function App() {
             <MiniDisplay key={index} vars={vars} />
           ))}
         </div>
+        <SlideTab slides={slides} />
       </div>
     );
   }
