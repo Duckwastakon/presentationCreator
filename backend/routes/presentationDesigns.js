@@ -85,6 +85,15 @@ const designs = {
           text: "Hi",
         },
       },
+      img: {
+        0: {
+          x: 4,
+          y: 2,
+          w: 3,
+          h: 0.5,
+          url: "",
+        },
+      },
     },
     4: {
       backgroundImageUrl: "",

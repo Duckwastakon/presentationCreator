@@ -1,4 +1,4 @@
-export const MainPresentationDisplay = ({ vars, ind }) => {
+export const MainPresentationDisplay = ({vars, ind, updateObject, setUpdateObject}) => {
   console.log(vars);
   console.log(vars.text);
 
@@ -21,7 +21,7 @@ export const MainPresentationDisplay = ({ vars, ind }) => {
             }}
           >
             {variables[1].text}
-          </p>
+            </p>
         );
       })}
     </div>

@@ -4,7 +4,6 @@ import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentation";
 
 function App() {
-  const [imageUrl, updateimageUrl] = useState("");
   const [slides, updateSlides] = useState({});
   const [currentSlideId, updateCurrenSlideId] = useState();
   const [currentPrefab, updateCurrentPrefab] = useState({});
@@ -15,8 +14,27 @@ function App() {
     updateCurrenSlideId(slideId);
   }
 
-  function updateCurrentSelectedObject(dataType, index, valueName, newValue) {
-    let newPrefab = { ...currentPrefab }
+  function deleteCurrentSlide() {
+    let newSlides = {}
+    let i = 0
+    Object.entries(slides).map((val) =>{
+      if(val[0] !== currentSlideId.toString()){
+        newSlides = {...newSlides, [i]: val[1]}
+        i++;
+      }
+    })
+    console.log(newSlides)
+    
+    updateSlides(newSlides)
+    updateCurrentPrefab({})
+  }
+
+  function saveSlide(){
+    updateSlides({...slides, currentSlideId: currentPrefab})
+  }
+
+  function updateSlideObject(dataType, index, valueName, newValue) {
+    let newPrefab = { ...currentPrefab };
 
     if (dataType == null) {
       newPrefab[valueName] = newValue;
@@ -24,6 +42,7 @@ function App() {
     } else {
       newPrefab[dataType][index][valueName] = newValue;
       updateCurrentPrefab(newPrefab);
+      console.log(newPrefab);
     }
   }
 
@@ -44,8 +63,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        updateimageUrl(data);
-        updateCurrentSelectedObject(null, null, "backgroundImageUrl", data)
+        updateSlideObject(null, null, "backgroundImageUrl", data);
       });
   }
 
@@ -104,7 +122,10 @@ function App() {
       <div className="container">
         <div className="editorWindow">
           <p className="headerText">This is main file</p>
-          <MainPresentationDisplay vars={currentPrefab} imageUrl={imageUrl} />
+          <MainPresentationDisplay
+            vars={currentPrefab}
+            updateObject={updateSlideObject}
+          />
           <p className="infoText">what would you like in the background?</p>
           <form className="formStyling" onSubmit={getNewImage}>
             <input className="imageInputField" name="query" type="text" />
