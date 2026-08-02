@@ -119,3 +119,19 @@
     text-align: center;
     font-size: var(--textSize);
 }
+
+.imageInputField {
+    border-radius: 8px;
+    border-width: 1px;
+}
+
+.inputSubmitButton {
+    border-radius: 8px;
+}
+
+.formStyling {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
