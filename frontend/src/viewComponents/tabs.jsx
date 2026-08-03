@@ -1,4 +1,4 @@
-export const SlideTab = ({ slides, onClick }) => {
+export const SlideTab = ({ slides, onClick, currentSelected }) => {
   console.log(slides);
   return (
     <div className="slideTab">
@@ -8,17 +8,28 @@ export const SlideTab = ({ slides, onClick }) => {
           const vars = slideVal[1];
           console.log(vars);
           return (
-            <button
-              onClick={() => {
-                console.log(slideVal);
-                onClick(slideVal[1], ind);
-              }}
+            <div
               key={ind}
+              style={{ alignItems: "center", justifyContent: "center" }}
             >
-              <div className="miniSlideTab">
-                {Object.entries(vars.text).map((variables, indv) => {
-                  console.log(variables);
-                  return (
+              {Number(slideVal[0]) === currentSelected &&
+                <button
+                  onClick={() => {
+                    onClick({});
+                  }}
+                  className="newSlideButton"
+                >
+                  <p className="newSlideButtonText">+</p>
+                </button>
+              }
+              <button
+                onClick={() => {
+                  console.log(slideVal);
+                  onClick(slideVal[1], ind);
+                }}
+              >
+                <div className="miniSlideTab">
+                  {Object.entries(vars.text).map((variables, indv) => (
                     <p
                       key={indv}
                       style={{
@@ -31,10 +42,10 @@ export const SlideTab = ({ slides, onClick }) => {
                     >
                       {variables[1].text}
                     </p>
-                  );
-                })}
-              </div>
-            </button>
+                  ))}
+                </div>
+              </button>
+            </div>
           );
         })}
       <button

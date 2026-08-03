@@ -9,28 +9,28 @@ function App() {
   const [currentPrefab, updateCurrentPrefab] = useState({});
   const [styleOptions, updateStyleOptions] = useState({});
 
+  const [scrollPage, updateScrollPage] = useState(0);
+
   function changeCurrentSelectedSlide(slideValues, slideId) {
     updateCurrentPrefab(slideValues);
     updateCurrenSlideId(slideId);
   }
 
   function deleteCurrentSlide() {
-    let newSlides = {}
-    let i = 0
-    Object.entries(slides).map((val) =>{
-      if(val[0] !== currentSlideId.toString()){
-        newSlides = {...newSlides, [i]: val[1]}
+    let newSlides = {};
+    let i = 0;
+    Object.entries(slides).map((val) => {
+      if (val[0] !== currentSlideId.toString()) {
+        newSlides = { ...newSlides, [i]: val[1] };
         i++;
       }
-    })
-    console.log(newSlides)
-    
-    updateSlides(newSlides)
-    updateCurrentPrefab({})
+    });
+    updateSlides(newSlides);
+    updateCurrentPrefab({});
   }
 
-  function saveSlide(){
-    updateSlides({...slides, currentSlideId: currentPrefab})
+  function saveSlide() {
+    updateSlides({ ...slides, currentSlideId: currentPrefab });
   }
 
   function updateSlideObject(dataType, index, valueName, newValue) {
@@ -42,8 +42,9 @@ function App() {
     } else {
       newPrefab[dataType][index][valueName] = newValue;
       updateCurrentPrefab(newPrefab);
-      console.log(newPrefab);
     }
+
+    console.log(newPrefab);
   }
 
   function getNewImage(e) {
@@ -77,21 +78,33 @@ function App() {
       });
   }
 
+  function changePage(allObj, objPerPage, newPageVal, changeFunc){
+    const possiblePages = Math.ceil(allObj / objPerPage)
+    console.log(Math.ceil(0.5))
+    console.log()
+    console.log(possiblePages)
+    if(newPageVal > possiblePages){
+      newPageVal = 0
+    }
+    if(newPageVal < 0){
+      newPageVal = possiblePages
+    }
+
+    changeFunc(newPageVal)
+  }
+
   const MiniDisplay = ({ vars, ind }) => {
     console.log(vars);
     return (
       <button
         key={ind}
         onClick={() => {
-          console.log(vars);
           updateCurrentPrefab(vars);
           updateCurrenSlideId(Object.entries(slides).length);
           updateSlides((previous) => ({
             ...previous,
             [Object.entries(slides).length]: vars,
           }));
-          console.log(slides);
-          console.log(Object.entries(slides).length);
         }}
       >
         <div className="miniPresentation">
@@ -134,18 +147,35 @@ function App() {
             </button>
           </form>
         </div>
-        <SlideTab slides={slides} onClick={changeCurrentSelectedSlide} />
+        <SlideTab
+          slides={slides}
+          onClick={changeCurrentSelectedSlide}
+          currentSelected={currentSlideId}
+        />
       </div>
     );
   } else {
+    let possibleStyles = {};
+    for (let i = 0; i < 4; i++) {
+      if (styleOptions[i + scrollPage * 4] != null) {
+        possibleStyles = { ...possibleStyles, [i]: styleOptions[i + scrollPage * 4]};
+      }
+    }
+    console.log(possibleStyles)
     return (
       <div className="container">
+        <button onClick={() => {changePage(Object.entries(possibleStyles).length, 4, scrollPage-1, updateScrollPage)}} style={{left: "15px"}} className="changePageButton">back</button>
         <div className="styleChoiceContainer">
-          {Object.entries(styleOptions).map((vars, index) => (
+          {Object.entries(possibleStyles).map((vars, index) => (
             <MiniDisplay key={index} vars={vars[1]} />
           ))}
         </div>
-        <SlideTab slides={slides} onClick={changeCurrentSelectedSlide} />
+        <button onClick={() => {changePage(Object.entries(possibleStyles).length, 4, scrollPage+1, updateScrollPage)}} style={{right: "15px"}} className="changePageButton">next</button>
+        <SlideTab
+          slides={slides}
+          onClick={changeCurrentSelectedSlide}
+          currentSelected={currentSlideId}
+        />
       </div>
     );
   }

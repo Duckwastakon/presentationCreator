@@ -96,7 +96,6 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    overflow-x: scroll;
 }
 
 .miniSlideTab {
@@ -135,4 +134,11 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
+}
+
+.changePageButton {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
 }
