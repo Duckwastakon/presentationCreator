@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./styling/appStyle.css";
 import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentation";
@@ -10,6 +10,12 @@ function App() {
   const [styleOptions, updateStyleOptions] = useState({});
 
   const [scrollPage, updateScrollPage] = useState(0);
+
+  let selectedObject = useRef([])
+
+  function updateSelectedObject(newVal){
+    selectedObject.current = newVal
+  }
 
   function changeCurrentSelectedSlide(slideValues, slideId) {
     updateCurrentPrefab(slideValues);
@@ -36,7 +42,7 @@ function App() {
   function updateSlideObject(dataType, index, valueName, newValue) {
     let newPrefab = { ...currentPrefab };
 
-    if (dataType == null) {
+    if (dataType === null) {
       newPrefab[valueName] = newValue;
       updateCurrentPrefab(newPrefab);
     } else {
@@ -64,7 +70,11 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        updateSlideObject(null, null, "backgroundImageUrl", data);
+        if(selectedObject != []){
+          updateSlideObject(selectedObject.current[0], selectedObject.current[1], selectedObject.current[2], data);
+        }else{
+          updateSlideObject(null, null, "backgroundImageUrl", data);
+        }
       });
   }
 
@@ -94,7 +104,6 @@ function App() {
   }
 
   const MiniDisplay = ({ vars, ind }) => {
-    console.log(vars);
     return (
       <button
         key={ind}
@@ -138,6 +147,7 @@ function App() {
           <MainPresentationDisplay
             vars={currentPrefab}
             updateObject={updateSlideObject}
+            setUpdateObject={updateSelectedObject}
           />
           <p className="infoText">what would you like in the background?</p>
           <form className="formStyling" onSubmit={getNewImage}>

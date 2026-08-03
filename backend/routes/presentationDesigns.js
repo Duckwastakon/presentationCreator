@@ -22,6 +22,15 @@ const designs = {
           text: "Hi",
         },
       },
+      images: {
+        0: {
+          x: 4,
+          y: 2,
+          w: 3,
+          h: 0.5,
+          src: "",
+        },
+      },
     },
     1: {
       backgroundImageUrl: "",
@@ -41,6 +50,15 @@ const designs = {
           h: 0.5,
           fontSize: 16,
           text: "good design",
+        },
+      },
+      images: {
+        0: {
+          x: 4,
+          y: 2,
+          w: 3,
+          h: 0.5,
+          src: "",
         },
       },
     },
@@ -64,6 +82,15 @@ const designs = {
           text: "Name",
         },
       },
+      images: {
+        0: {
+          x: 4,
+          y: 2,
+          w: 3,
+          h: 0.5,
+          src: "",
+        },
+      },
     },
     3: {
       backgroundImageUrl: "",
@@ -85,13 +112,13 @@ const designs = {
           text: "Hi",
         },
       },
-      img: {
+      images: {
         0: {
           x: 4,
           y: 2,
           w: 3,
           h: 0.5,
-          url: "",
+          src: "",
         },
       },
     },
@@ -113,6 +140,15 @@ const designs = {
           h: 0.5,
           fontSize: 16,
           text: "Hi",
+        },
+      },
+      images: {
+        0: {
+          x: 4,
+          y: 2,
+          w: 3,
+          h: 3,
+          src: "",
         },
       },
     },
