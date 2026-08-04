@@ -11,10 +11,10 @@ function App() {
 
   const [scrollPage, updateScrollPage] = useState(0);
 
-  let selectedObject = useRef([])
+  let selectedObject = useRef([]);
 
-  function updateSelectedObject(newVal){
-    selectedObject.current = newVal
+  function updateSelectedObject(newVal) {
+    selectedObject.current = newVal;
   }
 
   function changeCurrentSelectedSlide(slideValues, slideId) {
@@ -35,22 +35,25 @@ function App() {
     updateCurrentPrefab({});
   }
 
-  function saveSlide() {
-    updateSlides({ ...slides, currentSlideId: currentPrefab });
+  function saveSlide(newPrefab) {
+    console.log(currentPrefab);
+    updateSlides({ ...slides, [currentSlideId]: newPrefab });
   }
 
   function updateSlideObject(dataType, index, valueName, newValue) {
     let newPrefab = { ...currentPrefab };
-
-    if (dataType === null) {
+    console.log(dataType);
+    if (dataType === undefined) {
       newPrefab[valueName] = newValue;
-      updateCurrentPrefab(newPrefab);
     } else {
+      console.log(newValue);
       newPrefab[dataType][index][valueName] = newValue;
-      updateCurrentPrefab(newPrefab);
     }
 
+    updateCurrentPrefab(newPrefab);
+
     console.log(newPrefab);
+    saveSlide(newPrefab);
   }
 
   function getNewImage(e) {
@@ -70,10 +73,17 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if(selectedObject != []){
-          updateSlideObject(selectedObject.current[0], selectedObject.current[1], selectedObject.current[2], data);
-        }else{
-          updateSlideObject(null, null, "backgroundImageUrl", data);
+        if (selectedObject.current.length > 0) {
+          console.log("has");
+          updateSlideObject(
+            selectedObject.current[0],
+            selectedObject.current[1],
+            selectedObject.current[2],
+            data,
+          );
+        } else {
+          console.log("change background");
+          updateSlideObject(undefined, undefined, "backgroundImageUrl", data);
         }
       });
   }
@@ -88,19 +98,16 @@ function App() {
       });
   }
 
-  function changePage(allObj, objPerPage, newPageVal, changeFunc){
-    const possiblePages = Math.ceil(allObj / objPerPage)
-    console.log(Math.ceil(0.5))
-    console.log()
-    console.log(possiblePages)
-    if(newPageVal > possiblePages){
-      newPageVal = 0
+  function changePage(allObj, objPerPage, newPageVal, changeFunc) {
+    const possiblePages = Math.ceil(allObj / objPerPage);
+    if (newPageVal > possiblePages) {
+      newPageVal = 0;
     }
-    if(newPageVal < 0){
-      newPageVal = possiblePages
+    if (newPageVal < 0) {
+      newPageVal = possiblePages;
     }
 
-    changeFunc(newPageVal)
+    changeFunc(newPageVal);
   }
 
   const MiniDisplay = ({ vars, ind }) => {
@@ -108,11 +115,12 @@ function App() {
       <button
         key={ind}
         onClick={() => {
-          updateCurrentPrefab(vars);
+          const slideClone = structuredClone(vars);
+          updateCurrentPrefab(slideClone);
           updateCurrenSlideId(Object.entries(slides).length);
           updateSlides((previous) => ({
             ...previous,
-            [Object.entries(slides).length]: vars,
+            [Object.entries(slides).length]: slideClone,
           }));
         }}
       >
@@ -124,7 +132,11 @@ function App() {
                 position: "absolute",
                 top: (180 * (variables[1].y / 7.5)).toString() + "px",
                 left: (320 * (variables[1].x / 13.333)).toString() + "px",
+                height: (180 * (variables[1].h / 7.5)).toString() + "px",
+                width: (320 * (variables[1].w / 13.333)).toString() + "px",
                 fontSize: variables[1].fontSize.toString() + "px",
+                textAlign: "left",
+                overflow: "hidden",
               }}
             >
               {variables[1].text}
@@ -147,7 +159,7 @@ function App() {
           <MainPresentationDisplay
             vars={currentPrefab}
             updateObject={updateSlideObject}
-            setUpdateObject={updateSelectedObject}
+            updateSelectedObject={updateSelectedObject}
           />
           <p className="infoText">what would you like in the background?</p>
           <form className="formStyling" onSubmit={getNewImage}>
@@ -168,19 +180,48 @@ function App() {
     let possibleStyles = {};
     for (let i = 0; i < 4; i++) {
       if (styleOptions[i + scrollPage * 4] != null) {
-        possibleStyles = { ...possibleStyles, [i]: styleOptions[i + scrollPage * 4]};
+        possibleStyles = {
+          ...possibleStyles,
+          [i]: styleOptions[i + scrollPage * 4],
+        };
       }
     }
-    console.log(possibleStyles)
+    console.log(possibleStyles);
     return (
       <div className="container">
-        <button onClick={() => {changePage(Object.entries(possibleStyles).length, 4, scrollPage-1, updateScrollPage)}} style={{left: "15px"}} className="changePageButton">back</button>
+        <button
+          onClick={() => {
+            changePage(
+              Object.entries(possibleStyles).length,
+              4,
+              scrollPage - 1,
+              updateScrollPage,
+            );
+          }}
+          style={{ left: "15px" }}
+          className="changePageButton"
+        >
+          back
+        </button>
         <div className="styleChoiceContainer">
           {Object.entries(possibleStyles).map((vars, index) => (
             <MiniDisplay key={index} vars={vars[1]} />
           ))}
         </div>
-        <button onClick={() => {changePage(Object.entries(possibleStyles).length, 4, scrollPage+1, updateScrollPage)}} style={{right: "15px"}} className="changePageButton">next</button>
+        <button
+          onClick={() => {
+            changePage(
+              Object.entries(possibleStyles).length,
+              4,
+              scrollPage + 1,
+              updateScrollPage,
+            );
+          }}
+          style={{ right: "15px" }}
+          className="changePageButton"
+        >
+          next
+        </button>
         <SlideTab
           slides={slides}
           onClick={changeCurrentSelectedSlide}

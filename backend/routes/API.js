@@ -15,6 +15,7 @@ APIRouter.get("/", async (req, res) => {
   });
 
   const data = await resp.json();
+  console.log(data)
   res.json(data.photos[Math.round(Math.random()*14)].src.original);
 });
 

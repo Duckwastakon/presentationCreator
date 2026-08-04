@@ -65,10 +65,6 @@
     background-color: white;
 }
 
-.responseImage {
-
-}
-
 .infoText {
     font-size: var(--textSize);
     text-align: center;
@@ -141,4 +137,15 @@
     align-items: center;
     justify-content: center;
     top: 50%;
+}
+
+.presentationTextEditBox {
+    background: transparent;
+    border-width: 0px;
+}
+
+.presentationTextEditBox:focus {
+    border-width: 0px;
+    border-color: aqua;
+    color: aquamarine;
 }
