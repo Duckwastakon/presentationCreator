@@ -46,8 +46,16 @@ function App() {
     if (dataType === undefined) {
       newPrefab[valueName] = newValue;
     } else {
-      console.log(newValue);
-      newPrefab[dataType][index][valueName] = newValue;
+      if(index === undefined){
+        newPrefab[dataType][valueName] = newValue
+      }else{
+        if(valueName === undefined) {
+          console.log("gut")
+          newPrefab[dataType][index] = newValue
+        }else{
+          newPrefab[dataType][index][valueName] = newValue;
+        }
+      }
     }
 
     updateCurrentPrefab(newPrefab);
