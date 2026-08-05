@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import whiteDot from "./a.png";
+import { ResizeDots } from "./resizeDots";
 
 export const MainPresentationDisplay = ({
   vars,
@@ -14,6 +14,16 @@ export const MainPresentationDisplay = ({
   let startX = useRef(0);
   let startY = useRef(0);
 
+  function handleMouseMovement(event) {
+    if (changingState.current === 0) return;
+
+    if (changingState.current < 9) {
+      handleMouseResize(event);
+    } else {
+      handleObjectMove(event);
+    }
+  }
+
   function startResizing(event, newState) {
     startX.current = event.clientX;
     startY.current = event.clientY;
@@ -22,27 +32,19 @@ export const MainPresentationDisplay = ({
 
   function stopResizing() {
     if (changingState.current == 0) return;
-
-    console.log("saved");
-
+    console.log(selectedObject);
     changingState.current = 0;
+    if (selectedObject[0] === "") return;
     updateObject(
       selectedObject[0],
       selectedObject[1],
       undefined,
       selectedObjectsVariables[1],
     );
-    console.log(
-      selectedObject[0],
-      selectedObject[1],
-      selectedObjectsVariables[1],
-    );
     updateSelectedObject(["", ""]);
   }
 
-  function handleMouseMovement(event) {
-    if (changingState.current == 0) return;
-
+  function handleMouseResize(event) {
     const xDiff = startX.current - event.clientX;
     const yDiff = startY.current - event.clientY;
 
@@ -111,6 +113,25 @@ export const MainPresentationDisplay = ({
     setSelectedObjectsVariables(newVals);
   }
 
+  function handleObjectMove(event) {
+    const xDiff = startX.current - event.clientX;
+    const yDiff = startY.current - event.clientY;
+    if (Object.entries(selectedObjectsVariables).length < 1) {
+      console.log("no vars");
+      return;
+    }
+    let newVals = structuredClone(selectedObjectsVariables);
+    console.log(newVals);
+    console.log(13.333 * (xDiff / 800), 7.5 * (yDiff / 450));
+    newVals[1].x -= 13.333 * (xDiff / 800);
+    newVals[1].y -= 7.5 * (yDiff / 450);
+
+    startX.current = event.clientX;
+    startY.current = event.clientY;
+
+    setSelectedObjectsVariables(newVals);
+  }
+
   return (
     <div
       className="presentationBackground"
@@ -124,13 +145,22 @@ export const MainPresentationDisplay = ({
         stopResizing();
       }}
     >
+      <button
+        className="backgroundButton"
+        onMouseDown={() => {
+          console.log("a");
+          updateSelectedObject("");
+          setSelectedObject(["", ""]);
+        }}
+      />
       {Object.entries(vars.text).map((variables, indv) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
-        
-        let useForSize
-        if(selected){useForSize=selectedObjectsVariables[1]}
-        else{useForSize=variables[1]}
+
+        let useForSize = variables[1];
+        if (selected) {
+          useForSize = selectedObjectsVariables[1];
+        }
         return (
           <div
             style={{
@@ -156,7 +186,9 @@ export const MainPresentationDisplay = ({
                 setSelectedObjectsVariables(structuredClone(variables));
                 setSelectedObject(["text", variables[0]]);
               }}
-              onMouseUp={() => stopResizing()}
+              onMouseDown={(event) => {
+                startResizing(event, 9);
+              }}
               className="presentationTextEditBox"
               style={{
                 width: "100%",
@@ -165,90 +197,10 @@ export const MainPresentationDisplay = ({
               }}
             />
             {selected && (
-              <div style={{ width: "100%", height: "100%" }}>
-                <button
-                  onMouseUp={() => stopResizing()}
-                  onMouseDown={(event) => {
-                    startResizing(event, 1);
-                  }}
-                  style={{
-                    position: "absolute",
-                    width: "15px",
-                    height: "15px",
-                    top: "-15px",
-                    left: "-15px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    changingSize
-                    style={{ width: "100%", height: "100%" }}
-                    src={whiteDot}
-                  />
-                </button>
-
-                <button
-                  onMouseDown={(event) => {
-                    startResizing(event, 2);
-                  }}
-                  style={{
-                    position: "absolute",
-                    width: "15px",
-                    height: "15px",
-                    top: "-15px",
-                    right: "-15px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    changingSize
-                    style={{ width: "100%", height: "100%" }}
-                    src={whiteDot}
-                  />
-                </button>
-                <button
-                  onMouseDown={(event) => {
-                    startResizing(event, 3);
-                  }}
-                  style={{
-                    position: "absolute",
-                    width: "15px",
-                    height: "15px",
-                    bottom: "-15px",
-                    left: "-15px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    changingSize
-                    style={{ width: "100%", height: "100%" }}
-                    src={whiteDot}
-                  />
-                </button>
-                <button
-                  onMouseDown={(event) => {
-                    startResizing(event, 4);
-                  }}
-                  style={{
-                    position: "absolute",
-                    width: "15px",
-                    height: "15px",
-                    bottom: "-15px",
-                    right: "-15px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    changingSize
-                    style={{ width: "100%", height: "100%" }}
-                    src={whiteDot}
-                  />
-                </button>
-              </div>
+              <ResizeDots
+                startResizing={startResizing}
+                stopResizing={stopResizing}
+              />
             )}
           </div>
         );
@@ -258,153 +210,40 @@ export const MainPresentationDisplay = ({
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
 
+        let useForSize = variables[1];
         if (selected) {
-          return (
-            <div
-              key={indv}
+          useForSize = selectedObjectsVariables[1];
+        }
+        return (
+          <div
+            key={indv}
+            style={{
+              position: "absolute",
+              top: (100 * (useForSize.y / 7.5)).toString() + "%",
+              height: (100 * (useForSize.h / 7.5)).toString() + "%",
+              left: (100 * (useForSize.x / 13.333)).toString() + "%",
+              width: (100 * (useForSize.w / 13.333)).toString() + "%",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 0,
+            }}
+          >
+            <button
               style={{
-                position: "absolute",
-                top:
-                  (100 * (selectedObjectsVariables[1].y / 7.5)).toString() +
-                  "%",
-                height:
-                  (100 * (selectedObjectsVariables[1].h / 7.5)).toString() +
-                  "%",
-                left:
-                  (100 * (selectedObjectsVariables[1].x / 13.333)).toString() +
-                  "%",
-                width:
-                  (100 * (selectedObjectsVariables[1].w / 13.333)).toString() +
-                  "%",
+                width: "100%",
+                height: "100%",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: 0,
               }}
-            >
-              <button
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 0,
-                }}
-                onMouseUp={() => stopResizing()}
-                onClick={() => {
-                  console.log(["images", variables[0], "src"]);
+              onMouseDown={(event) => {
+                if (selected) {
+                  startResizing(event, 9);
+                } else {
                   updateSelectedObject(["images", variables[0], "src"]);
                   setSelectedObjectsVariables(structuredClone(variables));
                   setSelectedObject(["images", variables[0]]);
-                }}
-              >
-                <img
-                  style={{ width: "100%", height: "100%" }}
-                  src={variables[1].src}
-                />
-              </button>
-              <button
-                onMouseUp={() => stopResizing()}
-                onMouseDown={(event) => {
-                  startResizing(event, 1);
-                }}
-                style={{
-                  position: "absolute",
-                  width: "15px",
-                  height: "15px",
-                  top: "-15px",
-                  left: "-15px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  changingSize
-                  style={{ width: "100%", height: "100%" }}
-                  src={whiteDot}
-                />
-              </button>
-
-              <button
-                onMouseDown={(event) => {
-                  startResizing(event, 2);
-                }}
-                style={{
-                  position: "absolute",
-                  width: "15px",
-                  height: "15px",
-                  top: "-15px",
-                  right: "-15px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  changingSize
-                  style={{ width: "100%", height: "100%" }}
-                  src={whiteDot}
-                />
-              </button>
-              <button
-                onMouseDown={(event) => {
-                  startResizing(event, 3);
-                }}
-                style={{
-                  position: "absolute",
-                  width: "15px",
-                  height: "15px",
-                  bottom: "-15px",
-                  left: "-15px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  changingSize
-                  style={{ width: "100%", height: "100%" }}
-                  src={whiteDot}
-                />
-              </button>
-              <button
-                onMouseDown={(event) => {
-                  startResizing(event, 4);
-                }}
-                style={{
-                  position: "absolute",
-                  width: "15px",
-                  height: "15px",
-                  bottom: "-15px",
-                  right: "-15px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  changingSize
-                  style={{ width: "100%", height: "100%" }}
-                  src={whiteDot}
-                />
-              </button>
-            </div>
-          );
-        } else {
-          return (
-            <button
-              key={indv}
-              style={{
-                position: "absolute",
-                top: (100 * (variables[1].y / 7.5)).toString() + "%",
-                height: (100 * (variables[1].h / 7.5)).toString() + "%",
-                left: (100 * (variables[1].x / 13.333)).toString() + "%",
-                width: (100 * (variables[1].w / 13.333)).toString() + "%",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 0,
-              }}
-              onClick={() => {
-                console.log(["images", variables[0], "src"]);
-                updateSelectedObject(["images", variables[0], "src"]);
-                setSelectedObjectsVariables(structuredClone(variables));
-                setSelectedObject(["images", variables[0]]);
+                }
               }}
             >
               <img
@@ -412,8 +251,14 @@ export const MainPresentationDisplay = ({
                 src={variables[1].src}
               />
             </button>
-          );
-        }
+            {selected && (
+              <ResizeDots
+                startResizing={startResizing}
+                stopResizing={stopResizing}
+              />
+            )}
+          </div>
+        );
       })}
     </div>
   );
