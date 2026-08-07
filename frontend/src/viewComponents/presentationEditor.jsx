@@ -131,7 +131,7 @@ export const MainPresentationDisplay = ({
   return (
     <div
       className="presentationBackground"
-      style={{ backgroundImage: `url(${vars.backgroundImageUrl})` }}
+      style={{ backgroundImage: `url(${vars.backgroundImageUrl})`, backgroundColor: `${vars.backgroundColor}` }}
       key={ind}
       onMouseMove={(event) => handleMouseMovement(event)}
       onMouseLeave={() => {
@@ -219,6 +219,7 @@ export const MainPresentationDisplay = ({
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
 
         let useForSize = variables[1];
+
         if (selected) {
           useForSize = selectedObjectsVariables[1];
         }
@@ -238,11 +239,13 @@ export const MainPresentationDisplay = ({
           >
             <button
               style={{
+                display: "flex",
                 width: "100%",
                 height: "100%",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: 0,
+                border: `solid ${(variables[1].borderColor || "#000000")} ${(variables[1].borderWidth || 0)}px`,
+                borderRadius: (variables[1].cornerRadius || 0).toString() + "px"
               }}
               onMouseDown={(event) => {
                 if (selected) {
@@ -255,7 +258,7 @@ export const MainPresentationDisplay = ({
               }}
             >
               <img
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", padding: "0px", margin: "0px" }}
                 src={variables[1].src}
               />
             </button>

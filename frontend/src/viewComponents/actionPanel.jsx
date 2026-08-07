@@ -4,7 +4,7 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
   console.log(selectedObject);
 
   if (selectedObject[0] === "text") {
-    const textAlign = selectedObject[2]["textAlign"] || "left"
+    const textAlign = selectedObject[2]["textAlign"] || "left";
     return (
       <div className="actionPanel">
         <div className="simpleOptionContainer">
@@ -205,28 +205,110 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
   if (selectedObject[0] === "images") {
     return (
       <div className="actionPanel">
-        <p className="infoText">what image would you like?</p>
-        <form className="formStyling" onSubmit={getNewImage}>
-          <input className="imageInputField" name="query" type="text" />
-          <button className="inputSubmitButton" type="submit">
-            submit
-          </button>
-        </form>
-        <div>ColorSelector</div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">image content</p>
+          <form className="inLine" onSubmit={getNewImage}>
+            <input
+              className="simpleTextInput"
+              placeholder="example `ducks`"
+              name="query"
+              type="text"
+            />
+            <button className="submitButton" type="submit">
+              <p className="simpleText">submit</p>
+            </button>
+          </form>
+        </div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText"> border width</p>
+          <input
+            type="range"
+            value={selectedObject[2]["borderWidth"] || 0}
+            min={0}
+            max={12}
+            step={1}
+            onChange={(newVal) => {
+              updateObject(
+                selectedObject[0],
+                selectedObject[1],
+                "borderWidth",
+                newVal.target.value,
+              );
+            }}
+          />
+        </div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">border color</p>
+          <input
+            className="simpleColorInput"
+            type="color"
+            value={selectedObject[2]["borderColor"] || "#000000"}
+            onChange={(newVal) => {
+              updateObject(
+                selectedObject[0],
+                selectedObject[1],
+                "borderColor",
+                newVal.target.value,
+              );
+            }}
+          />
+        </div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">corner roundness</p>
+          <input
+            type="range"
+            value={selectedObject[2]["cornerRadius"] || 0}
+            min={0}
+            max={16}
+            step={1}
+            onChange={(newVal) => {
+              updateObject(
+                selectedObject[0],
+                selectedObject[1],
+                "cornerRadius",
+                newVal.target.value,
+              );
+            }}
+          />
+        </div>
       </div>
     );
   }
 
   if (selectedObject[0] == "") {
+    console.log(selectedObject);
     return (
       <div className="actionPanel">
-        <p className="infoText">what would you like in the background?</p>
-        <form className="formStyling" onSubmit={getNewImage}>
-          <input className="imageInputField" name="query" type="text" />
-          <button className="inputSubmitButton" type="submit">
-            submit
-          </button>
-        </form>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">background image</p>
+          <form className="inLine" onSubmit={getNewImage}>
+            <input
+              className="simpleTextInput"
+              placeholder="example `ducks`"
+              name="query"
+              type="text"
+            />
+            <button className="submitButton" type="submit">
+              <p className="simpleText">submit</p>
+            </button>
+          </form>
+        </div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">background color</p>
+          <input
+            className="simpleInputColor"
+            type="color"
+            value={selectedObject[2]["backgroundColor"] || "#ffffff"}
+            onChange={(newVal) => {
+              updateObject(
+                undefined,
+                undefined,
+                "backgroundColor",
+                newVal.target.value,
+              );
+            }}
+          />
+        </div>
       </div>
     );
   }

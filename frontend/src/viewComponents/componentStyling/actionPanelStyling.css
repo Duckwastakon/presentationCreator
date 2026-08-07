@@ -45,7 +45,6 @@
 
 .simpleTextInput {
     font-size: var(--textSize);
-    width: 25%;
     overflow: hidden;
     height: 24px;
     text-align: center;
@@ -68,6 +67,24 @@
 .multipleOptions {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.inLine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.submitButton {
+    border-radius: 16px;
+    padding-right: 12px;
+    padding-left: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
