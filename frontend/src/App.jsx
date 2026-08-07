@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./styling/appStyle.css";
 import { SlideTab } from "./viewComponents/tabs";
-import { MainPresentationDisplay } from "./viewComponents/presentation";
+import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
+import { ActionPanel } from "./viewComponents/actionPanel";
 
 function App() {
   const [slides, updateSlides] = useState({});
@@ -11,11 +12,7 @@ function App() {
 
   const [scrollPage, updateScrollPage] = useState(0);
 
-  let selectedObject = useRef([]);
-
-  function updateSelectedObject(newVal) {
-    selectedObject.current = newVal;
-  }
+  const [selectedObject, updateSelectedObject] = useState([]);
 
   function changeCurrentSelectedSlide(slideValues, slideId) {
     updateCurrentPrefab(slideValues);
@@ -36,13 +33,17 @@ function App() {
   }
 
   function saveSlide(newPrefab) {
-    console.log(currentPrefab);
+    console.log("saved slide data ", currentPrefab);
     updateSlides({ ...slides, [currentSlideId]: newPrefab });
+  }
+
+  function getSelectedObjectsStats(){
+    if(selectedObject.length <= 0) return ["", "", ""]
+    return [selectedObject[0], selectedObject[1], currentPrefab[selectedObject[0]][selectedObject[1]]]
   }
 
   function updateSlideObject(dataType, index, valueName, newValue) {
     let newPrefab = { ...currentPrefab };
-    console.log(dataType);
     if (dataType === undefined) {
       newPrefab[valueName] = newValue;
     } else {
@@ -50,7 +51,6 @@ function App() {
         newPrefab[dataType][valueName] = newValue
       }else{
         if(valueName === undefined) {
-          console.log("gut")
           newPrefab[dataType][index] = newValue
         }else{
           newPrefab[dataType][index][valueName] = newValue;
@@ -60,7 +60,6 @@ function App() {
 
     updateCurrentPrefab(newPrefab);
 
-    console.log(newPrefab);
     saveSlide(newPrefab);
   }
 
@@ -81,12 +80,12 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (selectedObject.current.length > 0) {
+        if (selectedObject.length > 0) {
           console.log("has");
           updateSlideObject(
-            selectedObject.current[0],
-            selectedObject.current[1],
-            selectedObject.current[2],
+            selectedObject[0],
+            selectedObject[1],
+            selectedObject[2],
             data,
           );
         } else {
@@ -169,13 +168,7 @@ function App() {
             updateObject={updateSlideObject}
             updateSelectedObject={updateSelectedObject}
           />
-          <p className="infoText">what would you like in the background?</p>
-          <form className="formStyling" onSubmit={getNewImage}>
-            <input className="imageInputField" name="query" type="text" />
-            <button className="inputSubmitButton" type="submit">
-              submit
-            </button>
-          </form>
+          <ActionPanel selectedObject={getSelectedObjectsStats()} getNewImage={getNewImage} updateObject={updateSlideObject}/>
         </div>
         <SlideTab
           slides={slides}
@@ -194,7 +187,6 @@ function App() {
         };
       }
     }
-    console.log(possibleStyles);
     return (
       <div className="container">
         <button

@@ -32,16 +32,14 @@ export const MainPresentationDisplay = ({
 
   function stopResizing() {
     if (changingState.current == 0) return;
-    console.log(selectedObject);
     changingState.current = 0;
     if (selectedObject[0] === "") return;
-    updateObject(
-      selectedObject[0],
-      selectedObject[1],
-      undefined,
-      selectedObjectsVariables[1],
-    );
-    updateSelectedObject(["", ""]);
+    let newVars = { ...vars[selectedObject[0]][selectedObject[1]] };
+    ((newVars.x = selectedObjectsVariables[1].x),
+      (newVars.y = selectedObjectsVariables[1].y),
+      (newVars.w = selectedObjectsVariables[1].w),
+      (newVars.h = selectedObjectsVariables[1].h),
+      updateObject(selectedObject[0], selectedObject[1], undefined, newVars));
   }
 
   function handleMouseResize(event) {
@@ -117,12 +115,10 @@ export const MainPresentationDisplay = ({
     const xDiff = startX.current - event.clientX;
     const yDiff = startY.current - event.clientY;
     if (Object.entries(selectedObjectsVariables).length < 1) {
-      console.log("no vars");
       return;
     }
     let newVals = structuredClone(selectedObjectsVariables);
-    console.log(newVals);
-    console.log(13.333 * (xDiff / 800), 7.5 * (yDiff / 450));
+
     newVals[1].x -= 13.333 * (xDiff / 800);
     newVals[1].y -= 7.5 * (yDiff / 450);
 
@@ -148,7 +144,6 @@ export const MainPresentationDisplay = ({
       <button
         className="backgroundButton"
         onMouseDown={() => {
-          console.log("a");
           updateSelectedObject("");
           setSelectedObject(["", ""]);
         }}
@@ -161,6 +156,10 @@ export const MainPresentationDisplay = ({
         if (selected) {
           useForSize = selectedObjectsVariables[1];
         }
+
+        const outlineWidth = (variables[1].outlineWidth || 0);
+        const outlineColor = variables[1].outlineColor || "black";
+
         return (
           <div
             style={{
@@ -182,7 +181,7 @@ export const MainPresentationDisplay = ({
               }
               onSelect={() => {
                 console.log(["text", variables[0]]);
-                updateSelectedObject("");
+                updateSelectedObject(["text", variables[0], undefined]);
                 setSelectedObjectsVariables(structuredClone(variables));
                 setSelectedObject(["text", variables[0]]);
               }}
@@ -194,6 +193,15 @@ export const MainPresentationDisplay = ({
                 width: "100%",
                 height: "100%",
                 fontSize: (variables[1].fontSize * 2.5).toString() + "px",
+                color: variables[1].textColor || "black",
+                fontWeight: variables[1].bold || "400",
+                textShadow: `${outlineWidth}px ${outlineWidth}px 0px ${outlineColor},
+                ${-outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
+                ${outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
+                ${-outlineWidth}px ${outlineWidth}px 0px ${outlineColor}`,
+                textDecoration: variables[1].textDecoration || "none",
+                fontStyle: variables[1].fontStyle || "normal",
+                textAlign: variables[1].textAlign || "left"
               }}
             />
             {selected && (

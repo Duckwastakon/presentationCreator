@@ -1,12 +1,10 @@
 export const SlideTab = ({ slides, onClick, currentSelected }) => {
-  console.log(slides);
   return (
     <div className="slideTab">
       {Object.keys(slides).length > 0 &&
         Object.entries(slides).map((slideVal, ind) => {
-          console.log(slideVal);
           const vars = slideVal[1];
-          console.log(vars);
+          
           return (
             <div
               key={ind}

@@ -1,0 +1,74 @@
+:root {
+    --headerSize: 32px;
+    --subHeaderSize: 24px;
+    --textSize: 16px;
+    --subTextSize: 8px;
+
+    --gapMini: 4px;
+    --gapMedium: 8px;
+    --gapHuge: 12px;
+    --gapMassive: 16px;
+}
+
+.actionPanel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    max-width: 90%;
+    max-height: 20%;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: white;
+    border-radius: 16px;
+    gap: var(--gapHuge);
+}
+
+.simpleOptionContainer {
+    height: 100%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gapMini);
+}
+
+.simpleText {
+    font-size: var(--textSize);
+    text-align: center;
+    color: black;
+    height: auto;
+}
+
+.simpleTextInput {
+    font-size: var(--textSize);
+    width: 25%;
+    overflow: hidden;
+    height: 24px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    height: auto;
+}
+
+.simpleColorInput {
+    border-radius: 16px;
+    height: 24px;
+}
+
+.simpleInputCheckbox {
+    width: 24px;
+    height: 24px;
+}
+
+.multipleOptions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
