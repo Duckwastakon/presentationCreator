@@ -5,6 +5,8 @@ dotenv.config();
 
 const APIRouter = express.Router();
 
+let i = 0;
+
 APIRouter.get("/", async (req, res) => {
     const gottenQuery = req.query.query;
     console.log(gottenQuery)
@@ -14,9 +16,11 @@ APIRouter.get("/", async (req, res) => {
     },
   });
 
+  console.log(i)
+  i+=1
+
   const data = await resp.json();
-  console.log(data)
-  res.json(data.photos[Math.round(Math.random()*14)].src.original);
+  res.json(data.photos);
 });
 
 export default APIRouter;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./styling/appStyle.css";
 import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
@@ -33,13 +33,16 @@ function App() {
   }
 
   function saveSlide(newPrefab) {
-    console.log("saved slide data ", currentPrefab);
     updateSlides({ ...slides, [currentSlideId]: newPrefab });
   }
 
-  function getSelectedObjectsStats(){
-    if(selectedObject.length <= 0) return ["", "", ""]
-    return [selectedObject[0], selectedObject[1], currentPrefab[selectedObject[0]][selectedObject[1]]]
+  function getSelectedObjectsStats() {
+    if (selectedObject.length <= 0) return ["", "", ""];
+    return [
+      selectedObject[0],
+      selectedObject[1],
+      currentPrefab[selectedObject[0]][selectedObject[1]],
+    ];
   }
 
   function updateSlideObject(dataType, index, valueName, newValue) {
@@ -47,12 +50,12 @@ function App() {
     if (dataType === undefined) {
       newPrefab[valueName] = newValue;
     } else {
-      if(index === undefined){
-        newPrefab[dataType][valueName] = newValue
-      }else{
-        if(valueName === undefined) {
-          newPrefab[dataType][index] = newValue
-        }else{
+      if (index === undefined) {
+        newPrefab[dataType][valueName] = newValue;
+      } else {
+        if (valueName === undefined) {
+          newPrefab[dataType][index] = newValue;
+        } else {
           newPrefab[dataType][index][valueName] = newValue;
         }
       }
@@ -63,14 +66,90 @@ function App() {
     saveSlide(newPrefab);
   }
 
+  const currentImages = useRef({});
+
   function getNewImage(e) {
     e.preventDefault();
+    console.log("Hey")
 
     const form = e.target;
     const formData = new FormData(form);
     const query = formData.get("query");
 
-    fetchImage(query);
+    let found = false;
+
+    const savedImages = Object.entries(currentImages.current);
+
+    if (savedImages.length > 0) {
+      console.log(savedImages);
+      savedImages.map((entry) => {
+        if (entry[0] === query) {
+          found = true
+          let currentImageId;
+          if (selectedObject[0] != undefined) {
+            currentImageId =
+              currentPrefab[selectedObject[0]][selectedObject[1]]["src"];
+          } else {
+            currentImageId = currentPrefab["backgroundImageUrl"];
+          }
+          console.log(entry[0]);
+          let i = 0;
+          for (const img of entry[1]) {
+            if (img.src.original === currentImageId) {
+              console.log("setTrue");
+              console.log(currentImageId);
+              console.log(i);
+
+              if (i + 1 >= entry[1].length) break;
+
+              if (selectedObject.length > 0) {
+                updateSlideObject(
+                  selectedObject[0],
+                  selectedObject[1],
+                  selectedObject[2],
+                  entry[1][i + 1].src.original,
+                );
+              } else {
+                updateSlideObject(
+                  undefined,
+                  undefined,
+                  "backgroundImageUrl",
+                  entry[1][i + 1].src.original,
+                );
+              }
+
+              return;
+            }
+
+            i += 1;
+          }
+
+          console.log("cant find next image");
+          console.log(entry);
+
+          console.log(savedImages);
+          if (selectedObject.length > 0) {
+            updateSlideObject(
+              selectedObject[0],
+              selectedObject[1],
+              selectedObject[2],
+              entry[1][0].src.original,
+            );
+          } else {
+            updateSlideObject(
+              undefined,
+              undefined,
+              "backgroundImageUrl",
+              entry[1][0].src.original,
+            );
+          }
+        }
+      });
+    }
+
+    if (!found) {
+      fetchImage(query);
+    }
   }
 
   function fetchImage(query) {
@@ -79,20 +158,47 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("gettingNewPhotos");
         console.log(data);
+
+        currentImages.current = {
+          ...currentImages.current,
+          [query]: shuffleArray(data),
+        };
+        var gottenRandNum = Math.floor(Math.random() * 4);
+        console.log(gottenRandNum, data[gottenRandNum]);
+
         if (selectedObject.length > 0) {
           console.log("has");
           updateSlideObject(
             selectedObject[0],
             selectedObject[1],
             selectedObject[2],
-            data,
+            data[gottenRandNum].src.original,
           );
         } else {
-          console.log("change background");
-          updateSlideObject(undefined, undefined, "backgroundImageUrl", data);
+          updateSlideObject(
+            undefined,
+            undefined,
+            "backgroundImageUrl",
+            data[gottenRandNum].src.original,
+          );
         }
       });
+  }
+
+  function shuffleArray(arr) {
+    for (let i = 0; i < arr.length * 3; i++) {
+      const varPos1 = Math.floor(Math.random() * arr.length);
+      const varPos2 = Math.floor(Math.random() * arr.length);
+      const val1 = arr[varPos1];
+
+      arr[varPos1] = arr[varPos2];
+      arr[varPos2] = val1;
+    }
+
+    console.log(arr);
+    return arr;
   }
 
   function fetchStyles(type) {
@@ -168,7 +274,11 @@ function App() {
             updateObject={updateSlideObject}
             updateSelectedObject={updateSelectedObject}
           />
-          <ActionPanel selectedObject={getSelectedObjectsStats()} getNewImage={getNewImage} updateObject={updateSlideObject}/>
+          <ActionPanel
+            selectedObject={getSelectedObjectsStats()}
+            getNewImage={getNewImage}
+            updateObject={updateSlideObject}
+          />
         </div>
         <SlideTab
           slides={slides}

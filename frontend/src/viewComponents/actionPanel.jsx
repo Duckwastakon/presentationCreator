@@ -1,8 +1,6 @@
 import "./componentStyling/actionPanelStyling.css";
 
 export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
-  console.log(selectedObject);
-
   if (selectedObject[0] === "text") {
     const textAlign = selectedObject[2]["textAlign"] || "left";
     return (
@@ -276,7 +274,6 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
   }
 
   if (selectedObject[0] == "") {
-    console.log(selectedObject);
     return (
       <div className="actionPanel">
         <div className="simpleOptionContainer">
@@ -296,7 +293,7 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
         <div className="simpleOptionContainer">
           <p className="simpleText">background color</p>
           <input
-            className="simpleInputColor"
+            className="simpleColorInput"
             type="color"
             value={selectedObject[2]["backgroundColor"] || "#ffffff"}
             onChange={(newVal) => {

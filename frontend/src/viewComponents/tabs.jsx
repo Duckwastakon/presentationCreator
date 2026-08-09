@@ -8,7 +8,7 @@ export const SlideTab = ({ slides, onClick, currentSelected }) => {
           return (
             <div
               key={ind}
-              style={{ alignItems: "center", justifyContent: "center" }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center"}}
             >
               {Number(slideVal[0]) === currentSelected && (
                 <button
@@ -16,6 +16,7 @@ export const SlideTab = ({ slides, onClick, currentSelected }) => {
                     onClick({});
                   }}
                   className="newSlideButton"
+                  style={{marginRight: "12px"}}
                 >
                   <p className="newSlideButtonText">+</p>
                 </button>

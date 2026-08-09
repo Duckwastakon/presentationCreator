@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { ResizeDots } from "./resizeDots";
+import "./componentStyling/presentationDisplayStyling.css"
 
 export const MainPresentationDisplay = ({
   vars,
@@ -97,6 +98,30 @@ export const MainPresentationDisplay = ({
         dotBLPos[1] = dotBRPos[1];
         break;
 
+      case 5:
+        dotTLPos[1] -= valDifference[1];
+        dotTRPos[1] = dotTLPos[1];
+
+        break;
+
+      case 6:
+        dotTRPos[0] -= valDifference[0];
+        dotBRPos[0] = dotTRPos[0];
+
+        break;
+
+      case 7:
+        dotBRPos[1] -= valDifference[1];
+        dotBLPos[1] = dotBRPos[1];
+
+        break;
+
+      case 8:
+        dotBLPos[0] -= valDifference[0];
+        dotTLPos[0] = dotBLPos[0];
+
+        break;
+
       default:
         return;
     }
@@ -131,7 +156,10 @@ export const MainPresentationDisplay = ({
   return (
     <div
       className="presentationBackground"
-      style={{ backgroundImage: `url(${vars.backgroundImageUrl})`, backgroundColor: `${vars.backgroundColor}` }}
+      style={{
+        backgroundImage: `url(${vars.backgroundImageUrl})`,
+        backgroundColor: `${vars.backgroundColor}`,
+      }}
       key={ind}
       onMouseMove={(event) => handleMouseMovement(event)}
       onMouseLeave={() => {
@@ -157,7 +185,7 @@ export const MainPresentationDisplay = ({
           useForSize = selectedObjectsVariables[1];
         }
 
-        const outlineWidth = (variables[1].outlineWidth || 0);
+        const outlineWidth = variables[1].outlineWidth || 0;
         const outlineColor = variables[1].outlineColor || "black";
 
         return (
@@ -201,7 +229,7 @@ export const MainPresentationDisplay = ({
                 ${-outlineWidth}px ${outlineWidth}px 0px ${outlineColor}`,
                 textDecoration: variables[1].textDecoration || "none",
                 fontStyle: variables[1].fontStyle || "normal",
-                textAlign: variables[1].textAlign || "left"
+                textAlign: variables[1].textAlign || "left",
               }}
             />
             {selected && (
@@ -238,14 +266,14 @@ export const MainPresentationDisplay = ({
             }}
           >
             <button
+            className="imageButton"
               style={{
                 display: "flex",
                 width: "100%",
                 height: "100%",
                 alignItems: "center",
                 justifyContent: "center",
-                border: `solid ${(variables[1].borderColor || "#000000")} ${(variables[1].borderWidth || 0)}px`,
-                borderRadius: (variables[1].cornerRadius || 0).toString() + "px"
+                overflow: "hidden",
               }}
               onMouseDown={(event) => {
                 if (selected) {
@@ -258,7 +286,12 @@ export const MainPresentationDisplay = ({
               }}
             >
               <img
-                style={{ width: "100%", height: "100%", padding: "0px", margin: "0px" }}
+              className="slideImage"
+                style={{
+                  border: `solid ${variables[1].borderColor || "#000000"} ${variables[1].borderWidth || 0}px`,
+                  borderRadius:
+                    (variables[1].cornerRadius || 0).toString() + "px",
+                }}
                 src={variables[1].src}
               />
             </button>
