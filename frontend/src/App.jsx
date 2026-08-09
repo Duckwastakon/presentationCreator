@@ -6,7 +6,7 @@ import { ActionPanel } from "./viewComponents/actionPanel";
 
 function App() {
   const [slides, updateSlides] = useState({});
-  const [currentSlideId, updateCurrenSlideId] = useState();
+  const currentSlideId = useRef();
   const [currentPrefab, updateCurrentPrefab] = useState({});
   const [styleOptions, updateStyleOptions] = useState({});
 
@@ -14,16 +14,24 @@ function App() {
 
   const [selectedObject, updateSelectedObject] = useState([]);
 
-  function changeCurrentSelectedSlide(slideValues, slideId) {
+  const createNewSlideId = useRef(0);
+
+  function changeCurrentSelectedSlide(
+    slideValues,
+    slideId,
+    deleteCurrentSlideFunction,
+    newCreatingSpot = undefined,
+  ) {
+    currentSlideId.current = slideId;
+    createNewSlideId.current = newCreatingSpot;
     updateCurrentPrefab(slideValues);
-    updateCurrenSlideId(slideId);
   }
 
   function deleteCurrentSlide() {
     let newSlides = {};
     let i = 0;
     Object.entries(slides).map((val) => {
-      if (val[0] !== currentSlideId.toString()) {
+      if (val[0] !== currentSlideId.current.toString()) {
         newSlides = { ...newSlides, [i]: val[1] };
         i++;
       }
@@ -33,7 +41,7 @@ function App() {
   }
 
   function saveSlide(newPrefab) {
-    updateSlides({ ...slides, [currentSlideId]: newPrefab });
+    updateSlides({ ...slides, [currentSlideId.current]: newPrefab });
   }
 
   function getSelectedObjectsStats() {
@@ -70,7 +78,7 @@ function App() {
 
   function getNewImage(e) {
     e.preventDefault();
-    console.log("Hey")
+    console.log("Hey");
 
     const form = e.target;
     const formData = new FormData(form);
@@ -84,7 +92,7 @@ function App() {
       console.log(savedImages);
       savedImages.map((entry) => {
         if (entry[0] === query) {
-          found = true
+          found = true;
           let currentImageId;
           if (selectedObject[0] != undefined) {
             currentImageId =
@@ -223,6 +231,35 @@ function App() {
     changeFunc(newPageVal);
   }
 
+  function newSlide(slideValues) {
+    console.log(slideValues);
+    console.log(createNewSlideId.current);
+    currentSlideId.current = createNewSlideId.current;
+    let allSlides = {};
+    let createNew = false;
+
+    if (Object.entries(slides).length > 0) {
+      Object.entries(slides).map((slide, i) => {
+        console.log(i);
+        if (i == createNewSlideId.current) {
+          createNew = true
+          allSlides = { ...allSlides, [i]: { ...slideValues } };
+          console.log(allSlides);
+        }
+        allSlides = { ...allSlides, [Object.entries(allSlides).length]: slide[1] };
+      });
+    } else {
+      createNew = true
+      allSlides = { [0]: { ...slideValues } };
+    }
+
+    if (!createNew) {
+      allSlides = { ...allSlides, [createNewSlideId.current]: { ...slideValues } };
+    }
+    createNewSlideId.current = undefined
+    updateSlides(allSlides);
+  }
+
   const MiniDisplay = ({ vars, ind }) => {
     return (
       <button
@@ -230,11 +267,8 @@ function App() {
         onClick={() => {
           const slideClone = structuredClone(vars);
           updateCurrentPrefab(slideClone);
-          updateCurrenSlideId(Object.entries(slides).length);
-          updateSlides((previous) => ({
-            ...previous,
-            [Object.entries(slides).length]: slideClone,
-          }));
+          console.log(slideClone);
+          newSlide(slideClone);
         }}
       >
         <div className="miniPresentation">
@@ -284,6 +318,8 @@ function App() {
           slides={slides}
           onClick={changeCurrentSelectedSlide}
           currentSelected={currentSlideId}
+          deleteCurrentSlideFunction={deleteCurrentSlide}
+          nextNewSlideSpot={createNewSlideId}
         />
       </div>
     );
@@ -336,6 +372,8 @@ function App() {
           slides={slides}
           onClick={changeCurrentSelectedSlide}
           currentSelected={currentSlideId}
+          deleteCurrentSlideFunction={deleteCurrentSlide}
+          nextNewSlideSpot={createNewSlideId}
         />
       </div>
     );

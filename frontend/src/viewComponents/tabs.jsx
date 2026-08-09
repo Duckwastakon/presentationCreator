@@ -1,26 +1,72 @@
-export const SlideTab = ({ slides, onClick, currentSelected }) => {
+export const SlideTab = ({
+  slides,
+  onClick,
+  currentSelected,
+  nextNewSlideSpot,
+}) => {
+  console.log(currentSelected);
+  console.log(currentSelected.current);
   return (
     <div className="slideTab">
       {Object.keys(slides).length > 0 &&
+        (nextNewSlideSpot.current == 0 ? (
+          <button
+            onClick={() => {
+              onClick({}, undefined, 0);
+            }}
+            className="newSlideButton"
+            style={{ backgroundColor: "blue" }}
+          >
+            <p className="newSlideButtonText">+</p>
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              onClick({}, undefined, 0);
+            }}
+            className="newSlideButton"
+          >
+            <p className="newSlideButtonText">+</p>
+          </button>
+        ))}
+
+      {Object.keys(slides).length > 0 &&
         Object.entries(slides).map((slideVal, ind) => {
           const vars = slideVal[1];
-          
+
           return (
             <div
               key={ind}
-              style={{ display: "flex", alignItems: "center", justifyContent: "center"}}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              {Number(slideVal[0]) === currentSelected && (
-                <button
-                  onClick={() => {
-                    onClick({});
-                  }}
-                  className="newSlideButton"
-                  style={{marginRight: "12px"}}
-                >
-                  <p className="newSlideButtonText">+</p>
-                </button>
-              )}
+              {Number(slideVal[0]) === nextNewSlideSpot.current &&
+                nextNewSlideSpot.current !== 0 && (
+                  <button
+                    style={{ marginRight: "12px", backgroundColor: "blue" }}
+                    onClick={() => {
+                      onClick({}, undefined, currentSelected.current);
+                    }}
+                    className="newSlideButton"
+                  >
+                    <p className="newSlideButtonText">+</p>
+                  </button>
+                )}
+              {Number(slideVal[0]) === currentSelected.current &&
+                currentSelected.current !== 0 && (
+                  <button
+                    style={{ marginRight: "12px" }}
+                    onClick={() => {
+                      onClick({}, undefined, currentSelected.current);
+                    }}
+                    className="newSlideButton"
+                  >
+                    <p className="newSlideButtonText">+</p>
+                  </button>
+                )}
               <button
                 style={{
                   backgroundImage: `url(${vars.backgroundImageUrl})`,
@@ -55,17 +101,42 @@ export const SlideTab = ({ slides, onClick, currentSelected }) => {
                   ))}
                 </div>
               </button>
+              {Number(slideVal[0]) === currentSelected.current &&
+                currentSelected.current !==
+                  Object.entries(slides).length - 1 && (
+                  <button
+                    style={{ marginLeft: "12px" }}
+                    onClick={() => {
+                      onClick({}, undefined, currentSelected.current + 1);
+                    }}
+                    className="newSlideButton"
+                  >
+                    <p className="newSlideButtonText">+</p>
+                  </button>
+                )}
             </div>
           );
         })}
-      <button
-        onClick={() => {
-          onClick({});
-        }}
-        className="newSlideButton"
-      >
-        <p className="newSlideButtonText">+</p>
-      </button>
+      {nextNewSlideSpot.current === Object.keys(slides).length ? (
+        <button
+          onClick={() => {
+            onClick({}, undefined, Object.keys(slides).length);
+          }}
+          className="newSlideButton"
+          style={{ backgroundColor: "blue" }}
+        >
+          <p className="newSlideButtonText">+</p>
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            onClick({}, undefined, Object.keys(slides).length);
+          }}
+          className="newSlideButton"
+        >
+          <p className="newSlideButtonText">+</p>
+        </button>
+      )}
     </div>
   );
 };
