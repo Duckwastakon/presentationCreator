@@ -3,6 +3,7 @@ import "./styling/appStyle.css";
 import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
 import { ActionPanel } from "./viewComponents/actionPanel";
+import { Modal } from "./viewComponents/modal";
 
 function App() {
   const [slides, updateSlides] = useState({});
@@ -14,12 +15,19 @@ function App() {
 
   const [selectedObject, updateSelectedObject] = useState([]);
 
+  const [modalActive, updateModal] = useState(false);
+
   const createNewSlideId = useRef(0);
+
+  function toggleModal() {
+    console.log(modalActive);
+    updateModal(!modalActive);
+    console.log(modalActive);
+  }
 
   function changeCurrentSelectedSlide(
     slideValues,
     slideId,
-    deleteCurrentSlideFunction,
     newCreatingSpot = undefined,
   ) {
     currentSlideId.current = slideId;
@@ -36,6 +44,8 @@ function App() {
         i++;
       }
     });
+    createNewSlideId.current = currentSlideId.current;
+    currentSlideId.current = undefined;
     updateSlides(newSlides);
     updateCurrentPrefab({});
   }
@@ -242,21 +252,32 @@ function App() {
       Object.entries(slides).map((slide, i) => {
         console.log(i);
         if (i == createNewSlideId.current) {
-          createNew = true
-          allSlides = { ...allSlides, [i]: { ...slideValues } };
+          createNew = true;
+          allSlides = {
+            ...allSlides,
+            [Object.entries(allSlides).length]: slideValues,
+          };
           console.log(allSlides);
         }
-        allSlides = { ...allSlides, [Object.entries(allSlides).length]: slide[1] };
+        allSlides = {
+          ...allSlides,
+          [Object.entries(allSlides).length]: slide[1],
+        };
       });
     } else {
-      createNew = true
+      createNew = true;
       allSlides = { [0]: { ...slideValues } };
     }
 
     if (!createNew) {
-      allSlides = { ...allSlides, [createNewSlideId.current]: { ...slideValues } };
+      allSlides = {
+        ...allSlides,
+        [Object.entries(allSlides).length]: slideValues,
+      };
     }
-    createNewSlideId.current = undefined
+
+    createNewSlideId.current = undefined;
+    console.log(currentSlideId);
     updateSlides(allSlides);
   }
 
@@ -301,6 +322,12 @@ function App() {
   if (Object.keys(currentPrefab).length > 0) {
     return (
       <div className="container">
+        {modalActive && (
+          <Modal
+            deleteCurrentSlideFunction={deleteCurrentSlide}
+            toggleModal={toggleModal}
+          />
+        )}
         <div className="editorWindow">
           <p className="headerText">This is main file</p>
           <MainPresentationDisplay
@@ -318,7 +345,7 @@ function App() {
           slides={slides}
           onClick={changeCurrentSelectedSlide}
           currentSelected={currentSlideId}
-          deleteCurrentSlideFunction={deleteCurrentSlide}
+          toggleModal={toggleModal}
           nextNewSlideSpot={createNewSlideId}
         />
       </div>
@@ -372,7 +399,7 @@ function App() {
           slides={slides}
           onClick={changeCurrentSelectedSlide}
           currentSelected={currentSlideId}
-          deleteCurrentSlideFunction={deleteCurrentSlide}
+          toggleModal={toggleModal}
           nextNewSlideSpot={createNewSlideId}
         />
       </div>
