@@ -65,6 +65,7 @@ export const MiniSlideDisplay = ({
           <p
             key={indv}
             style={{
+              display: "flex",
               position: "absolute",
               top: (100 * (variables[1].y / 7.5)).toString() + "%",
               height: (100 * (variables[1].h / 7.5)).toString() + "%",
@@ -81,8 +82,8 @@ export const MiniSlideDisplay = ({
               fontStyle: variables[1].fontStyle || "normal",
               textAlign: variables[1].textAlign || "left",
               alignItems: "center",
-              justifyContent: "center",
               overflow: "hidden",
+              textWrap: "nowrap",
             }}
           >
             {variables[1].text}

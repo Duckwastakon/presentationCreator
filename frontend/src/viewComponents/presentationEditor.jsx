@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { ResizeDots } from "./resizeDots";
-import "./componentStyling/presentationDisplayStyling.css"
+import "./componentStyling/presentationDisplayStyling.css";
+import { TextObject } from "./miniComponents/editorComponents/textObject";
+import { ImageObject } from "./miniComponents/editorComponents/ImageObject";
 
 export const MainPresentationDisplay = ({
   vars,
@@ -180,128 +181,22 @@ export const MainPresentationDisplay = ({
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
 
-        let useForSize = variables[1];
         if (selected) {
-          useForSize = selectedObjectsVariables[1];
+          return (<TextObject startResizing={startResizing} stopResizing={stopResizing} variables={selectedObjectsVariables} key={indv} updateObject={updateObject} updateSelectedObject={updateSelectedObject} setSelectedObject={setSelectedObject} setSelectedObjectsVariables={setSelectedObjectsVariables} selected={selected}/>)
+        } else {
+          return (<TextObject startResizing={startResizing} stopResizing={stopResizing} variables={variables} key={indv} updateObject={updateObject} updateSelectedObject={updateSelectedObject} setSelectedObject={setSelectedObject} setSelectedObjectsVariables={setSelectedObjectsVariables} selected={selected}/>)
         }
-
-        const outlineWidth = variables[1].outlineWidth || 0;
-        const outlineColor = variables[1].outlineColor || "black";
-
-        return (
-          <div
-            style={{
-              position: "absolute",
-              top: (100 * (useForSize.y / 7.5)).toString() + "%",
-              height: (100 * (useForSize.h / 7.5)).toString() + "%",
-              left: (100 * (useForSize.x / 13.333)).toString() + "%",
-              width: (100 * (useForSize.w / 13.333)).toString() + "%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            key={indv}
-          >
-            <input
-              type="text"
-              value={variables[1].text}
-              onChange={(newVal) =>
-                updateObject("text", variables[0], "text", newVal.target.value)
-              }
-              onSelect={() => {
-                console.log(["text", variables[0]]);
-                updateSelectedObject(["text", variables[0], undefined]);
-                setSelectedObjectsVariables(structuredClone(variables));
-                setSelectedObject(["text", variables[0]]);
-              }}
-              onMouseDown={(event) => {
-                startResizing(event, 9);
-              }}
-              className="presentationTextEditBox"
-              style={{
-                width: "100%",
-                height: "100%",
-                fontSize: (variables[1].fontSize * 2.5).toString() + "px",
-                color: variables[1].textColor || "black",
-                fontWeight: variables[1].bold || "400",
-                textShadow: `${outlineWidth}px ${outlineWidth}px 0px ${outlineColor},
-                ${-outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
-                ${outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
-                ${-outlineWidth}px ${outlineWidth}px 0px ${outlineColor}`,
-                textDecoration: variables[1].textDecoration || "none",
-                fontStyle: variables[1].fontStyle || "normal",
-                textAlign: variables[1].textAlign || "left",
-              }}
-            />
-            {selected && (
-              <ResizeDots
-                startResizing={startResizing}
-                stopResizing={stopResizing}
-              />
-            )}
-          </div>
-        );
       })}
 
       {Object.entries(vars.images).map((variables, indv) => {
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
 
-        let useForSize = variables[1];
-
         if (selected) {
-          useForSize = selectedObjectsVariables[1];
+          variables = selectedObjectsVariables;
         }
         return (
-          <div
-            key={indv}
-            style={{
-              position: "absolute",
-              top: (100 * (useForSize.y / 7.5)).toString() + "%",
-              height: (100 * (useForSize.h / 7.5)).toString() + "%",
-              left: (100 * (useForSize.x / 13.333)).toString() + "%",
-              width: (100 * (useForSize.w / 13.333)).toString() + "%",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 0,
-            }}
-          >
-            <button
-            className="imageButton"
-              style={{
-                display: "flex",
-                width: "100%",
-                height: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-              }}
-              onMouseDown={(event) => {
-                if (selected) {
-                  startResizing(event, 9);
-                } else {
-                  updateSelectedObject(["images", variables[0], "src"]);
-                  setSelectedObjectsVariables(structuredClone(variables));
-                  setSelectedObject(["images", variables[0]]);
-                }
-              }}
-            >
-              <img
-              className="slideImage"
-                style={{
-                  border: `solid ${variables[1].borderColor || "#000000"} ${variables[1].borderWidth || 0}px`,
-                  borderRadius:
-                    (variables[1].cornerRadius || 0).toString() + "px",
-                }}
-                src={variables[1].src}
-              />
-            </button>
-            {selected && (
-              <ResizeDots
-                startResizing={startResizing}
-                stopResizing={stopResizing}
-              />
-            )}
-          </div>
+          <ImageObject startResizing={startResizing} stopResizing={stopResizing} variables={variables} key={indv} updateObject={updateObject} updateSelectedObject={updateSelectedObject} setSelectedObject={setSelectedObject} setSelectedObjectsVariables={setSelectedObjectsVariables} selected={selected}/>
         );
       })}
     </div>
