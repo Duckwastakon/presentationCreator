@@ -1,16 +1,15 @@
-import "./tabComponentStyling.css";
-
 export const MiniSlideDisplay = ({
   slideVal,
   ind,
   onClick,
   currentSelected,
   toggleModal,
+  startMovingSlide,
 }) => {
   const vars = slideVal[1];
-  const clrCheck = Number(slideVal[0]) === currentSelected.current;
+  const selected = Number(slideVal[0]) === currentSelected.current;
   let shadowColor;
-  if (clrCheck) {
+  if (selected) {
     shadowColor = "cyan";
   } else {
     shadowColor = "grey";
@@ -27,9 +26,15 @@ export const MiniSlideDisplay = ({
     >
       <button
         className="selectSlideButton"
-        onClick={() => {
-          console.log(slideVal);
-          onClick(slideVal[1], ind);
+        onMouseUp={() => {
+          if (!selected) {
+            onClick(slideVal[1], ind);
+          }
+        }}
+        onMouseDown={(event) => {
+          if (selected) {
+            startMovingSlide(event, slideVal[1], slideVal[0]);
+          }
         }}
       />
 

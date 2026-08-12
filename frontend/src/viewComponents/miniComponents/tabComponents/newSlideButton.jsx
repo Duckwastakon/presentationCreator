@@ -1,5 +1,3 @@
-import "./tabComponentStyling.css";
-
 export const NewSlideButton = ({ backgroundColor, onClick, onClickVal }) => {
   return (
     <button

@@ -1,6 +1,6 @@
 import whiteDot from "./a.png";
 
-export const ResizeDots = ({startResizing, stopResizing}) => {
+export const ResizeDots = ({ startResizing, stopResizing }) => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <button
@@ -18,10 +18,7 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
 
       <button
@@ -38,10 +35,7 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
       <button
         onMouseDown={(event) => {
@@ -57,10 +51,7 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
       <button
         onMouseDown={(event) => {
@@ -76,12 +67,9 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
-            <button
+      <button
         onMouseDown={(event) => {
           startResizing(event, 5);
         }}
@@ -91,15 +79,12 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           height: "15px",
           top: "-15px",
           right: "50%",
-          marginLeft:"15px",
+          marginLeft: "15px",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
       <button
         onMouseDown={(event) => {
@@ -115,12 +100,9 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
-        <button
+      <button
         onMouseDown={(event) => {
           startResizing(event, 7);
         }}
@@ -134,10 +116,7 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
       <button
         onMouseDown={(event) => {
@@ -153,10 +132,7 @@ export const ResizeDots = ({startResizing, stopResizing}) => {
           justifyContent: "center",
         }}
       >
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={whiteDot}
-        />
+        <img style={{ width: "100%", height: "100%" }} src={whiteDot} />
       </button>
     </div>
   );

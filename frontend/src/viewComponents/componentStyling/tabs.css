@@ -1,7 +1,29 @@
+.slideMovingContainer {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100px;
+}
+
+.slideTab {
+    width: 100%;
+    height: 15%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
 .miniSlideTab {
   background-repeat: no-repeat;
-  background-position: "center";
-  background-size: "cover";
+  background-position: center;
+  background-size: cover;
 
   height: 90px;
   width: 160px;
@@ -20,7 +42,7 @@
 }
 
 .selectSlideButton:hover {
-  background-color: rgba(0, 0, 0, 0.2)
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .deleteSlideButton {
@@ -43,11 +65,11 @@
 }
 
 .newSlideButton {
-    border-radius: 20px;
-    aspect-ratio: 1;
-    width: 40px;
-    align-items: center;
-    justify-content: center;
+  border-radius: 20px;
+  aspect-ratio: 1;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
 }
 
 .newSlideButton:hover {

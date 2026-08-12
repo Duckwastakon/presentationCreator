@@ -347,6 +347,7 @@ function App() {
           currentSelected={currentSlideId}
           toggleModal={toggleModal}
           nextNewSlideSpot={createNewSlideId}
+          updateSlides={updateSlides}
         />
       </div>
     );
@@ -401,6 +402,7 @@ function App() {
           currentSelected={currentSlideId}
           toggleModal={toggleModal}
           nextNewSlideSpot={createNewSlideId}
+          updateSlides={updateSlides}
         />
       </div>
     );
