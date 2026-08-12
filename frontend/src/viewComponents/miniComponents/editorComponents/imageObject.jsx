@@ -1,17 +1,18 @@
 import { ResizeDots } from "./resizeDots";
 
-export const ImageObject = ({  startResizing,
+export const ImageObject = ({
+  startResizing,
   stopResizing,
   variables,
-  key,
+  ind,
   updateSelectedObject,
   setSelectedObjectsVariables,
   setSelectedObject,
-  selected,}) => {
-
+  selected,
+}) => {
   return (
     <div
-      key={key}
+      key={ind}
       style={{
         position: "absolute",
         top: (100 * (variables[1].y / 7.5)).toString() + "%",
@@ -23,6 +24,22 @@ export const ImageObject = ({  startResizing,
         padding: 0,
       }}
     >
+      <img
+        className="slideImage"
+        style={{
+          border: `solid ${variables[1].borderColor || "#000000"} ${variables[1].borderWidth || 0}px`,
+          borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
+
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+        }}
+        src={variables[1].src}
+      />
+
       <button
         className="imageButton"
         style={{
@@ -42,16 +59,8 @@ export const ImageObject = ({  startResizing,
             setSelectedObject(["images", variables[0]]);
           }
         }}
-      >
-        <img
-          className="slideImage"
-          style={{
-            border: `solid ${variables[1].borderColor || "#000000"} ${variables[1].borderWidth || 0}px`,
-            borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
-          }}
-          src={variables[1].src}
-        />
-      </button>
+      />
+
       {selected && (
         <ResizeDots startResizing={startResizing} stopResizing={stopResizing} />
       )}

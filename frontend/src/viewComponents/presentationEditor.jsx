@@ -13,8 +13,14 @@ export const MainPresentationDisplay = ({
   const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
 
   let changingState = useRef(0);
-  let startX = useRef(0);
-  let startY = useRef(0);
+  let lockedX = useRef(0);
+  let lockedY = useRef(0);
+
+  let lastX = useRef(0);
+  let lastY = useRef(0);
+
+  let xLocked = useRef(false);
+  let yLocked = useRef(false);
 
   function handleMouseMovement(event) {
     if (changingState.current === 0) return;
@@ -27,9 +33,12 @@ export const MainPresentationDisplay = ({
   }
 
   function startResizing(event, newState) {
-    startX.current = event.clientX;
-    startY.current = event.clientY;
+    lockedX.current = event.clientX;
+    lockedY.current = event.clientY;
     changingState.current = newState;
+
+    lastX.current = event.clientX;
+    lastY.current = event.clientY;
   }
 
   function stopResizing() {
@@ -45,8 +54,8 @@ export const MainPresentationDisplay = ({
   }
 
   function handleMouseResize(event) {
-    const xDiff = startX.current - event.clientX;
-    const yDiff = startY.current - event.clientY;
+    const xDiff = lastX.current - event.clientX;
+    const yDiff = lastY.current - event.clientY;
 
     let dotTLPos = [
       selectedObjectsVariables[1].x,
@@ -131,25 +140,57 @@ export const MainPresentationDisplay = ({
     newVals[1].w = Math.abs(dotTRPos[0] - dotTLPos[0]);
     newVals[1].h = Math.abs(dotBLPos[1] - dotTLPos[1]);
 
-    startX.current = event.clientX;
-    startY.current = event.clientY;
+    lastX.current = event.clientX;
+    lastY.current = event.clientY;
 
     setSelectedObjectsVariables(newVals);
   }
 
   function handleObjectMove(event) {
-    const xDiff = startX.current - event.clientX;
-    const yDiff = startY.current - event.clientY;
+    const xDiff = lastX.current - event.clientX;
+    const yDiff = lastY.current - event.clientY;
+
     if (Object.entries(selectedObjectsVariables).length < 1) {
       return;
     }
     let newVals = structuredClone(selectedObjectsVariables);
 
-    newVals[1].x -= 13.333 * (xDiff / 800);
-    newVals[1].y -= 7.5 * (yDiff / 450);
+    if (xLocked.current == true) {
+      const lockedXDiff = lockedX.current - event.clientX;
 
-    startX.current = event.clientX;
-    startY.current = event.clientY;
+      if (Math.abs(lockedXDiff) > 22) {
+        newVals[1].x -= 13.333 * (lockedXDiff / 800);
+        xLocked.current = false;
+      }
+    } else {
+      newVals[1].x -= 13.333 * (xDiff / 800);
+
+      if (Math.abs((13.333 / 2) - newVals[1].w / 2 - newVals[1].x) < 0.1) {
+        newVals[1].x = (13.333 / 2) - newVals[1].w / 2;
+        xLocked.current = true;
+        lockedX.current = event.clientX;
+      }
+    }
+
+    if (yLocked.current == true) {
+      const lockedYDiff = lockedY.current - event.clientY;
+
+      if (Math.abs(lockedYDiff) > 22) {
+        newVals[1].y -= 7.5 * (lockedYDiff / 450);
+        yLocked.current = false;
+      }
+    } else {
+      newVals[1].y -= 7.5 * (yDiff / 450);
+
+      if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
+        newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
+        yLocked.current = true;
+        lockedY.current = event.clientY;
+      }
+    }
+
+    lastX.current = event.clientX;
+    lastY.current = event.clientY;
 
     setSelectedObjectsVariables(newVals);
   }
@@ -182,9 +223,33 @@ export const MainPresentationDisplay = ({
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
 
         if (selected) {
-          return (<TextObject startResizing={startResizing} stopResizing={stopResizing} variables={selectedObjectsVariables} key={indv} updateObject={updateObject} updateSelectedObject={updateSelectedObject} setSelectedObject={setSelectedObject} setSelectedObjectsVariables={setSelectedObjectsVariables} selected={selected}/>)
+          return (
+            <TextObject
+              startResizing={startResizing}
+              stopResizing={stopResizing}
+              variables={selectedObjectsVariables}
+              ind={indv}
+              updateObject={updateObject}
+              updateSelectedObject={updateSelectedObject}
+              setSelectedObject={setSelectedObject}
+              setSelectedObjectsVariables={setSelectedObjectsVariables}
+              selected={selected}
+            />
+          );
         } else {
-          return (<TextObject startResizing={startResizing} stopResizing={stopResizing} variables={variables} key={indv} updateObject={updateObject} updateSelectedObject={updateSelectedObject} setSelectedObject={setSelectedObject} setSelectedObjectsVariables={setSelectedObjectsVariables} selected={selected}/>)
+          return (
+            <TextObject
+              startResizing={startResizing}
+              stopResizing={stopResizing}
+              variables={variables}
+              ind={indv}
+              updateObject={updateObject}
+              updateSelectedObject={updateSelectedObject}
+              setSelectedObject={setSelectedObject}
+              setSelectedObjectsVariables={setSelectedObjectsVariables}
+              selected={selected}
+            />
+          );
         }
       })}
 
@@ -196,7 +261,17 @@ export const MainPresentationDisplay = ({
           variables = selectedObjectsVariables;
         }
         return (
-          <ImageObject startResizing={startResizing} stopResizing={stopResizing} variables={variables} key={indv} updateObject={updateObject} updateSelectedObject={updateSelectedObject} setSelectedObject={setSelectedObject} setSelectedObjectsVariables={setSelectedObjectsVariables} selected={selected}/>
+          <ImageObject
+            startResizing={startResizing}
+            stopResizing={stopResizing}
+            variables={variables}
+            ind={indv}
+            updateObject={updateObject}
+            updateSelectedObject={updateSelectedObject}
+            setSelectedObject={setSelectedObject}
+            setSelectedObjectsVariables={setSelectedObjectsVariables}
+            selected={selected}
+          />
         );
       })}
     </div>

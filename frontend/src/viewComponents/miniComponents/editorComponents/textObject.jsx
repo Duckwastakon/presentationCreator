@@ -4,7 +4,7 @@ export const TextObject = ({
   startResizing,
   stopResizing,
   variables,
-  key,
+  ind,
   updateObject,
   updateSelectedObject,
   setSelectedObjectsVariables,
@@ -25,7 +25,7 @@ export const TextObject = ({
         alignItems: "center",
         justifyContent: "center",
       }}
-      key={key}
+      key={ind}
     >
       <input
         type="text"
