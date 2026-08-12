@@ -185,7 +185,7 @@ export const SlideTab = ({
                   placeMovingDisp == 1 &&
                   Object.keys(movingSlide).length > 0 && (
                     <MovingSlide
-                      style={{ opacity: "0.5" }}
+                      style={{ opacity: "0.3" }}
                       slideComponents={movingSlide}
                     />
                   )}
@@ -230,7 +230,7 @@ export const SlideTab = ({
                   placeMovingDisp == 2 &&
                   Object.keys(movingSlide).length > 0 && (
                     <MovingSlide
-                      style={{ opacity: "0.5" }}
+                      style={{ opacity: "0.3" }}
                       slideComponents={movingSlide}
                     />
                   )}
