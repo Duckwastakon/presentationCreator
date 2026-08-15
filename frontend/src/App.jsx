@@ -84,6 +84,26 @@ function App() {
     saveSlide(newPrefab);
   }
 
+  function createNewObject(type, size = 24){
+    if(type==="text"){
+      let newWidth = (6 * size/36) + 0.2
+      let newX = 13.333 / 2 - newWidth / 2
+      
+      let newHeight = (size/36) + 0.1
+      let newY = 7.5 / 2 - newHeight / 2
+
+      const newText = {
+        x: newX,
+        y: newY,
+        w: newWidth,
+        h: newHeight,
+        fontSize: size,
+        text: "new Text",
+      }
+      updateSlideObject(type, Object.keys(currentPrefab[type]).length, undefined, newText)
+    }
+  }
+
   const currentImages = useRef({});
 
   function getNewImage(e) {
@@ -339,6 +359,7 @@ function App() {
             selectedObject={getSelectedObjectsStats()}
             getNewImage={getNewImage}
             updateObject={updateSlideObject}
+            createNewObject={createNewObject}
           />
         </div>
         <SlideTab

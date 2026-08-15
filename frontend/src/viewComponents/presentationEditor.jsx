@@ -22,6 +22,24 @@ export const MainPresentationDisplay = ({
   let xLocked = useRef(false);
   let yLocked = useRef(false);
 
+  let holdingShift = false;
+  let lockedAspectRatio = 1;
+
+  addEventListener("keydown", (event) => {
+    if (event.shiftKey && Object.entries(selectedObjectsVariables).length > 0) {
+      holdingShift = true;
+      lockedAspectRatio =
+        selectedObjectsVariables[1].w /
+        selectedObjectsVariables[1].h;
+    }
+  });
+
+  addEventListener("keyup", (event) => {
+    if (!event.shiftKey) {
+      holdingShift = false;
+    }
+  });
+
   function handleMouseMovement(event) {
     if (changingState.current === 0) return;
 
@@ -54,8 +72,8 @@ export const MainPresentationDisplay = ({
   }
 
   function handleMouseResize(event) {
-    const xDiff = lastX.current - event.clientX;
-    const yDiff = lastY.current - event.clientY;
+    let xDiff = lastX.current - event.clientX;
+    let yDiff = lastY.current - event.clientY;
 
     let dotTLPos = [
       selectedObjectsVariables[1].x,
@@ -73,6 +91,19 @@ export const MainPresentationDisplay = ({
       selectedObjectsVariables[1].x + selectedObjectsVariables[1].w,
       selectedObjectsVariables[1].y + selectedObjectsVariables[1].h,
     ];
+
+    if (holdingShift) {
+      console.log("shift")
+      console.log(lockedAspectRatio)
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        yDiff = xDiff / lockedAspectRatio
+      } else {
+        xDiff = yDiff * lockedAspectRatio
+      }
+      console.log(xDiff/yDiff)
+      console.log("complete")
+    }
+    console.log(xDiff, yDiff)
 
     let valDifference = [13.333 * (xDiff / 800), 7.5 * (yDiff / 450)];
 
@@ -165,8 +196,8 @@ export const MainPresentationDisplay = ({
     } else {
       newVals[1].x -= 13.333 * (xDiff / 800);
 
-      if (Math.abs((13.333 / 2) - newVals[1].w / 2 - newVals[1].x) < 0.1) {
-        newVals[1].x = (13.333 / 2) - newVals[1].w / 2;
+      if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
+        newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
         xLocked.current = true;
         lockedX.current = event.clientX;
       }

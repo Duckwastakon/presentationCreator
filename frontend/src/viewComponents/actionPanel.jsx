@@ -1,6 +1,6 @@
 import "./componentStyling/actionPanelStyling.css";
 
-export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
+export const ActionPanel = ({ selectedObject, getNewImage, updateObject, createNewObject }) => {
   if (selectedObject[0] === "text") {
     const textAlign = selectedObject[2]["textAlign"] || "left";
     return (
@@ -196,6 +196,23 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
             }}
           />
         </div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">layer</p>
+          <input
+            className="simpleTextInput"
+            name="fontSizeText"
+            value={selectedObject[2]["layer"] || 1}
+            onInput={(newFontSize) => {
+              updateObject(
+                selectedObject[0],
+                selectedObject[1],
+                "layer",
+                newFontSize.target.value,
+              );
+            }}
+            type="number"
+          />
+        </div>
       </div>
     );
   }
@@ -223,7 +240,7 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
             type="range"
             value={selectedObject[2]["borderWidth"] || 0}
             min={0}
-            max={12}
+            max={50}
             step={1}
             onChange={(newVal) => {
               updateObject(
@@ -269,6 +286,23 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
             }}
           />
         </div>
+        <div className="simpleOptionContainer">
+          <p className="simpleText">layer</p>
+          <input
+            className="simpleTextInput"
+            name="fontSizeText"
+            value={selectedObject[2]["layer"] || 1}
+            onInput={(newFontSize) => {
+              updateObject(
+                selectedObject[0],
+                selectedObject[1],
+                "layer",
+                newFontSize.target.value,
+              );
+            }}
+            type="number"
+          />
+        </div>
       </div>
     );
   }
@@ -305,6 +339,16 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject }) => {
               );
             }}
           />
+        </div>
+        <div className="simpleOptionContainer">
+          <button onMouseDown={() => {createNewObject("text")}} className="createNewButton">
+            <p className="simpleText">add new text</p>
+          </button>
+        </div>
+        <div className="simpleOptionContainer">
+          <button onMouseDown={() => {createNewObject("images")}} className="createNewButton">
+            <p className="simpleText">add new image</p>
+          </button>
         </div>
       </div>
     );

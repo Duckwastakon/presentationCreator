@@ -11,9 +11,6 @@ export const TextObject = ({
   setSelectedObject,
   selected,
 }) => {
-  const outlineWidth = variables[1].outlineWidth || 0;
-  const outlineColor = variables[1].outlineColor || "black";
-
   return (
     <div
       style={{
@@ -24,6 +21,7 @@ export const TextObject = ({
         width: (100 * (variables[1].w / 13.333)).toString() + "%",
         alignItems: "center",
         justifyContent: "center",
+        zIndex: (variables[1].layer || 1)
       }}
       key={ind}
     >
@@ -48,17 +46,15 @@ export const TextObject = ({
           fontSize: (variables[1].fontSize * 2.5).toString() + "px",
           color: variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
-          textShadow: `${outlineWidth}px ${outlineWidth}px 0px ${outlineColor},
-                    ${-outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
-                    ${outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
-                    ${-outlineWidth}px ${outlineWidth}px 0px ${outlineColor}`,
+          WebkitTextStrokeWidth: `${variables[1].outlineWidth}px`,
+          WebkitTextStrokeColor: variables[1].outlineColor || "black",
           textDecoration: variables[1].textDecoration || "none",
           fontStyle: variables[1].fontStyle || "normal",
           textAlign: variables[1].textAlign || "left",
         }}
       />
       {selected && (
-        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} />
+        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} objectSize={[variables[1].w, variables[1].h]} />
       )}
     </div>
   );

@@ -10,6 +10,8 @@ export const ImageObject = ({
   setSelectedObject,
   selected,
 }) => {
+  console.log([variables[1].w, variables[1].h])
+
   return (
     <div
       key={ind}
@@ -22,6 +24,7 @@ export const ImageObject = ({
         alignItems: "center",
         justifyContent: "center",
         padding: 0,
+        zIndex: (variables[1].layer || 1)
       }}
     >
       <img
@@ -36,6 +39,8 @@ export const ImageObject = ({
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
+          padding: "0px",
+          margin: "0px",
         }}
         src={variables[1].src}
       />
@@ -49,6 +54,8 @@ export const ImageObject = ({
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
+          position: "absolute",
+          top: "0px"
         }}
         onMouseDown={(event) => {
           if (selected) {
@@ -62,7 +69,7 @@ export const ImageObject = ({
       />
 
       {selected && (
-        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} />
+        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} objectSize={[variables[1].w, variables[1].h]} />
       )}
     </div>
   );
