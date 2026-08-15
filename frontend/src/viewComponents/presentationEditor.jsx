@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import "./componentStyling/presentationDisplayStyling.css";
 import { TextObject } from "./miniComponents/editorComponents/textObject";
-import { ImageObject } from "./miniComponents/editorComponents/ImageObject";
+import { ImageObject } from "./miniComponents/editorComponents/imageObject";
 
 export const MainPresentationDisplay = ({
   vars,
@@ -23,6 +23,7 @@ export const MainPresentationDisplay = ({
   let yLocked = useRef(false);
 
   let holdingShift = false;
+
   let lockedAspectRatio = 1;
 
   addEventListener("keydown", (event) => {
@@ -63,6 +64,7 @@ export const MainPresentationDisplay = ({
     if (changingState.current == 0) return;
     changingState.current = 0;
     if (selectedObject[0] === "") return;
+
     let newVars = { ...vars[selectedObject[0]][selectedObject[1]] };
     ((newVars.x = selectedObjectsVariables[1].x),
       (newVars.y = selectedObjectsVariables[1].y),
@@ -285,6 +287,7 @@ export const MainPresentationDisplay = ({
       })}
 
       {Object.entries(vars.images).map((variables, indv) => {
+        console.log("Image ", variables)
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
 

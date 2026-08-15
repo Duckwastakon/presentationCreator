@@ -10,7 +10,8 @@ export const ImageObject = ({
   setSelectedObject,
   selected,
 }) => {
-  console.log([variables[1].w, variables[1].h])
+  console.log(variables)
+  console.log("Image object")
 
   return (
     <div
@@ -58,6 +59,7 @@ export const ImageObject = ({
           top: "0px"
         }}
         onMouseDown={(event) => {
+          console.log(variables)
           if (selected) {
             startResizing(event, 9);
           } else {
@@ -69,7 +71,7 @@ export const ImageObject = ({
       />
 
       {selected && (
-        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} objectSize={[variables[1].w, variables[1].h]} />
+        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} objectSize={[variables[1].w, variables[1].h]}/>
       )}
     </div>
   );

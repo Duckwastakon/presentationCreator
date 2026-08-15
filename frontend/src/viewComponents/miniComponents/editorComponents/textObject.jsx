@@ -11,6 +11,7 @@ export const TextObject = ({
   setSelectedObject,
   selected,
 }) => {
+  console.log("Text")
   return (
     <div
       style={{
