@@ -29,6 +29,51 @@ export const MainPresentationDisplay = ({
 
   let lockedAspectRatio = useRef(1);
 
+  const [xBars, updateXBars] = useState([])
+  const [yBars, updateYBars] = useState([])
+
+  function addXBar(pos){
+    let newBars = xBars
+    if(!newBars.includes(pos)){
+      newBars.push(pos)
+    }
+    updateXBars(newBars)
+  }
+
+  function removeXBar(pos){
+    let newBars = []
+    if(xBars.includes(pos)){
+      xBars.forEach((gottenPos)=>{
+        if(!gottenPos==pos){
+          newBars.push(gottenPos)
+        }
+      })
+
+      updateXBars(newBars)
+    }
+  }
+
+    function addYBar(pos){
+    let newBars = yBars
+    if(!newBars.includes(pos)){
+      newBars.push(pos)
+    }
+    updateYBars(newBars)
+  }
+
+    function removeYBar(pos){
+    let newBars = []
+    if(yBars.includes(pos)){
+      yBars.forEach((gottenPos)=>{
+        if(!gottenPos==pos){
+          newBars.push(gottenPos)
+        }
+      })
+
+      updateYBars(newBars)
+    }
+  }
+
   useEffect(() => {
     addEventListener(
       "keydown",
@@ -265,11 +310,13 @@ export const MainPresentationDisplay = ({
           }
         } else {
           newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+          removeXBar(400)
 
           if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
             newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
             xLocked.current = true;
             lockedX.current = event.clientX;
+            addXBar(400)
           }
         }
       } else {
@@ -283,11 +330,13 @@ export const MainPresentationDisplay = ({
           }
         } else {
           newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+          removeYBar(225)
 
           if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
             newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
             yLocked.current = true;
             lockedY.current = event.clientY;
+            addYBar(225)
           }
         }
       }
@@ -301,11 +350,13 @@ export const MainPresentationDisplay = ({
         }
       } else {
         newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+        removeXBar(400)
 
         if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
           newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
           xLocked.current = true;
           lockedX.current = event.clientX;
+          addXBar(400)
         }
       }
 
@@ -318,11 +369,13 @@ export const MainPresentationDisplay = ({
         }
       } else {
         newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+        removeYBar(225)
 
         if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
           newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
           yLocked.current = true;
           lockedY.current = event.clientY;
+          addYBar(225)
         }
       }
     }
@@ -411,6 +464,16 @@ export const MainPresentationDisplay = ({
             selected={selected}
           />
         );
+      })}
+      {yBars.map((pos, index) => {
+        return (
+          <div key={index} style={{backgroundColor: "black", height: "1px", width: "100%", position: "absolute", top: `${pos}px`, left: "0px"}}/>
+        )
+      })}
+      {xBars.map((pos, index) => {
+        return (
+          <div key={index} style={{backgroundColor: "black", height: "100%", width: "1px", position: "absolute", top: "0", left: `${pos}px`}}/>
+        )
       })}
     </div>
   );

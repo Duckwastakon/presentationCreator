@@ -221,7 +221,7 @@ export const SlideTab = ({
                     Object.entries(slides).length - 1 && (
                     <NewSlideButton
                       backgroundColor={idleColor}
-                      onClick={onclick}
+                      onClick={onClick}
                       onClickVal={currentSelected + 1}
                     />
                   )}
