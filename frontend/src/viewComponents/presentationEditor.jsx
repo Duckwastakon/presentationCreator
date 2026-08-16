@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./componentStyling/presentationDisplayStyling.css";
 import { TextObject } from "./miniComponents/editorComponents/textObject";
 import { ImageObject } from "./miniComponents/editorComponents/imageObject";
@@ -22,23 +22,31 @@ export const MainPresentationDisplay = ({
   let xLocked = useRef(false);
   let yLocked = useRef(false);
 
-  let holdingShift = false;
+  let holdingShift = useRef(false);
 
-  let lockedAspectRatio = 1;
+  let lockedAspectRatio = useRef(1);
 
-  addEventListener("keydown", (event) => {
-    if (event.shiftKey && Object.entries(selectedObjectsVariables).length > 0) {
-      holdingShift = true;
-      lockedAspectRatio =
-        selectedObjectsVariables[1].w /
-        selectedObjectsVariables[1].h;
-    }
-  });
+  useEffect(() => {
+    addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.shiftKey &&
+          Object.keys(selectedObjectsVariables).length > 0
+        ) {
+          holdingShift.current = true;
+          lockedAspectRatio.current =
+            selectedObjectsVariables[1].w / selectedObjectsVariables[1].h;
+        }
+      },
+      [],
+    );
 
-  addEventListener("keyup", (event) => {
-    if (!event.shiftKey) {
-      holdingShift = false;
-    }
+    addEventListener("keyup", (event) => {
+      if (!event.shiftKey) {
+        holdingShift.current = false;
+      }
+    });
   });
 
   function handleMouseMovement(event) {
@@ -93,19 +101,6 @@ export const MainPresentationDisplay = ({
       selectedObjectsVariables[1].x + selectedObjectsVariables[1].w,
       selectedObjectsVariables[1].y + selectedObjectsVariables[1].h,
     ];
-
-    if (holdingShift) {
-      console.log("shift")
-      console.log(lockedAspectRatio)
-      if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        yDiff = xDiff / lockedAspectRatio
-      } else {
-        xDiff = yDiff * lockedAspectRatio
-      }
-      console.log(xDiff/yDiff)
-      console.log("complete")
-    }
-    console.log(xDiff, yDiff)
 
     let valDifference = [13.333 * (xDiff / 800), 7.5 * (yDiff / 450)];
 
@@ -168,10 +163,70 @@ export const MainPresentationDisplay = ({
       default:
         return;
     }
+
     newVals[1].x = dotTLPos[0];
     newVals[1].y = dotTLPos[1];
-    newVals[1].w = Math.abs(dotTRPos[0] - dotTLPos[0]);
-    newVals[1].h = Math.abs(dotBLPos[1] - dotTLPos[1]);
+    if (
+      Math.abs(xDiff) >= Math.abs(yDiff) &&
+      holdingShift.current &&
+      changingState.current <= 4
+    ) {
+      let endY;
+      let endX;
+      if (changingState.current == 1) {
+        endY = selectedObjectsVariables[1].y + selectedObjectsVariables[1].h;
+        endX = selectedObjectsVariables[1].x + selectedObjectsVariables[1].w;
+      }
+      if (changingState.current == 2) {
+        endY = selectedObjectsVariables[1].y + selectedObjectsVariables[1].h;
+      }
+      if (changingState.current == 3) {
+        endX = selectedObjectsVariables[1].x + selectedObjectsVariables[1].w;
+      }
+
+      newVals[1].w = Math.abs(dotTRPos[0] - dotTLPos[0]);
+      newVals[1].h = newVals[1].w / lockedAspectRatio.current;
+
+      if (!isNaN(endY)) {
+        newVals[1].y = endY - newVals[1].h;
+      }
+      if (!isNaN(endX)) {
+        newVals[1].x = endX - newVals[1].w;
+      }
+    }
+
+    if (
+      Math.abs(xDiff) < Math.abs(yDiff) &&
+      holdingShift.current &&
+      changingState.current <= 4
+    ) {
+      let endY;
+      let endX;
+      if (changingState.current == 1) {
+        endY = selectedObjectsVariables[1].y + selectedObjectsVariables[1].h;
+        endX = selectedObjectsVariables[1].x + selectedObjectsVariables[1].w;
+      }
+      if (changingState.current == 2) {
+        endY = selectedObjectsVariables[1].y + selectedObjectsVariables[1].h;
+      }
+      if (changingState.current == 3) {
+        endX = selectedObjectsVariables[1].x + selectedObjectsVariables[1].w;
+      }
+
+      newVals[1].h = Math.abs(dotBLPos[1] - dotTLPos[1]);
+      newVals[1].w = newVals[1].h * lockedAspectRatio.current;
+
+      if (!isNaN(endY)) {
+        newVals[1].y = endY - newVals[1].h;
+      }
+      if (!isNaN(endX)) {
+        newVals[1].x = endX - newVals[1].w;
+      }
+    }
+    if (!holdingShift.current) {
+      newVals[1].w = Math.abs(dotTRPos[0] - dotTLPos[0]);
+      newVals[1].h = Math.abs(dotBLPos[1] - dotTLPos[1]);
+    }
 
     lastX.current = event.clientX;
     lastY.current = event.clientY;
@@ -287,7 +342,6 @@ export const MainPresentationDisplay = ({
       })}
 
       {Object.entries(vars.images).map((variables, indv) => {
-        console.log("Image ", variables)
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
 

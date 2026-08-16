@@ -1,7 +1,6 @@
 import whiteDot from "./a.png";
 
 export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
-  console.log(objectSize)
   const yResizePos = (450 / 7.5) * (objectSize[1] / 2) - 7.5
   const xResizePos = (800 / 13.333) * (objectSize[0] / 2) - 7.5
   return (

@@ -10,9 +10,6 @@ export const ImageObject = ({
   setSelectedObject,
   selected,
 }) => {
-  console.log(variables)
-  console.log("Image object")
-
   return (
     <div
       key={ind}
