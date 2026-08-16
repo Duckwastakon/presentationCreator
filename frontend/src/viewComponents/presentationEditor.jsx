@@ -16,6 +16,9 @@ export const MainPresentationDisplay = ({
   let lockedX = useRef(0);
   let lockedY = useRef(0);
 
+  let StartingXY = useRef([0, 0]);
+  let startingXYPos = useRef([0, 0]);
+
   let lastX = useRef(0);
   let lastY = useRef(0);
 
@@ -60,6 +63,11 @@ export const MainPresentationDisplay = ({
   }
 
   function startResizing(event, newState) {
+    StartingXY.current = [event.clientX, event.clientY];
+    startingXYPos.current = [
+      selectedObjectsVariables[1].x,
+      selectedObjectsVariables[1].y,
+    ];
     lockedX.current = event.clientX;
     lockedY.current = event.clientY;
     changingState.current = newState;
@@ -235,45 +243,87 @@ export const MainPresentationDisplay = ({
   }
 
   function handleObjectMove(event) {
-    const xDiff = lastX.current - event.clientX;
-    const yDiff = lastY.current - event.clientY;
+    const startDiffX = StartingXY.current[0] - event.clientX;
+    const startDiffY = StartingXY.current[1] - event.clientY;
+
+    console.log(startingXYPos.current[0] - 13.333 * (startDiffX / 800))
 
     if (Object.entries(selectedObjectsVariables).length < 1) {
       return;
     }
     let newVals = structuredClone(selectedObjectsVariables);
 
-    if (xLocked.current == true) {
-      const lockedXDiff = lockedX.current - event.clientX;
+    if (holdingShift.current) {
+      if (Math.abs(startDiffX) > Math.abs(startDiffY)) {
+        newVals[1].y = startingXYPos.current[1]
+        if (xLocked.current == true) {
+          const lockedXDiff = lockedX.current - event.clientX;
 
-      if (Math.abs(lockedXDiff) > 22) {
-        newVals[1].x -= 13.333 * (lockedXDiff / 800);
-        xLocked.current = false;
+          if (Math.abs(lockedXDiff) > 22) {
+            newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+            xLocked.current = false;
+          }
+        } else {
+          newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+
+          if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
+            newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+          }
+        }
+      } else {
+        newVals[1].x = startingXYPos.current[0]
+        if (yLocked.current == true) {
+          const lockedYDiff = lockedY.current - event.clientY;
+
+          if (Math.abs(lockedYDiff) > 22) {
+            newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+            yLocked.current = false;
+          }
+        } else {
+          newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+
+          if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
+            newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+          }
+        }
       }
     } else {
-      newVals[1].x -= 13.333 * (xDiff / 800);
+      if (xLocked.current == true) {
+        const lockedXDiff = lockedX.current - event.clientX;
 
-      if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
-        newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
-        xLocked.current = true;
-        lockedX.current = event.clientX;
+        if (Math.abs(lockedXDiff) > 22) {
+          newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+          xLocked.current = false;
+        }
+      } else {
+        newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+
+        if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
+          newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
+          xLocked.current = true;
+          lockedX.current = event.clientX;
+        }
       }
-    }
 
-    if (yLocked.current == true) {
-      const lockedYDiff = lockedY.current - event.clientY;
+      if (yLocked.current == true) {
+        const lockedYDiff = lockedY.current - event.clientY;
 
-      if (Math.abs(lockedYDiff) > 22) {
-        newVals[1].y -= 7.5 * (lockedYDiff / 450);
-        yLocked.current = false;
-      }
-    } else {
-      newVals[1].y -= 7.5 * (yDiff / 450);
+        if (Math.abs(lockedYDiff) > 22) {
+         newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+          yLocked.current = false;
+        }
+      } else {
+        newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
 
-      if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
-        newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
-        yLocked.current = true;
-        lockedY.current = event.clientY;
+        if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
+          newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
+          yLocked.current = true;
+          lockedY.current = event.clientY;
+        }
       }
     }
 
