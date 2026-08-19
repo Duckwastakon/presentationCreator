@@ -1,3 +1,4 @@
+import { LeftClickSettings } from "./leftClickSettings";
 import { ResizeDots } from "./resizeDots";
 
 export const TextObject = ({
@@ -10,6 +11,8 @@ export const TextObject = ({
   setSelectedObjectsVariables,
   setSelectedObject,
   selected,
+  deleteObject,
+  duplicateObject,
 }) => {
   return (
     <div
@@ -21,10 +24,11 @@ export const TextObject = ({
         width: (100 * (variables[1].w / 13.333)).toString() + "%",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: (variables[1].layer || 1)
+        zIndex: variables[1].layer || 1,
       }}
       key={ind}
     >
+      {selected && <LeftClickSettings deleteObject={deleteObject} duplicateObject={duplicateObject} posX={variables[1].w} objectIndex={ind} />}
       <input
         type="text"
         value={variables[1].text}
@@ -54,7 +58,11 @@ export const TextObject = ({
         }}
       />
       {selected && (
-        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} objectSize={[variables[1].w, variables[1].h]} />
+        <ResizeDots
+          startResizing={startResizing}
+          stopResizing={stopResizing}
+          objectSize={[variables[1].w, variables[1].h]}
+        />
       )}
     </div>
   );

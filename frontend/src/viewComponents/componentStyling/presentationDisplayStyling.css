@@ -1,16 +1,46 @@
 .imageButton {
-    background-color: transparent;
-    background: transparent;
-    border-width: 0px;
-    border: none;
-    overflow: hidden;
+  background-color: transparent;
+  background: transparent;
+  border-width: 0px;
+  border: none;
+  overflow: hidden;
 }
 
 .slideImage {
-    width: 100%;
-    height: 100%;
-    padding: 0px;
-    margin: 0px;
-    border: none;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  overflow: hidden;
+}
+
+.warningModal {
+  position: fixed;
+  width: 50vw;
+  height: 60vh;
+  top: 20vh;
+  left: 25vw;
+}
+
+.extraButtonContainer {
+  display: flex;
+  width: auto;
+  height: 45px;
+  background-color: white;
+  border-radius: 32px;
+  align-items: center;
+  justify-content: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  gap: 4px;
+  z-index: 100;
+  width: 100px;
+}
+
+.choiceButton {
+  background-color: coral;
+  border-radius: 16px;
 }

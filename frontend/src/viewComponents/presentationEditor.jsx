@@ -8,6 +8,7 @@ export const MainPresentationDisplay = ({
   ind,
   updateObject,
   updateSelectedObject,
+  deleteObject,
 }) => {
   const [selectedObject, setSelectedObject] = useState(["", ""]);
   const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
@@ -29,49 +30,59 @@ export const MainPresentationDisplay = ({
 
   let lockedAspectRatio = useRef(1);
 
-  const [xBars, updateXBars] = useState([])
-  const [yBars, updateYBars] = useState([])
+  const [xBars, updateXBars] = useState([]);
+  const [yBars, updateYBars] = useState([]);
 
-  function addXBar(pos){
-    let newBars = xBars
-    if(!newBars.includes(pos)){
-      newBars.push(pos)
+  function addXBar(pos) {
+    let newBars = xBars;
+    if (!newBars.includes(pos)) {
+      newBars.push(pos);
     }
-    updateXBars(newBars)
+    updateXBars(newBars);
   }
 
-  function removeXBar(pos){
-    let newBars = []
-    if(xBars.includes(pos)){
-      xBars.forEach((gottenPos)=>{
-        if(!gottenPos==pos){
-          newBars.push(gottenPos)
+  function removeXBar(pos) {
+    let newBars = [];
+    if (xBars.includes(pos)) {
+      xBars.forEach((gottenPos) => {
+        if (!gottenPos == pos) {
+          newBars.push(gottenPos);
         }
-      })
+      });
 
-      updateXBars(newBars)
+      updateXBars(newBars);
     }
   }
 
-    function addYBar(pos){
-    let newBars = yBars
-    if(!newBars.includes(pos)){
-      newBars.push(pos)
+  function addYBar(pos) {
+    let newBars = yBars;
+    if (!newBars.includes(pos)) {
+      newBars.push(pos);
     }
-    updateYBars(newBars)
+    updateYBars(newBars);
   }
 
-    function removeYBar(pos){
-    let newBars = []
-    if(yBars.includes(pos)){
-      yBars.forEach((gottenPos)=>{
-        if(!gottenPos==pos){
-          newBars.push(gottenPos)
+  function removeYBar(pos) {
+    let newBars = [];
+    if (yBars.includes(pos)) {
+      yBars.forEach((gottenPos) => {
+        if (!gottenPos == pos) {
+          newBars.push(gottenPos);
         }
-      })
+      });
 
-      updateYBars(newBars)
+      updateYBars(newBars);
     }
+  }
+
+  function deleteObj(dataType, objectIndex) {
+    deleteObject(dataType, objectIndex);
+    unselectObject();
+  }
+
+  function unselectObject() {
+    updateSelectedObject("");
+    setSelectedObject(["", ""]);
   }
 
   useEffect(() => {
@@ -291,8 +302,6 @@ export const MainPresentationDisplay = ({
     const startDiffX = StartingXY.current[0] - event.clientX;
     const startDiffY = StartingXY.current[1] - event.clientY;
 
-    console.log(startingXYPos.current[0] - 13.333 * (startDiffX / 800))
-
     if (Object.entries(selectedObjectsVariables).length < 1) {
       return;
     }
@@ -300,27 +309,28 @@ export const MainPresentationDisplay = ({
 
     if (holdingShift.current) {
       if (Math.abs(startDiffX) > Math.abs(startDiffY)) {
-        newVals[1].y = startingXYPos.current[1]
+        newVals[1].y = startingXYPos.current[1];
         if (xLocked.current == true) {
           const lockedXDiff = lockedX.current - event.clientX;
 
           if (Math.abs(lockedXDiff) > 22) {
-            newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
+            newVals[1].x =
+              startingXYPos.current[0] - 13.333 * (startDiffX / 800);
             xLocked.current = false;
           }
         } else {
           newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
-          removeXBar(400)
+          removeXBar(400);
 
           if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
             newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
             xLocked.current = true;
             lockedX.current = event.clientX;
-            addXBar(400)
+            addXBar(400);
           }
         }
       } else {
-        newVals[1].x = startingXYPos.current[0]
+        newVals[1].x = startingXYPos.current[0];
         if (yLocked.current == true) {
           const lockedYDiff = lockedY.current - event.clientY;
 
@@ -330,13 +340,13 @@ export const MainPresentationDisplay = ({
           }
         } else {
           newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
-          removeYBar(225)
+          removeYBar(225);
 
           if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
             newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
             yLocked.current = true;
             lockedY.current = event.clientY;
-            addYBar(225)
+            addYBar(225);
           }
         }
       }
@@ -350,13 +360,13 @@ export const MainPresentationDisplay = ({
         }
       } else {
         newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
-        removeXBar(400)
+        removeXBar(400);
 
         if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
           newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
           xLocked.current = true;
           lockedX.current = event.clientX;
-          addXBar(400)
+          addXBar(400);
         }
       }
 
@@ -364,18 +374,18 @@ export const MainPresentationDisplay = ({
         const lockedYDiff = lockedY.current - event.clientY;
 
         if (Math.abs(lockedYDiff) > 22) {
-         newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+          newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
           yLocked.current = false;
         }
       } else {
         newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
-        removeYBar(225)
+        removeYBar(225);
 
         if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
           newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
           yLocked.current = true;
           lockedY.current = event.clientY;
-          addYBar(225)
+          addYBar(225);
         }
       }
     }
@@ -405,11 +415,11 @@ export const MainPresentationDisplay = ({
       <button
         className="backgroundButton"
         onMouseDown={() => {
-          updateSelectedObject("");
-          setSelectedObject(["", ""]);
+          unselectObject();
         }}
       />
-      {Object.entries(vars.text).map((variables, indv) => {
+      
+      {Object.entries(vars.text).map((variables) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
 
@@ -419,12 +429,13 @@ export const MainPresentationDisplay = ({
               startResizing={startResizing}
               stopResizing={stopResizing}
               variables={selectedObjectsVariables}
-              ind={indv}
+              ind={variables[0]}
               updateObject={updateObject}
               updateSelectedObject={updateSelectedObject}
               setSelectedObject={setSelectedObject}
               setSelectedObjectsVariables={setSelectedObjectsVariables}
               selected={selected}
+              deleteObject={deleteObj}
             />
           );
         } else {
@@ -433,12 +444,13 @@ export const MainPresentationDisplay = ({
               startResizing={startResizing}
               stopResizing={stopResizing}
               variables={variables}
-              ind={indv}
+              ind={variables[0]}
               updateObject={updateObject}
               updateSelectedObject={updateSelectedObject}
               setSelectedObject={setSelectedObject}
               setSelectedObjectsVariables={setSelectedObjectsVariables}
               selected={selected}
+              deleteObject={deleteObj}
             />
           );
         }
@@ -467,13 +479,33 @@ export const MainPresentationDisplay = ({
       })}
       {yBars.map((pos, index) => {
         return (
-          <div key={index} style={{backgroundColor: "black", height: "1px", width: "100%", position: "absolute", top: `${pos}px`, left: "0px"}}/>
-        )
+          <div
+            key={index}
+            style={{
+              backgroundColor: "black",
+              height: "1px",
+              width: "100%",
+              position: "absolute",
+              top: `${pos}px`,
+              left: "0px",
+            }}
+          />
+        );
       })}
       {xBars.map((pos, index) => {
         return (
-          <div key={index} style={{backgroundColor: "black", height: "100%", width: "1px", position: "absolute", top: "0", left: `${pos}px`}}/>
-        )
+          <div
+            key={index}
+            style={{
+              backgroundColor: "black",
+              height: "100%",
+              width: "1px",
+              position: "absolute",
+              top: "0",
+              left: `${pos}px`,
+            }}
+          />
+        );
       })}
     </div>
   );

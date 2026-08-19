@@ -63,6 +63,18 @@ function App() {
     ];
   }
 
+  function deleteObject(dataType, index){
+    console.log(currentPrefab)
+
+    let newPrefab = { ...currentPrefab }
+    
+    console.log(newPrefab)
+
+    delete newPrefab[dataType][index]
+
+    console.log(newPrefab)
+  }
+
   function updateSlideObject(dataType, index, valueName, newValue) {
     let newPrefab = { ...currentPrefab };
     if (dataType === undefined) {
@@ -100,9 +112,23 @@ function App() {
         fontSize: size,
         text: "new Text",
       };
+      let newInd = NaN
+      let i = 0
+
+      while(!isNaN(newInd)){
+        console.log("Not numb")
+        if(!Object.entries(currentPrefab[type]).includes(Object.keys(currentPrefab[type]).length + i)){
+          newInd = Object.keys(currentPrefab[type]).length + i
+        }else{
+          i += 1
+        }
+      }
+
+      console.log(newInd)
+
       updateSlideObject(
         type,
-        Object.keys(currentPrefab[type]).length,
+        newInd,
         undefined,
         newText,
       );
@@ -380,6 +406,7 @@ function App() {
             vars={currentPrefab}
             updateObject={updateSlideObject}
             updateSelectedObject={updateSelectedObject}
+            deleteObject={deleteObject}
           />
           <ActionPanel
             selectedObject={getSelectedObjectsStats()}
