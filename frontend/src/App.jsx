@@ -63,16 +63,59 @@ function App() {
     ];
   }
 
-  function deleteObject(dataType, index){
-    console.log(currentPrefab)
+  function deleteObject(dataType, index) {
+    console.log(currentPrefab);
 
-    let newPrefab = { ...currentPrefab }
-    
-    console.log(newPrefab)
+    let newPrefab = { ...currentPrefab };
 
-    delete newPrefab[dataType][index]
+    console.log(newPrefab);
 
-    console.log(newPrefab)
+    delete newPrefab[dataType][index];
+
+    console.log(newPrefab);
+  }
+
+  function duplicateObject(dataType, object) {
+    console.log("attempting to duplicate");
+    let newPrefab = { ...currentPrefab };
+
+    console.log(newPrefab);
+    const size = Object.keys(newPrefab).length;
+    let i = 0;
+    console.log(Object.keys(newPrefab[dataType]));
+    while (Object.keys(newPrefab[dataType]).includes((size + i).toString())) {
+      i += 1;
+    }
+
+    console.log(size + i);
+    console.log(i);
+
+    let looped = true;
+    let checkable = Object.entries(newPrefab[dataType]);
+
+    let newClone = structuredClone(object[1]);
+
+    while (looped) {
+      looped = false;
+
+
+      checkable.map((val) => {
+        console.log(val);
+        if (val[1].x == newClone.x && val[1].y == newClone.y) {
+          newClone.x -= newClone.w / 2;
+          newClone.y += newClone.h;
+          looped = true;
+        }
+      });
+    }
+
+    newPrefab[dataType][size + i] = newClone;
+
+    console.log(newPrefab);
+
+    updateCurrentPrefab(newPrefab);
+
+    saveSlide(newPrefab);
   }
 
   function updateSlideObject(dataType, index, valueName, newValue) {
@@ -92,7 +135,6 @@ function App() {
     }
 
     updateCurrentPrefab(newPrefab);
-
     saveSlide(newPrefab);
   }
 
@@ -112,26 +154,22 @@ function App() {
         fontSize: size,
         text: "new Text",
       };
-      let newInd = NaN
-      let i = 0
+      let newInd;
+      let i = 0;
 
-      while(!isNaN(newInd)){
-        console.log("Not numb")
-        if(!Object.entries(currentPrefab[type]).includes(Object.keys(currentPrefab[type]).length + i)){
-          newInd = Object.keys(currentPrefab[type]).length + i
-        }else{
-          i += 1
-        }
+      while (
+        Object.entries(currentPrefab[type]).includes(
+          Object.keys(currentPrefab[type]).length + i,
+        )
+      ) {
+        i += 1;
       }
 
-      console.log(newInd)
+      newInd = Object.keys(currentPrefab[type]).length + i;
 
-      updateSlideObject(
-        type,
-        newInd,
-        undefined,
-        newText,
-      );
+      console.log(newInd);
+
+      updateSlideObject(type, newInd, undefined, newText);
     }
     if (type === "images") {
       let newWidth = 3;
@@ -407,6 +445,7 @@ function App() {
             updateObject={updateSlideObject}
             updateSelectedObject={updateSelectedObject}
             deleteObject={deleteObject}
+            duplicateObject={duplicateObject}
           />
           <ActionPanel
             selectedObject={getSelectedObjectsStats()}

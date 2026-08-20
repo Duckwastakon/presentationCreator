@@ -44,3 +44,10 @@
   background-color: coral;
   border-radius: 16px;
 }
+
+.moveObjectArea {
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+}

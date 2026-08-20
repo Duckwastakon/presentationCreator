@@ -28,23 +28,26 @@ export const TextObject = ({
       }}
       key={ind}
     >
-      {selected && <LeftClickSettings deleteObject={deleteObject} duplicateObject={duplicateObject} posX={variables[1].w} objectIndex={ind} />}
       <input
         type="text"
         value={variables[1].text}
-        onChange={(newVal) =>
-          updateObject("text", variables[0], "text", newVal.target.value)
-        }
+        onChange={(newVal) => {
+          updateObject("text", variables[0], "text", newVal.target.value);
+
+          let newVars = structuredClone(variables)
+          newVars[1].text = newVal.target.value
+          setSelectedObjectsVariables(newVars)
+        }}
         onSelect={() => {
           updateSelectedObject(["text", variables[0], undefined]);
           setSelectedObjectsVariables(structuredClone(variables));
           setSelectedObject(["text", variables[0]]);
         }}
-        onMouseDown={(event) => {
-          startResizing(event, 9);
-        }}
         className="presentationTextEditBox"
         style={{
+          position: "absolute",
+          left: "0",
+          top: "0",
           width: "100%",
           height: "100%",
           fontSize: (variables[1].fontSize * 2.5).toString() + "px",
@@ -57,6 +60,15 @@ export const TextObject = ({
           textAlign: variables[1].textAlign || "left",
         }}
       />
+      {selected && (
+        <LeftClickSettings
+          deleteObject={deleteObject}
+          duplicateObject={duplicateObject}
+          posX={variables[1].w}
+          objectIndex={ind}
+          objectData={variables}
+        />
+      )}
       {selected && (
         <ResizeDots
           startResizing={startResizing}

@@ -55,11 +55,9 @@ export const ImageObject = ({
           position: "absolute",
           top: "0px"
         }}
-        onMouseDown={(event) => {
+        onMouseDown={() => {
           console.log(variables)
-          if (selected) {
-            startResizing(event, 9);
-          } else {
+          if (!selected) {
             updateSelectedObject(["images", variables[0], "src"]);
             setSelectedObjectsVariables(structuredClone(variables));
             setSelectedObject(["images", variables[0]]);

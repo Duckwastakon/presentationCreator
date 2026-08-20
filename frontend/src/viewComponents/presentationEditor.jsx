@@ -9,6 +9,7 @@ export const MainPresentationDisplay = ({
   updateObject,
   updateSelectedObject,
   deleteObject,
+  duplicateObject
 }) => {
   const [selectedObject, setSelectedObject] = useState(["", ""]);
   const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
@@ -436,6 +437,7 @@ export const MainPresentationDisplay = ({
               setSelectedObjectsVariables={setSelectedObjectsVariables}
               selected={selected}
               deleteObject={deleteObj}
+              duplicateObject={duplicateObject}
             />
           );
         } else {
@@ -451,6 +453,7 @@ export const MainPresentationDisplay = ({
               setSelectedObjectsVariables={setSelectedObjectsVariables}
               selected={selected}
               deleteObject={deleteObj}
+              duplicateObject={duplicateObject}
             />
           );
         }
