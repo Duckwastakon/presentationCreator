@@ -1,6 +1,11 @@
 import "./componentStyling/actionPanelStyling.css";
 
-export const ActionPanel = ({ selectedObject, getNewImage, updateObject, createNewObject }) => {
+export const ActionPanel = ({
+  selectedObject,
+  getNewImage,
+  updateObject,
+  createNewObject,
+}) => {
   if (selectedObject[0] === "text") {
     const textAlign = selectedObject[2]["textAlign"] || "left";
     return (
@@ -287,6 +292,28 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject, createN
           />
         </div>
         <div className="simpleOptionContainer">
+          <p className="simpleText">aspect ratio</p>
+          <button
+            onMouseUp={() => {
+              let newVals = structuredClone(selectedObject);
+              const aspectRatio = newVals[2].aspectRatio || 1;
+              
+              console.log(aspectRatio)
+
+              if (newVals[2].x > newVals[2].y) {
+                const val = newVals[2].w / aspectRatio;
+                updateObject(selectedObject[0], selectedObject[1], "h", val);
+              } else {
+                const val = newVals[2].h * aspectRatio;
+                updateObject(selectedObject[0], selectedObject[1], "w", val);
+              }
+            }}
+            className="submitButton"
+          >
+            <p className="simpleText">restore</p>
+          </button>
+        </div>
+        <div className="simpleOptionContainer">
           <p className="simpleText">layer</p>
           <input
             className="simpleTextInput"
@@ -341,12 +368,22 @@ export const ActionPanel = ({ selectedObject, getNewImage, updateObject, createN
           />
         </div>
         <div className="simpleOptionContainer">
-          <button onMouseDown={() => {createNewObject("text")}} className="createNewButton">
+          <button
+            onMouseDown={() => {
+              createNewObject("text");
+            }}
+            className="createNewButton"
+          >
             <p className="simpleText">add new text</p>
           </button>
         </div>
         <div className="simpleOptionContainer">
-          <button onMouseDown={() => {createNewObject("images")}} className="createNewButton">
+          <button
+            onMouseDown={() => {
+              createNewObject("images");
+            }}
+            className="createNewButton"
+          >
             <p className="simpleText">add new image</p>
           </button>
         </div>

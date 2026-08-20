@@ -119,6 +119,7 @@ const designs = {
           w: 3,
           h: 0.5,
           src: "",
+          aspectRatio: 1
         },
       },
     },

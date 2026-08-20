@@ -98,7 +98,6 @@ function App() {
     while (looped) {
       looped = false;
 
-
       checkable.map((val) => {
         console.log(val);
         if (val[1].x == newClone.x && val[1].y == newClone.y) {
@@ -237,6 +236,14 @@ function App() {
                   selectedObject[2],
                   entry[1][i + 1].src.original,
                 );
+                const val = entry[1][i + 1].width / entry[1][i + 1].height;
+                console.log(val);
+                updateSlideObject(
+                  selectedObject[0],
+                  selectedObject[1],
+                  "aspectRatio",
+                  val,
+                );
               } else {
                 updateSlideObject(
                   undefined,
@@ -256,21 +263,6 @@ function App() {
           console.log(entry);
 
           console.log(savedImages);
-          if (selectedObject.length > 0) {
-            updateSlideObject(
-              selectedObject[0],
-              selectedObject[1],
-              selectedObject[2],
-              entry[1][0].src.original,
-            );
-          } else {
-            updateSlideObject(
-              undefined,
-              undefined,
-              "backgroundImageUrl",
-              entry[1][0].src.original,
-            );
-          }
         }
       });
     }
@@ -303,6 +295,14 @@ function App() {
             selectedObject[1],
             selectedObject[2],
             data[gottenRandNum].src.original,
+          );
+          const val = data[gottenRandNum].width / data[gottenRandNum].height;
+          console.log(val);
+          updateSlideObject(
+            selectedObject[0],
+            selectedObject[1],
+            "aspectRatio",
+            val,
           );
         } else {
           updateSlideObject(
