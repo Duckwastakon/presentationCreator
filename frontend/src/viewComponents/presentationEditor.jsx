@@ -9,7 +9,7 @@ export const MainPresentationDisplay = ({
   updateObject,
   updateSelectedObject,
   deleteObject,
-  duplicateObject
+  duplicateObject,
 }) => {
   const [selectedObject, setSelectedObject] = useState(["", ""]);
   const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
@@ -419,59 +419,50 @@ export const MainPresentationDisplay = ({
           unselectObject();
         }}
       />
-      
+
       {Object.entries(vars.text).map((variables) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
 
         if (selected) {
-          return (
-            <TextObject
-              startResizing={startResizing}
-              stopResizing={stopResizing}
-              variables={selectedObjectsVariables}
-              ind={variables[0]}
-              updateObject={updateObject}
-              updateSelectedObject={updateSelectedObject}
-              setSelectedObject={setSelectedObject}
-              setSelectedObjectsVariables={setSelectedObjectsVariables}
-              selected={selected}
-              deleteObject={deleteObj}
-              duplicateObject={duplicateObject}
-            />
-          );
-        } else {
-          return (
-            <TextObject
-              startResizing={startResizing}
-              stopResizing={stopResizing}
-              variables={variables}
-              ind={variables[0]}
-              updateObject={updateObject}
-              updateSelectedObject={updateSelectedObject}
-              setSelectedObject={setSelectedObject}
-              setSelectedObjectsVariables={setSelectedObjectsVariables}
-              selected={selected}
-              deleteObject={deleteObj}
-              duplicateObject={duplicateObject}
-            />
-          );
+          variables[1].x = selectedObjectsVariables[1].x;
+          variables[1].y = selectedObjectsVariables[1].y;
+          variables[1].w = selectedObjectsVariables[1].w;
+          variables[1].h = selectedObjectsVariables[1].h;
         }
+        return (
+          <TextObject
+            startResizing={startResizing}
+            stopResizing={stopResizing}
+            variables={variables}
+            ind={variables[0]}
+            updateObject={updateObject}
+            updateSelectedObject={updateSelectedObject}
+            setSelectedObject={setSelectedObject}
+            setSelectedObjectsVariables={setSelectedObjectsVariables}
+            selected={selected}
+            deleteObject={deleteObj}
+            duplicateObject={duplicateObject}
+          />
+        );
       })}
 
-      {Object.entries(vars.images).map((variables, indv) => {
+      {Object.entries(vars.images).map((variables) => {
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
 
         if (selected) {
-          variables = selectedObjectsVariables;
+          variables[1].x = selectedObjectsVariables[1].x;
+          variables[1].y = selectedObjectsVariables[1].y;
+          variables[1].w = selectedObjectsVariables[1].w;
+          variables[1].h = selectedObjectsVariables[1].h;
         }
         return (
           <ImageObject
             startResizing={startResizing}
             stopResizing={stopResizing}
             variables={variables}
-            ind={indv}
+            ind={variables[0]}
             updateObject={updateObject}
             updateSelectedObject={updateSelectedObject}
             setSelectedObject={setSelectedObject}

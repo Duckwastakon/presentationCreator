@@ -5,6 +5,7 @@ import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
 import { ActionPanel } from "./viewComponents/actionPanel";
 import { Modal } from "./viewComponents/modal";
 import { clamp } from "./extraFunctions";
+import { redoChange, saveChange, undoChange } from "./keyBindFunctions";
 
 function App() {
   const [slides, updateSlides] = useState({});
@@ -34,6 +35,11 @@ function App() {
     currentSlideId.current = slideId;
     createNewSlideId.current = newCreatingSpot;
     updateCurrentPrefab(slideValues);
+    saveChange({
+      currentSlideId: slideId,
+      currentPrefab: slideValues,
+      slides: slides,
+    });
   }
 
   function deleteCurrentSlide() {
@@ -49,6 +55,7 @@ function App() {
     currentSlideId.current = undefined;
     updateSlides(newSlides);
     updateCurrentPrefab({});
+    saveChange({ slides: newSlides, currentSlideId: -1, currentPrefab: {} });
   }
 
   function saveSlide(newPrefab) {
@@ -406,6 +413,11 @@ function App() {
     createNewSlideId.current = undefined;
     console.log(currentSlideId);
     updateSlides(allSlides);
+    saveChange({
+      slides: allSlides,
+      currentSlideId: currentSlideId.current,
+      currentPrefab: slideValues,
+    });
   }
 
   const MiniDisplay = ({ vars, ind }) => {
@@ -444,6 +456,37 @@ function App() {
 
   useEffect(() => {
     fetchStyles("intro");
+
+    function handleKeyCombo(event) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+        console.log("got input");
+        undoChange(
+          updateSlides,
+          currentSlideId,
+          updateCurrentPrefab,
+          updateStyleOptions,
+          updateScrollPage,
+          updateModal,
+        );
+      }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
+        console.log("redo");
+        redoChange(
+          updateSlides,
+          currentSlideId,
+          updateCurrentPrefab,
+          updateStyleOptions,
+          updateScrollPage,
+          updateModal,
+        );
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyCombo);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyCombo);
+    };
   }, []);
 
   if (Object.keys(currentPrefab).length > 0) {

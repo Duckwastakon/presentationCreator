@@ -4,6 +4,7 @@ import { NewSlideButton } from "./miniComponents/tabComponents/newSlideButton";
 import "./componentStyling/tabs.css";
 import { useRef, useState } from "react";
 import { MovingSlide } from "./miniComponents/tabComponents/inMovementSlide";
+import { saveChange } from "../keyBindFunctions";
 
 const selectedColor = "blue";
 const idleColor = "white";
@@ -106,7 +107,7 @@ export const SlideTab = ({
             ...newSlideOrder,
             [Object.keys(newSlideOrder).length]: slideVal[1],
           };
-        };
+        }
 
         if (newSlidePos == ind && newSlidePos > startingSlidePos.current) {
           console.log(ind, "placed");
@@ -130,6 +131,7 @@ export const SlideTab = ({
       UpdateMovingSlide({});
       updateSlides(newSlideOrder);
       onClick(movingSlide, newSlidePos);
+      saveChange({ slides: newSlideOrder, currentSlideId: newSlidePos });
     }
   }
 

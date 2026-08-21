@@ -1,3 +1,4 @@
+import { clamp } from "../extraFunctions";
 import "./componentStyling/actionPanelStyling.css";
 
 export const ActionPanel = ({
@@ -212,7 +213,7 @@ export const ActionPanel = ({
                 selectedObject[0],
                 selectedObject[1],
                 "layer",
-                newFontSize.target.value,
+                clamp(newFontSize.target.value, 0, 99),
               );
             }}
             type="number"
@@ -324,7 +325,7 @@ export const ActionPanel = ({
                 selectedObject[0],
                 selectedObject[1],
                 "layer",
-                newFontSize.target.value,
+                clamp(newFontSize.target.value, 0, 99),
               );
             }}
             type="number"
