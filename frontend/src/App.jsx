@@ -6,13 +6,22 @@ import { ActionPanel } from "./viewComponents/actionPanel";
 import { Modal } from "./viewComponents/modal";
 import { clamp } from "./extraFunctions";
 import { redoChange, saveChange, undoChange } from "./keyBindFunctions";
+import { deleteSelectedSlide, selectNewSlide } from "./slideFunctions";
 
 function App() {
+  const [allSlides, updateAllSlides] = useState({});
   const [slides, updateSlides] = useState({});
+
+  const currentlySelectedSlideId = useRef();
   const currentSlideId = useRef();
+
+  const [currentSlideVariables, updateCurentSlideVariables] = useState({});
   const [currentPrefab, updateCurrentPrefab] = useState({});
+
+  const [newSlidePrefabs, updateNewSlidePrefabs] = useState({});
   const [styleOptions, updateStyleOptions] = useState({});
 
+  const [currentScrollingPage, updateScrollingPage] = useState(0);
   const [scrollPage, updateScrollPage] = useState(0);
 
   const [selectedObject, updateSelectedObject] = useState([]);
@@ -22,9 +31,7 @@ function App() {
   const createNewSlideId = useRef(0);
 
   function toggleModal() {
-    console.log(modalActive);
     updateModal(!modalActive);
-    console.log(modalActive);
   }
 
   function changeCurrentSelectedSlide(
@@ -32,34 +39,74 @@ function App() {
     slideId,
     newCreatingSpot = undefined,
   ) {
-    currentSlideId.current = slideId;
-    createNewSlideId.current = newCreatingSpot;
-    updateCurrentPrefab(slideValues);
-    saveChange({
-      currentSlideId: slideId,
-      currentPrefab: slideValues,
-      slides: slides,
-    });
+    selectNewSlide(
+      slideValues,
+      slideId,
+      newCreatingSpot,
+      slides,
+      currentSlideId,
+      createNewSlideId,
+      updateCurrentPrefab,
+    );
   }
 
   function deleteCurrentSlide() {
-    let newSlides = {};
-    let i = 0;
-    Object.entries(slides).map((val) => {
-      if (val[0] !== currentSlideId.current.toString()) {
-        newSlides = { ...newSlides, [i]: val[1] };
-        i++;
-      }
-    });
-    createNewSlideId.current = currentSlideId.current;
-    currentSlideId.current = undefined;
-    updateSlides(newSlides);
-    updateCurrentPrefab({});
-    saveChange({ slides: newSlides, currentSlideId: -1, currentPrefab: {} });
+    deleteSelectedSlide(
+      slides,
+      currentSlideId,
+      createNewSlideId,
+      updateSlides,
+      updateCurrentPrefab,
+    );
   }
 
   function saveSlide(newPrefab) {
     updateSlides({ ...slides, [currentSlideId.current]: newPrefab });
+  }
+
+  function newSlide(slideValues) {
+    console.log(slideValues);
+    console.log(createNewSlideId.current);
+    currentSlideId.current = createNewSlideId.current;
+    let allSlides = {};
+    let createNew = false;
+
+    if (Object.entries(slides).length > 0) {
+      Object.entries(slides).map((slide, i) => {
+        console.log(i);
+        if (i == createNewSlideId.current) {
+          createNew = true;
+          allSlides = {
+            ...allSlides,
+            [Object.entries(allSlides).length]: slideValues,
+          };
+          console.log(allSlides);
+        }
+        allSlides = {
+          ...allSlides,
+          [Object.entries(allSlides).length]: slide[1],
+        };
+      });
+    } else {
+      createNew = true;
+      allSlides = { [0]: { ...slideValues } };
+    }
+
+    if (!createNew) {
+      allSlides = {
+        ...allSlides,
+        [Object.entries(allSlides).length]: slideValues,
+      };
+    }
+
+    createNewSlideId.current = undefined;
+    console.log(currentSlideId);
+    updateSlides(allSlides);
+    saveChange({
+      slides: structuredClone(allSlides),
+      currentSlideId: currentSlideId.current,
+      currentPrefab: structuredClone(slideValues),
+    });
   }
 
   function getSelectedObjectsStats() {
@@ -94,9 +141,6 @@ function App() {
     while (Object.keys(newPrefab[dataType]).includes((size + i).toString())) {
       i += 1;
     }
-
-    console.log(size + i);
-    console.log(i);
 
     let looped = true;
     let checkable = Object.entries(newPrefab[dataType]);
@@ -143,6 +187,10 @@ function App() {
 
     updateCurrentPrefab(newPrefab);
     saveSlide(newPrefab);
+    saveChange({
+      slides: structuredClone(slides),
+      currentPrefab: structuredClone(newPrefab),
+    });
   }
 
   function createNewObject(type, size = 24) {
@@ -373,51 +421,6 @@ function App() {
     }
 
     changeFunc(newPageVal);
-  }
-
-  function newSlide(slideValues) {
-    console.log(slideValues);
-    console.log(createNewSlideId.current);
-    currentSlideId.current = createNewSlideId.current;
-    let allSlides = {};
-    let createNew = false;
-
-    if (Object.entries(slides).length > 0) {
-      Object.entries(slides).map((slide, i) => {
-        console.log(i);
-        if (i == createNewSlideId.current) {
-          createNew = true;
-          allSlides = {
-            ...allSlides,
-            [Object.entries(allSlides).length]: slideValues,
-          };
-          console.log(allSlides);
-        }
-        allSlides = {
-          ...allSlides,
-          [Object.entries(allSlides).length]: slide[1],
-        };
-      });
-    } else {
-      createNew = true;
-      allSlides = { [0]: { ...slideValues } };
-    }
-
-    if (!createNew) {
-      allSlides = {
-        ...allSlides,
-        [Object.entries(allSlides).length]: slideValues,
-      };
-    }
-
-    createNewSlideId.current = undefined;
-    console.log(currentSlideId);
-    updateSlides(allSlides);
-    saveChange({
-      slides: allSlides,
-      currentSlideId: currentSlideId.current,
-      currentPrefab: slideValues,
-    });
   }
 
   const MiniDisplay = ({ vars, ind }) => {
