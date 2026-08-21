@@ -4,6 +4,7 @@ import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
 import { ActionPanel } from "./viewComponents/actionPanel";
 import { Modal } from "./viewComponents/modal";
+import { clamp } from "./extraFunctions";
 
 function App() {
   const [slides, updateSlides] = useState({});
@@ -138,6 +139,8 @@ function App() {
   }
 
   function createNewObject(type, size = 24) {
+    let newObj;
+
     if (type === "text") {
       let newWidth = (6 * size) / 36 + 0.2;
       let newX = 13.333 / 2 - newWidth / 2;
@@ -145,7 +148,7 @@ function App() {
       let newHeight = size / 36 + 0.1;
       let newY = 7.5 / 2 - newHeight / 2;
 
-      const newText = {
+      newObj = {
         x: newX,
         y: newY,
         w: newWidth,
@@ -153,44 +156,58 @@ function App() {
         fontSize: size,
         text: "new Text",
       };
-      let newInd;
-      let i = 0;
-
-      while (
-        Object.entries(currentPrefab[type]).includes(
-          Object.keys(currentPrefab[type]).length + i,
-        )
-      ) {
-        i += 1;
-      }
-
-      newInd = Object.keys(currentPrefab[type]).length + i;
-
-      console.log(newInd);
-
-      updateSlideObject(type, newInd, undefined, newText);
     }
     if (type === "images") {
-      let newWidth = 3;
+      let newWidth = 2;
       let newX = 13.333 / 2 - newWidth / 2;
 
-      let newHeight = 3;
+      let newHeight = 2;
       let newY = 7.5 / 2 - newHeight / 2;
 
-      const newImage = {
+      newObj = {
         x: newX,
         y: newY,
         w: newWidth,
         h: newHeight,
         src: undefined,
       };
-      updateSlideObject(
-        type,
-        Object.keys(currentPrefab[type]).length,
-        undefined,
-        newImage,
-      );
     }
+
+    let newInd;
+    let i = 0;
+
+    while (
+      Object.keys(currentPrefab[type]).includes(
+        (Object.keys(currentPrefab[type]).length + i).toString(),
+      )
+    ) {
+      i += 1;
+    }
+
+    newInd = Object.keys(currentPrefab[type]).length + i;
+
+    let looped = false;
+
+    while (!looped) {
+      looped = true;
+
+      Object.entries(currentPrefab[type]).map((val) => {
+        if (val[1].x == newObj.x && val[1].y == newObj.y) {
+          looped = false;
+          newObj.y += newObj.h;
+        }
+      });
+    }
+
+    if (newObj.y > 7.5 - newObj.h / 2) {
+      newObj.y = Math.random() * 7.5 - newObj.h / 2;
+      newObj.x = Math.random() * 13.333 - newObj.w / 2;
+    }
+
+    newObj.x = clamp(newObj.x, 0, 13.333 - newObj.w);
+    newObj.y = clamp(newObj.y, 0, 7.5 - newObj.h);
+
+    updateSlideObject(type, newInd, undefined, newObj);
   }
 
   const currentImages = useRef({});
