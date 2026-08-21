@@ -502,7 +502,6 @@ function App() {
           />
         )}
         <div className="editorWindow">
-          <p className="headerText">This is main file</p>
           <MainPresentationDisplay
             vars={currentPrefab}
             updateObject={updateSlideObject}

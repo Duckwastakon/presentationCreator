@@ -64,6 +64,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         onMouseDown={(event) => {
           startResizing(event, 1);
         }}
+        className="diagonal1"
         style={{
           position: "absolute",
           width: "15px",
@@ -98,6 +99,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       </button>
 
       <button
+        className="diagonal2"
         onMouseDown={(event) => {
           startResizing(event, 2);
         }}
@@ -137,6 +139,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         onMouseDown={(event) => {
           startResizing(event, 3);
         }}
+        className="diagonal2"
         style={{
           position: "absolute",
           width: "15px",
@@ -173,6 +176,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         onMouseDown={(event) => {
           startResizing(event, 4);
         }}
+        className="diagonal1"
         style={{
           position: "absolute",
           width: "15px",
@@ -209,6 +213,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         onMouseDown={(event) => {
           startResizing(event, 5);
         }}
+        className="vertical"
         style={{
           position: "absolute",
           width: "15px",
@@ -246,6 +251,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         onMouseDown={(event) => {
           startResizing(event, 6);
         }}
+        className="horizontal"
         style={{
           position: "absolute",
           width: "15px",
@@ -279,6 +285,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
+        className="vertical"
         onMouseDown={(event) => {
           startResizing(event, 7);
         }}
@@ -315,6 +322,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
+      className="horizontal"
         onMouseDown={(event) => {
           startResizing(event, 8);
         }}

@@ -28,7 +28,8 @@ export const ImageObject = ({
       <img
         className="slideImage"
         style={{
-          border: `solid ${variables[1].borderColor || "#000000"} ${variables[1].borderWidth || 0}px`,
+          outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
+          
           borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
 
           display: "flex",

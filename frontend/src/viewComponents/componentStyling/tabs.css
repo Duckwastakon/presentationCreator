@@ -1,23 +1,32 @@
 .slideMovingContainer {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100px;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 15%;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  box-shadow: 0px 0px 10px gray;
 }
 
 .slideTab {
-    width: 100%;
-    height: 15%;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    background-color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+  position: absolute;
+  top: 2.5%;
+  left: 0;
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .miniSlideTab {
@@ -77,9 +86,9 @@
 }
 
 .slideImage {
-    width: 100%;
-    height: 100%;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  overflow: hidden;
 }

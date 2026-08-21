@@ -7,7 +7,7 @@ export const LeftClickSettings = ({
   duplicateObject,
   posX,
   objectIndex,
-  objectData
+  objectData,
 }) => {
   const [hoverSrc, updateSrc] = useState(deleteIcon);
   return (

@@ -51,3 +51,25 @@
   background: transparent;
   border: none;
 }
+
+.moveObjectArea:hover {
+  cursor:
+    url(./move.png) 32 32,
+    auto;
+}
+
+.diagonal1:hover {
+  cursor: url(./resizeOne.png) 32 32, auto;
+}
+
+.diagonal2 {
+  cursor: url(./resizeTwo.png) 32 32, auto;
+}
+
+.horizontal {
+  cursor: url(./resizeHorizontal.png) 32 32, auto;
+}
+
+.vertical {
+  cursor: url(./resizeVertical.png) 32 32, auto;
+}
