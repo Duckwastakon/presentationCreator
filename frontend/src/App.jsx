@@ -4,483 +4,163 @@ import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
 import { ActionPanel } from "./viewComponents/actionPanel";
 import { Modal } from "./viewComponents/modal";
-import { clamp } from "./extraFunctions";
-import { redoChange, saveChange, undoChange } from "./keyBindFunctions";
-import { deleteSelectedSlide, selectNewSlide } from "./slideFunctions";
+import { redoChange, undoChange } from "./keyBindFunctions";
+import {
+  createNewSlide,
+  deleteSelectedSlide,
+  selectNewSlide,
+} from "./slideFunctions";
+import { SlideStylePicker } from "./viewComponents/slideStylePicker";
+import { createObj, delObj, dupObj, updObj } from "./objectFunctions";
+import { fetchStyles, getImage } from "./fetchFunctions";
 
 function App() {
   const [allSlides, updateAllSlides] = useState({});
-  const [slides, updateSlides] = useState({});
-
   const currentlySelectedSlideId = useRef();
-  const currentSlideId = useRef();
 
-  const [currentSlideVariables, updateCurentSlideVariables] = useState({});
-  const [currentPrefab, updateCurrentPrefab] = useState({});
+  const [currentSlideVariables, updateCurrentSlideVariables] = useState({});
+  const [selectedObject, updateSelectedObject] = useState([]);
 
   const [newSlidePrefabs, updateNewSlidePrefabs] = useState({});
-  const [styleOptions, updateStyleOptions] = useState({});
-
-  const [currentScrollingPage, updateScrollingPage] = useState(0);
-  const [scrollPage, updateScrollPage] = useState(0);
-
-  const [selectedObject, updateSelectedObject] = useState([]);
+  const [currentPageNumber, updatePageNumber] = useState(0);
 
   const [modalActive, updateModal] = useState(false);
 
   const createNewSlideId = useRef(0);
 
+  const usedImages = useRef({});
+
   function toggleModal() {
     updateModal(!modalActive);
   }
 
-  function changeCurrentSelectedSlide(
-    slideValues,
-    slideId,
-    newCreatingSpot = undefined,
-  ) {
+  function selectSlide(slideValues, slideId) {
     selectNewSlide(
       slideValues,
       slideId,
-      newCreatingSpot,
-      slides,
-      currentSlideId,
+      updateCurrentSlideVariables,
+      currentlySelectedSlideId,
       createNewSlideId,
-      updateCurrentPrefab,
     );
   }
 
-  function deleteCurrentSlide() {
+  function deleteSlide() {
     deleteSelectedSlide(
-      slides,
-      currentSlideId,
+      allSlides,
+      updateAllSlides,
+      currentlySelectedSlideId,
       createNewSlideId,
-      updateSlides,
-      updateCurrentPrefab,
+      updateCurrentSlideVariables,
     );
   }
 
-  function saveSlide(newPrefab) {
-    updateSlides({ ...slides, [currentSlideId.current]: newPrefab });
-  }
-
-  function newSlide(slideValues) {
-    console.log(slideValues);
-    console.log(createNewSlideId.current);
-    currentSlideId.current = createNewSlideId.current;
-    let allSlides = {};
-    let createNew = false;
-
-    if (Object.entries(slides).length > 0) {
-      Object.entries(slides).map((slide, i) => {
-        console.log(i);
-        if (i == createNewSlideId.current) {
-          createNew = true;
-          allSlides = {
-            ...allSlides,
-            [Object.entries(allSlides).length]: slideValues,
-          };
-          console.log(allSlides);
-        }
-        allSlides = {
-          ...allSlides,
-          [Object.entries(allSlides).length]: slide[1],
-        };
-      });
-    } else {
-      createNew = true;
-      allSlides = { [0]: { ...slideValues } };
-    }
-
-    if (!createNew) {
-      allSlides = {
-        ...allSlides,
-        [Object.entries(allSlides).length]: slideValues,
-      };
-    }
-
-    createNewSlideId.current = undefined;
-    console.log(currentSlideId);
-    updateSlides(allSlides);
-    saveChange({
-      slides: structuredClone(allSlides),
-      currentSlideId: currentSlideId.current,
-      currentPrefab: structuredClone(slideValues),
+  function saveSlide(newSlide) {
+    updateAllSlides({
+      ...allSlides,
+      [currentlySelectedSlideId.current]: newSlide,
     });
   }
 
-  function getSelectedObjectsStats() {
+  function createSlide(newSlideVariables) {
+    createNewSlide(
+      newSlideVariables,
+      createNewSlideId,
+      currentlySelectedSlideId,
+      allSlides,
+      updateAllSlides,
+    );
+  }
+
+  function getSelectedObjectVariables() {
     if (selectedObject.length <= 0) return ["", "", ""];
     return [
       selectedObject[0],
       selectedObject[1],
-      currentPrefab[selectedObject[0]][selectedObject[1]],
+      currentSlideVariables[selectedObject[0]][selectedObject[1]],
     ];
   }
 
   function deleteObject(dataType, index) {
-    console.log(currentPrefab);
-
-    let newPrefab = { ...currentPrefab };
-
-    console.log(newPrefab);
-
-    delete newPrefab[dataType][index];
-
-    console.log(newPrefab);
+    delObj(
+      dataType,
+      index,
+      currentSlideVariables,
+      updateCurrentSlideVariables,
+      saveSlide,
+    );
   }
 
   function duplicateObject(dataType, object) {
-    console.log("attempting to duplicate");
-    let newPrefab = { ...currentPrefab };
-
-    console.log(newPrefab);
-    const size = Object.keys(newPrefab).length;
-    let i = 0;
-    console.log(Object.keys(newPrefab[dataType]));
-    while (Object.keys(newPrefab[dataType]).includes((size + i).toString())) {
-      i += 1;
-    }
-
-    let looped = true;
-    let checkable = Object.entries(newPrefab[dataType]);
-
-    let newClone = structuredClone(object[1]);
-
-    while (looped) {
-      looped = false;
-
-      checkable.map((val) => {
-        console.log(val);
-        if (val[1].x == newClone.x && val[1].y == newClone.y) {
-          newClone.x -= newClone.w / 2;
-          newClone.y += newClone.h;
-          looped = true;
-        }
-      });
-    }
-
-    newPrefab[dataType][size + i] = newClone;
-
-    console.log(newPrefab);
-
-    updateCurrentPrefab(newPrefab);
-
-    saveSlide(newPrefab);
-  }
-
-  function updateSlideObject(dataType, index, valueName, newValue) {
-    let newPrefab = { ...currentPrefab };
-    if (dataType === undefined) {
-      newPrefab[valueName] = newValue;
-    } else {
-      if (index === undefined) {
-        newPrefab[dataType][valueName] = newValue;
-      } else {
-        if (valueName === undefined) {
-          newPrefab[dataType][index] = newValue;
-        } else {
-          newPrefab[dataType][index][valueName] = newValue;
-        }
-      }
-    }
-
-    updateCurrentPrefab(newPrefab);
-    saveSlide(newPrefab);
-    saveChange({
-      slides: structuredClone(slides),
-      currentPrefab: structuredClone(newPrefab),
-    });
-  }
-
-  function createNewObject(type, size = 24) {
-    let newObj;
-
-    if (type === "text") {
-      let newWidth = (6 * size) / 36 + 0.2;
-      let newX = 13.333 / 2 - newWidth / 2;
-
-      let newHeight = size / 36 + 0.1;
-      let newY = 7.5 / 2 - newHeight / 2;
-
-      newObj = {
-        x: newX,
-        y: newY,
-        w: newWidth,
-        h: newHeight,
-        fontSize: size,
-        text: "new Text",
-      };
-    }
-    if (type === "images") {
-      let newWidth = 2;
-      let newX = 13.333 / 2 - newWidth / 2;
-
-      let newHeight = 2;
-      let newY = 7.5 / 2 - newHeight / 2;
-
-      newObj = {
-        x: newX,
-        y: newY,
-        w: newWidth,
-        h: newHeight,
-        src: undefined,
-      };
-    }
-
-    let newInd;
-    let i = 0;
-
-    while (
-      Object.keys(currentPrefab[type]).includes(
-        (Object.keys(currentPrefab[type]).length + i).toString(),
-      )
-    ) {
-      i += 1;
-    }
-
-    newInd = Object.keys(currentPrefab[type]).length + i;
-
-    let looped = false;
-
-    while (!looped) {
-      looped = true;
-
-      Object.entries(currentPrefab[type]).map((val) => {
-        if (val[1].x == newObj.x && val[1].y == newObj.y) {
-          looped = false;
-          newObj.y += newObj.h;
-        }
-      });
-    }
-
-    if (newObj.y > 7.5 - newObj.h / 2) {
-      newObj.y = Math.random() * 7.5 - newObj.h / 2;
-      newObj.x = Math.random() * 13.333 - newObj.w / 2;
-    }
-
-    newObj.x = clamp(newObj.x, 0, 13.333 - newObj.w);
-    newObj.y = clamp(newObj.y, 0, 7.5 - newObj.h);
-
-    updateSlideObject(type, newInd, undefined, newObj);
-  }
-
-  const currentImages = useRef({});
-
-  function getNewImage(e) {
-    e.preventDefault();
-    console.log("Hey");
-
-    const form = e.target;
-    const formData = new FormData(form);
-    const query = formData.get("query");
-
-    let found = false;
-
-    const savedImages = Object.entries(currentImages.current);
-
-    if (savedImages.length > 0) {
-      console.log(savedImages);
-      savedImages.map((entry) => {
-        if (entry[0] === query) {
-          found = true;
-          let currentImageId;
-          if (selectedObject[0] != undefined) {
-            currentImageId =
-              currentPrefab[selectedObject[0]][selectedObject[1]]["src"];
-          } else {
-            currentImageId = currentPrefab["backgroundImageUrl"];
-          }
-          console.log(entry[0]);
-          let i = 0;
-          for (const img of entry[1]) {
-            if (img.src.original === currentImageId) {
-              console.log("setTrue");
-              console.log(currentImageId);
-              console.log(i);
-
-              if (i + 1 >= entry[1].length) break;
-
-              if (selectedObject.length > 0) {
-                updateSlideObject(
-                  selectedObject[0],
-                  selectedObject[1],
-                  selectedObject[2],
-                  entry[1][i + 1].src.original,
-                );
-                const val = entry[1][i + 1].width / entry[1][i + 1].height;
-                console.log(val);
-                updateSlideObject(
-                  selectedObject[0],
-                  selectedObject[1],
-                  "aspectRatio",
-                  val,
-                );
-              } else {
-                updateSlideObject(
-                  undefined,
-                  undefined,
-                  "backgroundImageUrl",
-                  entry[1][i + 1].src.original,
-                );
-              }
-
-              return;
-            }
-
-            i += 1;
-          }
-
-          console.log("cant find next image");
-          console.log(entry);
-
-          console.log(savedImages);
-        }
-      });
-    }
-
-    if (!found) {
-      fetchImage(query);
-    }
-  }
-
-  function fetchImage(query) {
-    fetch(`/API?query=${query}`, {
-      method: "get",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("gettingNewPhotos");
-        console.log(data);
-
-        currentImages.current = {
-          ...currentImages.current,
-          [query]: shuffleArray(data),
-        };
-        var gottenRandNum = Math.floor(Math.random() * 4);
-        console.log(gottenRandNum, data[gottenRandNum]);
-
-        if (selectedObject.length > 0) {
-          console.log("has");
-          updateSlideObject(
-            selectedObject[0],
-            selectedObject[1],
-            selectedObject[2],
-            data[gottenRandNum].src.original,
-          );
-          const val = data[gottenRandNum].width / data[gottenRandNum].height;
-          console.log(val);
-          updateSlideObject(
-            selectedObject[0],
-            selectedObject[1],
-            "aspectRatio",
-            val,
-          );
-        } else {
-          updateSlideObject(
-            undefined,
-            undefined,
-            "backgroundImageUrl",
-            data[gottenRandNum].src.original,
-          );
-        }
-      });
-  }
-
-  function shuffleArray(arr) {
-    for (let i = 0; i < arr.length * 3; i++) {
-      const varPos1 = Math.floor(Math.random() * arr.length);
-      const varPos2 = Math.floor(Math.random() * arr.length);
-      const val1 = arr[varPos1];
-
-      arr[varPos1] = arr[varPos2];
-      arr[varPos2] = val1;
-    }
-
-    console.log(arr);
-    return arr;
-  }
-
-  function fetchStyles(type) {
-    fetch(`/styles?type=${type}`, {
-      method: "get",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        updateStyleOptions(data);
-      });
-  }
-
-  function changePage(allObj, objPerPage, newPageVal, changeFunc) {
-    const possiblePages = Math.ceil(allObj / objPerPage);
-    if (newPageVal > possiblePages) {
-      newPageVal = 0;
-    }
-    if (newPageVal < 0) {
-      newPageVal = possiblePages;
-    }
-
-    changeFunc(newPageVal);
-  }
-
-  const MiniDisplay = ({ vars, ind }) => {
-    return (
-      <button
-        key={ind}
-        onClick={() => {
-          const slideClone = structuredClone(vars);
-          updateCurrentPrefab(slideClone);
-          console.log(slideClone);
-          newSlide(slideClone);
-        }}
-      >
-        <div className="miniPresentation">
-          {Object.entries(vars.text).map((variables, indv) => (
-            <p
-              key={indv}
-              style={{
-                position: "absolute",
-                top: (180 * (variables[1].y / 7.5)).toString() + "px",
-                left: (320 * (variables[1].x / 13.333)).toString() + "px",
-                height: (180 * (variables[1].h / 7.5)).toString() + "px",
-                width: (320 * (variables[1].w / 13.333)).toString() + "px",
-                fontSize: variables[1].fontSize.toString() + "px",
-                textAlign: "left",
-                overflow: "hidden",
-              }}
-            >
-              {variables[1].text}
-            </p>
-          ))}
-        </div>
-      </button>
+    dupObj(
+      dataType,
+      object,
+      currentSlideVariables,
+      updateCurrentSlideVariables,
+      saveSlide,
     );
-  };
+  }
+
+  function updateObject(dataType, index, variableName, newValue) {
+    updObj(
+      dataType,
+      index,
+      variableName,
+      newValue,
+      currentSlideVariables,
+      updateCurrentSlideVariables,
+      saveSlide,
+    );
+  }
+
+  function createObject(type, size = 24) {
+    const [newInd, newObj] = createObj(
+      type,
+      size,
+      currentSlideVariables,
+      updateCurrentSlideVariables,
+      saveSlide,
+    );
+
+    updateObject(type, newInd, undefined, newObj);
+  }
+
+  function getNewImage(event) {
+    getImage(
+      event,
+      usedImages,
+      selectedObject,
+      currentSlideVariables,
+      updateObject,
+    );
+  }
 
   useEffect(() => {
-    fetchStyles("intro");
-
+    fetchStyles("intro", updateNewSlidePrefabs)
     function handleKeyCombo(event) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
-        console.log("got input");
+        console.log("undo");
         undoChange(
-          updateSlides,
-          currentSlideId,
-          updateCurrentPrefab,
-          updateStyleOptions,
-          updateScrollPage,
+          updateAllSlides,
+          currentlySelectedSlideId,
+          updateCurrentSlideVariables,
+          updateSelectedObject,
+          updateNewSlidePrefabs,
+          updatePageNumber,
           updateModal,
+          createNewSlideId,
         );
       }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
         console.log("redo");
         redoChange(
-          updateSlides,
-          currentSlideId,
-          updateCurrentPrefab,
-          updateStyleOptions,
-          updateScrollPage,
+          updateAllSlides,
+          currentlySelectedSlideId,
+          updateCurrentSlideVariables,
+          updateSelectedObject,
+          updateNewSlidePrefabs,
+          updatePageNumber,
           updateModal,
+          createNewSlideId,
         );
       }
     }
@@ -492,92 +172,59 @@ function App() {
     };
   }, []);
 
-  if (Object.keys(currentPrefab).length > 0) {
+  if (Object.keys(currentSlideVariables).length > 0) {
     return (
       <div className="container">
         {modalActive && (
           <Modal
-            deleteCurrentSlideFunction={deleteCurrentSlide}
+            deleteCurrentSlideFunction={deleteSlide}
             toggleModal={toggleModal}
           />
         )}
         <div className="editorWindow">
           <MainPresentationDisplay
-            vars={currentPrefab}
-            updateObject={updateSlideObject}
+            vars={currentSlideVariables}
+            updateObject={updateObject}
             updateSelectedObject={updateSelectedObject}
             deleteObject={deleteObject}
             duplicateObject={duplicateObject}
           />
           <ActionPanel
-            selectedObject={getSelectedObjectsStats()}
+            selectedObject={getSelectedObjectVariables()}
             getNewImage={getNewImage}
-            updateObject={updateSlideObject}
-            createNewObject={createNewObject}
+            updateObject={updateObject}
+            createNewObject={createObject}
           />
         </div>
         <SlideTab
-          slides={slides}
-          onClick={changeCurrentSelectedSlide}
-          currentSelected={currentSlideId}
+          slides={allSlides}
+          onClick={selectSlide}
+          currentSelected={currentlySelectedSlideId}
           toggleModal={toggleModal}
           nextNewSlideSpot={createNewSlideId}
-          updateSlides={updateSlides}
+          updateSlides={updateAllSlides}
         />
       </div>
     );
   } else {
-    let possibleStyles = {};
-    for (let i = 0; i < 4; i++) {
-      if (styleOptions[i + scrollPage * 4] != null) {
-        possibleStyles = {
-          ...possibleStyles,
-          [i]: styleOptions[i + scrollPage * 4],
-        };
-      }
-    }
     return (
       <div className="container">
-        <button
-          onClick={() => {
-            changePage(
-              Object.entries(possibleStyles).length,
-              4,
-              scrollPage - 1,
-              updateScrollPage,
-            );
-          }}
-          style={{ left: "15px" }}
-          className="changePageButton"
-        >
-          back
-        </button>
-        <div className="styleChoiceContainer">
-          {Object.entries(possibleStyles).map((vars, index) => (
-            <MiniDisplay key={index} vars={vars[1]} />
-          ))}
-        </div>
-        <button
-          onClick={() => {
-            changePage(
-              Object.entries(possibleStyles).length,
-              4,
-              scrollPage + 1,
-              updateScrollPage,
-            );
-          }}
-          style={{ right: "15px" }}
-          className="changePageButton"
-        >
-          next
-        </button>
+        <SlideStylePicker
+          type={"intro"}
+          newSlidePrefabs={newSlidePrefabs}
+          updateNewSlidePrefabs={updateNewSlidePrefabs}
+          updateCurrentSlideVariables={updateCurrentSlideVariables}
+          currentPageNumber={currentPageNumber}
+          updatePageNumber={updatePageNumber}
+          createSlide={createSlide}
+        />
         <SlideTab
-          slides={slides}
-          onClick={changeCurrentSelectedSlide}
-          currentSelected={currentSlideId}
+          slides={allSlides}
+          onClick={selectSlide}
+          currentSelected={currentlySelectedSlideId}
           toggleModal={toggleModal}
           nextNewSlideSpot={createNewSlideId}
-          updateSlides={updateSlides}
+          updateSlides={updateAllSlides}
         />
       </div>
     );
