@@ -12,6 +12,7 @@ export const MainPresentationDisplay = ({
   updateSelectedObject,
   deleteObject,
   duplicateObject,
+  copyObject,
 }) => {
   const [selectedObject, setSelectedObject] = useState(["", ""]);
   const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
@@ -63,27 +64,39 @@ export const MainPresentationDisplay = ({
   }
 
   useEffect(() => {
-    addEventListener(
-      "keydown",
-      (event) => {
-        if (
-          event.shiftKey &&
-          Object.keys(selectedObjectsVariables).length > 0
-        ) {
-          holdingShift.current = true;
-          lockedAspectRatio.current =
-            selectedObjectsVariables[1].w / selectedObjectsVariables[1].h;
-        }
-      },
-      [],
-    );
+    const keyDownCheck = (event) => {
+      if (event.shiftKey && Object.keys(selectedObjectsVariables).length > 0) {
+        holdingShift.current = true;
+        lockedAspectRatio.current =
+          selectedObjectsVariables[1].w / selectedObjectsVariables[1].h;
+      }
 
-    addEventListener("keyup", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "c") {
+        copyObj();
+      }
+    };
+
+    const keyUpCheck = (event) => {
       if (!event.shiftKey) {
         holdingShift.current = false;
       }
-    });
-  });
+    };
+
+    window.addEventListener("keydown", keyDownCheck)
+    window.addEventListener("keyup", keyUpCheck)
+
+    return () => {
+      window.removeEventListener("keydown", keyDownCheck)
+      window.removeEventListener("keyup", keyUpCheck)
+    }
+  }, [selectedObject, selectedObjectsVariables, ]);
+
+  function copyObj() {
+    console.log("coppied");
+    console.log(selectedObject[0]);
+    console.log(selectedObjectsVariables[1]);
+    copyObject(selectedObject[0], selectedObjectsVariables[1]);
+  }
 
   function handleMouseMovement(event) {
     if (changingState.current === 0) return;
@@ -413,7 +426,7 @@ export const MainPresentationDisplay = ({
     let allObjects = { text: { ...vars.text }, images: { ...vars.images } };
 
     for (let type of Object.keys(allObjects)) {
-      console.log(type)
+      console.log(type);
       for (let variables of Object.entries(allObjects[type])) {
         if (selectedObject[0] == type && selectedObject[1] == variables[0])
           console.log("a");
@@ -590,6 +603,7 @@ export const MainPresentationDisplay = ({
           variables[1].y = selectedObjectsVariables[1].y;
           variables[1].w = selectedObjectsVariables[1].w;
           variables[1].h = selectedObjectsVariables[1].h;
+          variables[1].layer = 100
         }
         return (
           <TextObject
@@ -618,6 +632,7 @@ export const MainPresentationDisplay = ({
           variables[1].y = selectedObjectsVariables[1].y;
           variables[1].w = selectedObjectsVariables[1].w;
           variables[1].h = selectedObjectsVariables[1].h;
+          variables[1].layer = 100
         }
         return (
           <ImageObject

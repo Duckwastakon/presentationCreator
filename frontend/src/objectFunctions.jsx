@@ -22,11 +22,10 @@ export function dupObj(
   updateCurrentSlideVariables,
   saveSlide,
 ) {
-  let newSlide = structuredClone(currentSlideVariables);
+  let newSlide = structuredClone({...currentSlideVariables});
 
   const size = Object.keys(newSlide).length;
   let i = 0;
-  console.log(Object.keys(newSlide[dataType]));
   while (Object.keys(newSlide[dataType]).includes((size + i).toString())) {
     i += 1;
   }

@@ -33,6 +33,8 @@ function App() {
 
   const usedImages = useRef({});
 
+  const copiedObject = useRef({});
+
   function toggleModal() {
     updateModal(!modalActive);
   }
@@ -136,6 +138,27 @@ function App() {
     updateObject(type, newInd, undefined, newObj);
   }
 
+  function copyObject(type, obj){
+    console.log(type, obj)
+    copiedObject.current = {[type]: {[1]: obj}}
+  }
+
+  function pasteObject() {
+    console.log(copiedObject.current);
+    Object.entries(copiedObject.current).map((entry) => {
+      if(entry[0] == "" || entry[1] == {}) return
+      console.log(entry)
+      dupObj(
+        entry[0],
+        entry[1],
+        currentSlideVariables,
+        updateCurrentSlideVariables,
+        saveSlide,
+      );
+    });
+    saveSlide()
+  }
+
   function getNewImage(event) {
     getImage(
       event,
@@ -176,32 +199,10 @@ function App() {
           createNewSlideId,
         );
       }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "c") {
-        console.log("undo");
-        undoChange(
-          updateAllSlides,
-          currentlySelectedSlideId,
-          updateCurrentSlideVariables,
-          updateSelectedObject,
-          updateNewSlidePrefabs,
-          updatePageNumber,
-          updateModal,
-          createNewSlideId,
-        );
-      }
 
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "v") {
-        console.log("undo");
-        undoChange(
-          updateAllSlides,
-          currentlySelectedSlideId,
-          updateCurrentSlideVariables,
-          updateSelectedObject,
-          updateNewSlidePrefabs,
-          updatePageNumber,
-          updateModal,
-          createNewSlideId,
-        );
+        console.log("paste");
+        pasteObject();
       }
     }
 
@@ -210,7 +211,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyCombo);
     };
-  }, []);
+  }, [currentSlideVariables]);
 
   if (Object.keys(currentSlideVariables).length > 0) {
     return (
@@ -228,6 +229,7 @@ function App() {
             updateSelectedObject={updateSelectedObject}
             deleteObject={deleteObject}
             duplicateObject={duplicateObject}
+            copyObject={copyObject}
           />
           <ActionPanel
             selectedObject={getSelectedObjectVariables()}
