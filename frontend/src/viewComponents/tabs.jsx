@@ -10,12 +10,13 @@ const selectedColor = "blue";
 const idleColor = "white";
 
 export const SlideTab = ({
-  slides,
-  onClick,
-  currentSelected,
+  allSlides,
+  selectSlide,
+  startCreatingNewSlide,
+  currentlySelectedSlideId,
   toggleModal,
-  nextNewSlideSpot,
-  updateSlides,
+  createNewSlideId,
+  updateAllSlides,
 }) => {
   const [movingSlide, UpdateMovingSlide] = useState({});
   const [movingSlidePos, updateMovingSlidePos] = useState([0, 0]);
@@ -38,7 +39,7 @@ export const SlideTab = ({
 
     let slideXVals = [];
 
-    Object.entries(slides).map((vars, index) => {
+    Object.entries(allSlides).map((vars, index) => {
       const distance = -(startingSlidePos.current - index);
       let xPos =
         slideStartingX.current +
@@ -93,7 +94,7 @@ export const SlideTab = ({
 
       console.log(newSlidePos);
 
-      Object.entries(slides).map((slideVal, ind) => {
+      Object.entries(allSlides).map((slideVal, ind) => {
         if (newSlidePos == ind && newSlidePos <= startingSlidePos.current) {
           console.log(ind, "placed");
           newSlideOrder = {
@@ -129,8 +130,8 @@ export const SlideTab = ({
       console.log(newSlideOrder);
 
       UpdateMovingSlide({});
-      updateSlides(newSlideOrder);
-      onClick(movingSlide, newSlidePos);
+      updateAllSlides(newSlideOrder);
+      selectSlide(movingSlide, newSlidePos);
       saveChange({ slides: newSlideOrder, currentSlideId: newSlidePos });
     }
   }
@@ -155,23 +156,23 @@ export const SlideTab = ({
         </div>
       )}
       <div className="slideTab">
-        {Object.keys(slides).length > 0 &&
-          (nextNewSlideSpot.current == 0 ? (
+        {Object.keys(allSlides).length > 0 &&
+          (createNewSlideId.current == 0 ? (
             <NewSlideButton
               backgroundColor={selectedColor}
-              onClick={onClick}
+              onClick={startCreatingNewSlide}
               onClickVal={0}
             />
           ) : (
             <NewSlideButton
               backgroundColor={idleColor}
-              onClick={onClick}
+              onClick={startCreatingNewSlide}
               onClickVal={0}
             />
           ))}
 
-        {Object.keys(slides).length > 0 &&
-          Object.entries(slides).map((slideVal, ind) => {
+        {Object.keys(allSlides).length > 0 &&
+          Object.entries(allSlides).map((slideVal, ind) => {
             return (
               <div
                 key={ind}
@@ -191,40 +192,40 @@ export const SlideTab = ({
                       slideComponents={movingSlide}
                     />
                   )}
-                {Number(slideVal[0]) === nextNewSlideSpot.current &&
-                  nextNewSlideSpot.current !== 0 && (
+                {Number(slideVal[0]) === createNewSlideId.current &&
+                  createNewSlideId.current !== 0 && (
                     <NewSlideButton
                       backgroundColor={selectedColor}
-                      onClick={onClick}
-                      onClickVal={currentSelected.current}
+                      onClick={startCreatingNewSlide}
+                      onClickVal={currentlySelectedSlideId.current}
                     />
                   )}
 
-                {Number(slideVal[0]) === currentSelected.current &&
-                  currentSelected.current !== 0 && (
+                {Number(slideVal[0]) === currentlySelectedSlideId.current &&
+                  currentlySelectedSlideId.current !== 0 && (
                     <NewSlideButton
                       backgroundColor={idleColor}
-                      onClick={onClick}
-                      onClickVal={currentSelected.current}
+                      onClick={startCreatingNewSlide}
+                      onClickVal={currentlySelectedSlideId.current}
                     />
                   )}
 
                 <MiniSlideDisplay
                   slideVal={slideVal}
                   ind={ind}
-                  onClick={onClick}
-                  currentSelected={currentSelected}
+                  onClick={selectSlide}
+                  currentSelected={currentlySelectedSlideId}
                   toggleModal={toggleModal}
                   startMovingSlide={startMovingSlide}
                 />
 
-                {Number(slideVal[0]) === currentSelected.current &&
-                  currentSelected.current !==
-                    Object.entries(slides).length - 1 && (
+                {Number(slideVal[0]) === currentlySelectedSlideId.current &&
+                  currentlySelectedSlideId.current !==
+                    Object.entries(allSlides).length - 1 && (
                     <NewSlideButton
                       backgroundColor={idleColor}
-                      onClick={onClick}
-                      onClickVal={currentSelected + 1}
+                      onClick={startCreatingNewSlide}
+                      onClickVal={currentlySelectedSlideId.current + 1}
                     />
                   )}
 
@@ -239,17 +240,17 @@ export const SlideTab = ({
               </div>
             );
           })}
-        {nextNewSlideSpot.current === Object.keys(slides).length ? (
+        {createNewSlideId.current === Object.keys(allSlides).length ? (
           <NewSlideButton
             backgroundColor={selectedColor}
-            onClick={onClick}
-            onClickVal={Object.keys(slides).length}
+            onClick={startCreatingNewSlide}
+            onClickVal={Object.keys(allSlides).length}
           />
         ) : (
           <NewSlideButton
             backgroundColor={idleColor}
-            onClick={onClick}
-            onClickVal={Object.keys(slides).length}
+            onClick={startCreatingNewSlide}
+            onClickVal={Object.keys(allSlides).length}
           />
         )}
       </div>

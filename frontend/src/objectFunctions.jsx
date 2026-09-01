@@ -161,5 +161,5 @@ export function createObj(
   newObj.x = clamp(newObj.x, 0, 13.333 - newObj.w);
   newObj.y = clamp(newObj.y, 0, 7.5 - newObj.h);
 
-  return(newInd, newObj)
+  return[newInd, newObj]
 }

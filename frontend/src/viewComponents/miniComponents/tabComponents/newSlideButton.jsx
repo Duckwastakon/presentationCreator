@@ -2,7 +2,7 @@ export const NewSlideButton = ({ backgroundColor, onClick, onClickVal }) => {
   return (
     <button
       onClick={() => {
-        onClick({}, undefined, onClickVal);
+        onClick(onClickVal);
       }}
       className="newSlideButton"
       style={{ backgroundColor: backgroundColor }}

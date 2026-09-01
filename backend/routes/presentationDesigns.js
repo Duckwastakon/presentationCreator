@@ -28,7 +28,6 @@ const designs = {
           y: 2,
           w: 3,
           h: 0.75,
-          src: undefined,
         },
       },
     },
@@ -82,8 +81,7 @@ const designs = {
           text: "Name",
         },
       },
-      images: {
-      },
+      images: {},
     },
     3: {
       backgroundImageUrl: "",
@@ -105,8 +103,7 @@ const designs = {
           text: "Hi",
         },
       },
-      images: {
-      },
+      images: {},
     },
     4: {
       backgroundImageUrl: "",
@@ -146,18 +143,23 @@ const designs = {
       },
     },
   },
+  "info slides": {},
+  "image slides": {},
+  "credit slide": {},
+  "outro slides": {},
 };
 
 const styleRouter = express.Router();
 
 styleRouter.get("/", async (req, res) => {
   const gottenType = req.query.type;
-  console.log(gottenType);
 
   let data = designs[gottenType];
-  console.log(data);
-  console.log(Object.entries(data));
   res.json(data);
+});
+
+styleRouter.get("/all", async (req, res) => {
+  res.json(Object.keys(designs));
 });
 
 export default styleRouter;

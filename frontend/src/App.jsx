@@ -9,10 +9,11 @@ import {
   createNewSlide,
   deleteSelectedSlide,
   selectNewSlide,
+  startCreatingNewSlide,
 } from "./slideFunctions";
 import { SlideStylePicker } from "./viewComponents/slideStylePicker";
 import { createObj, delObj, dupObj, updObj } from "./objectFunctions";
-import { fetchStyles, getImage } from "./fetchFunctions";
+import { fetchAllStyles, fetchStyles, getImage } from "./fetchFunctions";
 
 function App() {
   const [allSlides, updateAllSlides] = useState({});
@@ -23,6 +24,8 @@ function App() {
 
   const [newSlidePrefabs, updateNewSlidePrefabs] = useState({});
   const [currentPageNumber, updatePageNumber] = useState(0);
+  const [prefabTypes, updatePrefabTypes] = useState([]);
+  const [selectedPrefabType, changeSelectedPrefabType] = useState("intro");
 
   const [modalActive, updateModal] = useState(false);
 
@@ -68,6 +71,15 @@ function App() {
       currentlySelectedSlideId,
       allSlides,
       updateAllSlides,
+    );
+  }
+
+  function startCreatingSlide(newSlidePosId) {
+    startCreatingNewSlide(
+      newSlidePosId,
+      createNewSlideId,
+      updateCurrentSlideVariables,
+      currentlySelectedSlideId,
     );
   }
 
@@ -135,7 +147,8 @@ function App() {
   }
 
   useEffect(() => {
-    fetchStyles("intro", updateNewSlidePrefabs)
+    fetchAllStyles(updatePrefabTypes);
+    fetchStyles("intro", updateNewSlidePrefabs);
     function handleKeyCombo(event) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
         console.log("undo");
@@ -153,6 +166,33 @@ function App() {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
         console.log("redo");
         redoChange(
+          updateAllSlides,
+          currentlySelectedSlideId,
+          updateCurrentSlideVariables,
+          updateSelectedObject,
+          updateNewSlidePrefabs,
+          updatePageNumber,
+          updateModal,
+          createNewSlideId,
+        );
+      }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "c") {
+        console.log("undo");
+        undoChange(
+          updateAllSlides,
+          currentlySelectedSlideId,
+          updateCurrentSlideVariables,
+          updateSelectedObject,
+          updateNewSlidePrefabs,
+          updatePageNumber,
+          updateModal,
+          createNewSlideId,
+        );
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "v") {
+        console.log("undo");
+        undoChange(
           updateAllSlides,
           currentlySelectedSlideId,
           updateCurrentSlideVariables,
@@ -197,34 +237,54 @@ function App() {
           />
         </div>
         <SlideTab
-          slides={allSlides}
-          onClick={selectSlide}
-          currentSelected={currentlySelectedSlideId}
+          allSlides={allSlides}
+          selectSlide={selectSlide}
+          startCreatingNewSlide={startCreatingSlide}
+          currentlySelectedSlideId={currentlySelectedSlideId}
           toggleModal={toggleModal}
-          nextNewSlideSpot={createNewSlideId}
-          updateSlides={updateAllSlides}
+          createNewSlideId={createNewSlideId}
+          updateAllSlides={updateAllSlides}
         />
       </div>
     );
   } else {
     return (
       <div className="container">
+        <div className="SlideTypePicker">
+          {prefabTypes.map((val, i) => {
+            let bgColor = val === selectedPrefabType ? "#62cdff" : "#f5f5f5";
+            console.log(bgColor);
+
+            return (
+              <button
+                key={i}
+                className="slideTypeButton"
+                onMouseDown={() => {
+                  fetchStyles(val, updateNewSlidePrefabs);
+                  changeSelectedPrefabType(val);
+                }}
+                style={{ backgroundColor: bgColor }}
+              >
+                {val}
+              </button>
+            );
+          })}
+        </div>
         <SlideStylePicker
-          type={"intro"}
           newSlidePrefabs={newSlidePrefabs}
-          updateNewSlidePrefabs={updateNewSlidePrefabs}
           updateCurrentSlideVariables={updateCurrentSlideVariables}
           currentPageNumber={currentPageNumber}
           updatePageNumber={updatePageNumber}
           createSlide={createSlide}
         />
         <SlideTab
-          slides={allSlides}
-          onClick={selectSlide}
-          currentSelected={currentlySelectedSlideId}
+          allSlides={allSlides}
+          selectSlide={selectSlide}
+          startCreatingNewSlide={startCreatingSlide}
+          currentlySelectedSlideId={currentlySelectedSlideId}
           toggleModal={toggleModal}
-          nextNewSlideSpot={createNewSlideId}
-          updateSlides={updateAllSlides}
+          createNewSlideId={createNewSlideId}
+          updateAllSlides={updateAllSlides}
         />
       </div>
     );

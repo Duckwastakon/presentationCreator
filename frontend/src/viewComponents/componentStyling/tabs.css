@@ -48,6 +48,7 @@
   border: none;
   top: 0;
   left: 0;
+  z-index: 100;
 }
 
 .selectSlideButton:hover {
@@ -56,8 +57,6 @@
 
 .deleteSlideButton {
   display: flex;
-  padding: 4px;
-  margin: 0px;
   width: 32px;
   height: 32px;
   position: absolute;
@@ -67,6 +66,7 @@
   justify-content: center;
   border: none;
   border-radius: 24px;
+  z-index: 101;
 }
 
 .deleteSlideButton:hover {

@@ -3,6 +3,8 @@ import "./componentStyling/presentationDisplayStyling.css";
 import { TextObject } from "./miniComponents/editorComponents/textObject";
 import { ImageObject } from "./miniComponents/editorComponents/imageObject";
 
+const lockTolerance = 0.05;
+
 export const MainPresentationDisplay = ({
   vars,
   ind,
@@ -35,45 +37,19 @@ export const MainPresentationDisplay = ({
   const [yBars, updateYBars] = useState([]);
 
   function addXBar(pos) {
-    let newBars = xBars;
-    if (!newBars.includes(pos)) {
-      newBars.push(pos);
-    }
-    updateXBars(newBars);
+    updateXBars([pos]);
   }
 
-  function removeXBar(pos) {
-    let newBars = [];
-    if (xBars.includes(pos)) {
-      xBars.forEach((gottenPos) => {
-        if (!gottenPos == pos) {
-          newBars.push(gottenPos);
-        }
-      });
-
-      updateXBars(newBars);
-    }
+  function removeXBar() {
+    updateXBars([]);
   }
 
   function addYBar(pos) {
-    let newBars = yBars;
-    if (!newBars.includes(pos)) {
-      newBars.push(pos);
-    }
-    updateYBars(newBars);
+    updateYBars([pos]);
   }
 
-  function removeYBar(pos) {
-    let newBars = [];
-    if (yBars.includes(pos)) {
-      yBars.forEach((gottenPos) => {
-        if (!gottenPos == pos) {
-          newBars.push(gottenPos);
-        }
-      });
-
-      updateYBars(newBars);
-    }
+  function removeYBar() {
+    updateYBars([]);
   }
 
   function deleteObj(dataType, objectIndex) {
@@ -144,6 +120,11 @@ export const MainPresentationDisplay = ({
       (newVars.w = selectedObjectsVariables[1].w),
       (newVars.h = selectedObjectsVariables[1].h),
       updateObject(selectedObject[0], selectedObject[1], undefined, newVars));
+
+    xLocked.current = false;
+    yLocked.current = false;
+    removeXBar();
+    removeYBar();
   }
 
   function handleMouseResize(event) {
@@ -299,6 +280,223 @@ export const MainPresentationDisplay = ({
     setSelectedObjectsVariables(newVals);
   }
 
+  function checkXLock(xPos, xWidth, event) {
+    if (xLocked.current) return xPos;
+
+    if (Math.abs(13.333 / 2 - xWidth / 2 - xPos) < lockTolerance) {
+      xLocked.current = true;
+      lockedX.current = event.clientX;
+      addXBar(400);
+      return 13.333 / 2 - xWidth / 2;
+    }
+    if (Math.abs(13.333 / 2 - xPos) < lockTolerance) {
+      xLocked.current = true;
+      lockedX.current = event.clientX;
+      addXBar(400);
+      return 13.333 / 2;
+    }
+    if (Math.abs(13.333 / 2 - xWidth - xPos) < lockTolerance) {
+      xLocked.current = true;
+      lockedX.current = event.clientX;
+      addXBar(400);
+      return 13.333 / 2 - xWidth;
+    }
+
+    let allObjects = { text: { ...vars.text }, images: { ...vars.images } };
+
+    for (let type of Object.keys(allObjects)) {
+      for (let variables of Object.entries(allObjects[type])) {
+        if (selectedObject[0] == type && selectedObject[1] == variables[0])
+          console.log("a");
+        else {
+          if (
+            Math.abs(variables[1].x + variables[1].w / 2 - xPos) < lockTolerance
+          ) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * (variables[1].x + variables[1].w / 2));
+            return variables[1].x + variables[1].w / 2;
+          }
+          if (
+            Math.abs(variables[1].x + variables[1].w / 2 - xPos - xWidth / 2) <
+            lockTolerance
+          ) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * (variables[1].x + variables[1].w / 2));
+            return variables[1].x + variables[1].w / 2 - xWidth / 2;
+          }
+          if (
+            Math.abs(variables[1].x + variables[1].w / 2 - xPos - xWidth) <
+            lockTolerance
+          ) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * (variables[1].x + variables[1].w / 2));
+            return variables[1].x + variables[1].w / 2 - xWidth;
+          }
+
+          if (Math.abs(variables[1].x - xPos) < lockTolerance) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * variables[1].x);
+            return variables[1].x;
+          }
+          if (Math.abs(variables[1].x - xPos - xWidth / 2) < lockTolerance) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * variables[1].x);
+            return variables[1].x - xWidth / 2;
+          }
+          if (Math.abs(variables[1].x - xPos - xWidth) < lockTolerance) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * variables[1].x);
+            return variables[1].x - xWidth;
+          }
+
+          if (
+            Math.abs(variables[1].x + variables[1].w - xPos) < lockTolerance
+          ) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * (variables[1].x + variables[1].w));
+            return variables[1].x + variables[1].w;
+          }
+          if (
+            Math.abs(variables[1].x + variables[1].w - xPos - xWidth / 2) <
+            lockTolerance
+          ) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * (variables[1].x + variables[1].w));
+            return variables[1].x + variables[1].w - xWidth / 2;
+          }
+          if (
+            Math.abs(variables[1].x + variables[1].w - xPos - xWidth) <
+            lockTolerance
+          ) {
+            xLocked.current = true;
+            lockedX.current = event.clientX;
+            addXBar((800 / 13.333) * (variables[1].x + variables[1].w));
+            return variables[1].x + variables[1].w - xWidth;
+          }
+        }
+      }
+    }
+
+    return xPos;
+  }
+
+  function checkYLock(yPos, yHeight, event) {
+    if (yLocked.current) return yPos;
+
+    if (Math.abs(7.5 / 2 - yHeight / 2 - yPos) < lockTolerance) {
+      yLocked.current = true;
+      lockedY.current = event.clientY;
+      addYBar(225);
+      return 7.5 / 2 - yHeight / 2;
+    }
+    if (Math.abs(7.5 / 2 - yPos) < lockTolerance) {
+      yLocked.current = true;
+      lockedY.current = event.clientY;
+      addYBar(225);
+      return 7.5 / 2;
+    }
+    if (Math.abs(7.5 / 2 - yHeight - yPos) < lockTolerance) {
+      yLocked.current = true;
+      lockedY.current = event.clientY;
+      addYBar(225);
+      return 7.5 / 2 - yHeight;
+    }
+
+    let allObjects = { text: { ...vars.text }, images: { ...vars.images } };
+
+    for (let type of Object.keys(allObjects)) {
+      console.log(type)
+      for (let variables of Object.entries(allObjects[type])) {
+        if (selectedObject[0] == type && selectedObject[1] == variables[0])
+          console.log("a");
+        else {
+          if (
+            Math.abs(variables[1].y + variables[1].h / 2 - yPos) < lockTolerance
+          ) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * (variables[1].y + variables[1].h / 2));
+            return variables[1].y + variables[1].h / 2;
+          }
+          if (
+            Math.abs(variables[1].y + variables[1].h / 2 - yPos - yHeight / 2) <
+            lockTolerance
+          ) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * (variables[1].y + variables[1].h / 2));
+            return variables[1].y + variables[1].h / 2 - yHeight / 2;
+          }
+          if (
+            Math.abs(variables[1].y + variables[1].h / 2 - yPos - yHeight) <
+            lockTolerance
+          ) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * (variables[1].y + variables[1].h / 2));
+            return variables[1].y + variables[1].h / 2 - yHeight;
+          }
+
+          if (Math.abs(variables[1].y - yPos) < lockTolerance) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * variables[1].y);
+            return variables[1].y;
+          }
+          if (Math.abs(variables[1].y - yPos - yHeight / 2) < lockTolerance) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * variables[1].y);
+            return variables[1].y - yHeight / 2;
+          }
+          if (Math.abs(variables[1].y - yPos - yHeight) < lockTolerance) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * variables[1].y);
+            return variables[1].y - yHeight;
+          }
+
+          if (
+            Math.abs(variables[1].y + variables[1].h - yPos) < lockTolerance
+          ) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * (variables[1].y + variables[1].h));
+            return variables[1].y + variables[1].h;
+          }
+          if (
+            Math.abs(variables[1].y + variables[1].h - yPos - yHeight / 2) <
+            lockTolerance
+          ) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * (variables[1].y + variables[1].h));
+            return variables[1].y + variables[1].h - yHeight / 2;
+          }
+          if (
+            Math.abs(variables[1].y + variables[1].h - yPos - yHeight) <
+            lockTolerance
+          ) {
+            yLocked.current = true;
+            lockedY.current = event.clientY;
+            addYBar((450 / 7.5) * (variables[1].y + variables[1].h));
+            return variables[1].y + variables[1].h - yHeight;
+          }
+        }
+      }
+    }
+
+    return yPos;
+  }
+
   function handleObjectMove(event) {
     const startDiffX = StartingXY.current[0] - event.clientX;
     const startDiffY = StartingXY.current[1] - event.clientY;
@@ -308,88 +506,51 @@ export const MainPresentationDisplay = ({
     }
     let newVals = structuredClone(selectedObjectsVariables);
 
+    let startX = newVals[1].x;
+    let startY = newVals[1].y;
+
     if (holdingShift.current) {
       if (Math.abs(startDiffX) > Math.abs(startDiffY)) {
         newVals[1].y = startingXYPos.current[1];
-        if (xLocked.current == true) {
-          const lockedXDiff = lockedX.current - event.clientX;
 
-          if (Math.abs(lockedXDiff) > 22) {
-            newVals[1].x =
-              startingXYPos.current[0] - 13.333 * (startDiffX / 800);
-            xLocked.current = false;
-          }
-        } else {
-          newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
-          removeXBar(400);
-
-          if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
-            newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
-            xLocked.current = true;
-            lockedX.current = event.clientX;
-            addXBar(400);
-          }
-        }
+        newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
       } else {
         newVals[1].x = startingXYPos.current[0];
-        if (yLocked.current == true) {
-          const lockedYDiff = lockedY.current - event.clientY;
 
-          if (Math.abs(lockedYDiff) > 22) {
-            newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
-            yLocked.current = false;
-          }
-        } else {
-          newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
-          removeYBar(225);
-
-          if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
-            newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
-            yLocked.current = true;
-            lockedY.current = event.clientY;
-            addYBar(225);
-          }
-        }
+        newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
       }
     } else {
-      if (xLocked.current == true) {
-        const lockedXDiff = lockedX.current - event.clientX;
+      newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
 
-        if (Math.abs(lockedXDiff) > 22) {
-          newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
-          xLocked.current = false;
-        }
-      } else {
+      newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+    }
+
+    if (xLocked.current == true) {
+      const lockedXDiff = lockedX.current - event.clientX;
+
+      if (Math.abs(lockedXDiff) > 22) {
         newVals[1].x = startingXYPos.current[0] - 13.333 * (startDiffX / 800);
-        removeXBar(400);
-
-        if (Math.abs(13.333 / 2 - newVals[1].w / 2 - newVals[1].x) < 0.1) {
-          newVals[1].x = 13.333 / 2 - newVals[1].w / 2;
-          xLocked.current = true;
-          lockedX.current = event.clientX;
-          addXBar(400);
-        }
-      }
-
-      if (yLocked.current == true) {
-        const lockedYDiff = lockedY.current - event.clientY;
-
-        if (Math.abs(lockedYDiff) > 22) {
-          newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
-          yLocked.current = false;
-        }
+        xLocked.current = false;
+        removeXBar();
       } else {
-        newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
-        removeYBar(225);
-
-        if (Math.abs(7.5 / 2 - newVals[1].h / 2 - newVals[1].y) < 0.1) {
-          newVals[1].y = 7.5 / 2 - newVals[1].h / 2;
-          yLocked.current = true;
-          lockedY.current = event.clientY;
-          addYBar(225);
-        }
+        newVals[1].x = startX;
       }
     }
+
+    if (yLocked.current == true) {
+      const lockedYDiff = lockedY.current - event.clientY;
+
+      if (Math.abs(lockedYDiff) > 22) {
+        newVals[1].y = startingXYPos.current[1] - 7.5 * (startDiffY / 450);
+        yLocked.current = false;
+        removeYBar();
+      } else {
+        newVals[1].y = startY;
+      }
+    }
+
+    newVals[1].x = checkXLock(newVals[1].x, newVals[1].w, event);
+    newVals[1].y = checkYLock(newVals[1].y, newVals[1].h, event);
 
     lastX.current = event.clientX;
     lastY.current = event.clientY;
@@ -432,6 +593,7 @@ export const MainPresentationDisplay = ({
         }
         return (
           <TextObject
+            key={variables[0]}
             startResizing={startResizing}
             stopResizing={stopResizing}
             variables={variables}
@@ -459,6 +621,7 @@ export const MainPresentationDisplay = ({
         }
         return (
           <ImageObject
+            key={variables[0]}
             startResizing={startResizing}
             stopResizing={stopResizing}
             variables={variables}
@@ -476,11 +639,11 @@ export const MainPresentationDisplay = ({
           <div
             key={index}
             style={{
-              backgroundColor: "black",
-              height: "1px",
+              backgroundColor: "red",
+              height: "4px",
               width: "100%",
               position: "absolute",
-              top: `${pos}px`,
+              top: `${pos - 2}px`,
               left: "0px",
             }}
           />
@@ -491,12 +654,12 @@ export const MainPresentationDisplay = ({
           <div
             key={index}
             style={{
-              backgroundColor: "black",
+              backgroundColor: "red",
               height: "100%",
-              width: "1px",
+              width: "4px",
               position: "absolute",
               top: "0",
-              left: `${pos}px`,
+              left: `${pos - 2}px`,
             }}
           />
         );

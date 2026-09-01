@@ -72,7 +72,7 @@ export function getImage(
   }
 
   if (!found) {
-    fetchImage(query);
+    fetchImage(query, selectedObject, usedImages, updateObject);
   }
 }
 
@@ -101,7 +101,6 @@ export function fetchImage(query, selectedObject, usedImages, updateObject) {
           data[gottenRandNum].src.original,
         );
         const val = data[gottenRandNum].width / data[gottenRandNum].height;
-        console.log(val);
         updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val);
       } else {
         updateObject(
@@ -121,5 +120,15 @@ export function fetchStyles(type, updateNewSlidePrefabs) {
     .then((res) => res.json())
     .then((data) => {
       updateNewSlidePrefabs(data);
+    });
+}
+
+export function fetchAllStyles(updatePrefabTypes) {
+  fetch(`/styles/all`, {
+    method: "get",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      updatePrefabTypes(data);
     });
 }

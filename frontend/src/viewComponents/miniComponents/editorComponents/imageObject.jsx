@@ -1,4 +1,5 @@
 import { ResizeDots } from "./resizeDots";
+import imageDefault from "./imagePrefab.png"
 
 export const ImageObject = ({
   startResizing,
@@ -41,7 +42,7 @@ export const ImageObject = ({
           padding: "0px",
           margin: "0px",
         }}
-        src={variables[1].src}
+        src={variables[1].src || imageDefault}
       />
 
       <button

@@ -25,8 +25,9 @@ export function startCreatingNewSlide(
   currentSlideId,
 ) {
   createNewSlideId.current = newSlidePosId;
-  updateSelectedSlide(undefined);
+  updateSelectedSlide({});
   currentSlideId.current = undefined;
+  console.log(newSlidePosId)
 
   saveChange({
     currentlySelectedSlideId: -1,
@@ -84,9 +85,9 @@ export function createNewSlide(
           [Object.entries(newSlides).length]: newSlideVariables,
         };
       }
-      allSlides = {
-        ...allSlides,
-        [Object.entries(allSlides).length]: slide[1],
+      newSlides = {
+        ...newSlides,
+        [Object.entries(newSlides).length]: slide[1],
       };
     });
   } else {
@@ -95,11 +96,13 @@ export function createNewSlide(
   }
 
   if (!createNew) {
-    allSlides = {
-      ...allSlides,
-      [Object.entries(allSlides).length]: newSlideVariables,
+    newSlides = {
+      ...newSlides,
+      [Object.entries(newSlides).length]: newSlideVariables,
     };
   }
+
+  console.log(newSlides)
 
   createNewSlideId.current = undefined;
   updateAllSlides(newSlides);

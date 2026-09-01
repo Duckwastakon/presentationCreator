@@ -54,22 +54,22 @@
 
 .moveObjectArea:hover {
   cursor:
-    url(./images/move.png) 32 32,
+    url(./images/move.png) 16 16,
     auto;
 }
 
 .diagonal1:hover {
-  cursor: url(./images/resizeOne.png) 32 32, auto;
+  cursor: url(./images/resizeOne.png) 16 16, auto;
 }
 
 .diagonal2 {
-  cursor: url(./images/resizeTwo.png) 32 32, auto;
+  cursor: url(./images/resizeTwo.png) 16 16, auto;
 }
 
 .horizontal {
-  cursor: url(./images/resizeHorizontal.png) 32 32, auto;
+  cursor: url(./images/resizeHorizontal.png) 16 16, auto;
 }
 
 .vertical {
-  cursor: url(./images/resizeVertical.png) 32 32, auto;
+  cursor: url(./images/resizeVertical.png) 16 16, auto;
 }

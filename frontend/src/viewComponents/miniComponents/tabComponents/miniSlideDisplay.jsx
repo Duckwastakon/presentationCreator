@@ -1,3 +1,5 @@
+import cross from "./delete.png";
+
 export const MiniSlideDisplay = ({
   slideVal,
   ind,
@@ -45,16 +47,13 @@ export const MiniSlideDisplay = ({
             toggleModal();
           }}
         >
-          <p
+          <img
+            src={cross}
             style={{
               width: "100%",
-              height: "100%",
-              color: "red",
-              textAlign: "center",
+              aspectRatio: 1,
             }}
-          >
-            -
-          </p>
+          />
         </button>
       )}
       {Object.entries(vars.text).map((variables, indv) => {

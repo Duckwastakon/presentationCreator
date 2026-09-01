@@ -1,10 +1,16 @@
+import "./componentStyling/slidePickerStyling.css";
+import arrowLeft from "./arrowLeft.png"
+import arrowRight from "./arrowRight.png"
+
 import { MiniDisplay } from "./miniComponents/slideStyleComponents/miniDisplay";
+
 export const SlideStylePicker = ({
   newSlidePrefabs,
   updateCurrentSlideVariables,
   currentPageNumber,
   updatePageNumber,
   createSlide,
+  
 }) => {
   function changePage(allObj, objPerPage, newPageVal, changeFunc) {
     const possiblePages = Math.ceil(allObj / objPerPage);
@@ -28,15 +34,15 @@ export const SlideStylePicker = ({
     }
   }
 
-  console.log(possibleStyles);
-
   return (
     <div
       style={{
+        display: "flex",
         width: "100%",
         height: "85%",
         alignItems: "center",
         justifyContent: "center",
+        flexDirection: "row",
       }}
     >
       <button
@@ -48,10 +54,9 @@ export const SlideStylePicker = ({
             updatePageNumber,
           );
         }}
-        style={{ left: "15px" }}
         className="changePageButton"
       >
-        back
+        <img className="arrowImage" src={arrowLeft}/>
       </button>
       <div className="styleChoiceContainer">
         {Object.entries(possibleStyles).map((vars, index) => (
@@ -72,10 +77,9 @@ export const SlideStylePicker = ({
             updatePageNumber,
           );
         }}
-        style={{ right: "15px" }}
         className="changePageButton"
       >
-        next
+        <img className="arrowImage" src={arrowRight}/>
       </button>
     </div>
   );

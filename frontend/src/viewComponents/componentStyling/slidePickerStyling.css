@@ -1,0 +1,31 @@
+.styleChoiceContainer {
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 70%;
+}
+
+.changePageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+
+  background: transparent;
+  border: none;
+}
+
+.arrowImage {
+  height: 100%;
+  width: 100%;
+  max-height: 64px;
+  max-width: 64px;
+  aspect-ratio: 1 / 1;
+}
+
+.arrowImage:hover {
+    background-color: rgb(139, 224, 255);
+}
