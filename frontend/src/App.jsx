@@ -5,15 +5,9 @@ import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
 import { ActionPanel } from "./viewComponents/actionPanel";
 import { Modal } from "./viewComponents/modal";
 import { redoChange, undoChange } from "./keyBindFunctions";
-import {
-  createNewSlide,
-  deleteSelectedSlide,
-  selectNewSlide,
-  startCreatingNewSlide,
-} from "./slideFunctions";
 import { SlideStylePicker } from "./viewComponents/slideStylePicker";
-import { createObj, delObj, dupObj, updObj } from "./objectFunctions";
-import { fetchAllStyles, fetchStyles, getImage } from "./fetchFunctions";
+import { dupObj } from "./objectFunctions";
+import { fetchAllStyles, fetchStyles } from "./fetchFunctions";
 import { useVariables } from "./presentationVariables";
 
 function App() {
@@ -22,11 +16,10 @@ function App() {
     updateAllSlides,
     currentSlideVariables,
     updateCurrentSlideVariables,
-    selectedObject,
+    currentlySelectedSlideId,
+    updateVariable,
     updateSelectedObject,
-    newSlidePrefabs,
     updateNewSlidePrefabs,
-    currentPageNumber,
     updatePageNumber,
     prefabTypes,
     updatePrefabTypes,
@@ -34,35 +27,17 @@ function App() {
     changeSelectedPrefabType,
     modalActive,
     updateModal,
-    currentlySelectedSlideIda,
-    updateCurrentlySelectedSlideIda,
-    createNewSlideIda,
-    changeCreateNewSlideIda,
+    copiedObject,
+    changeCreateNewSlideId
   } = useVariables();
 
-  function toggleModal() {
-    updateModal(!modalActive);
-  }
-
-  function selectSlide(slideValues, slideId) {
-    selectNewSlide(
-      slideValues,
-      slideId,
-      updateCurrentSlideVariables,
-      currentlySelectedSlideId,
-      createNewSlideId,
-    );
-  }
-
-  function deleteSlide() {
-    deleteSelectedSlide(
-      allSlides,
-      updateAllSlides,
-      currentlySelectedSlideId,
-      updateCurrentlySelectedSlideId,
-      changeCreateNewSlideId,
-      updateCurrentSlideVariables,
-    );
+  function getSelectedObjectVariables() {
+    if (updateVariable.length <= 0) return ["", "", ""];
+    return [
+      updateVariable[0],
+      updateVariable[1],
+      currentSlideVariables[updateVariable[0]][updateVariable[1]],
+    ];
   }
 
   function saveSlide(newSlide) {
@@ -72,87 +47,7 @@ function App() {
     });
   }
 
-  function createSlide(newSlideVariables) {
-    createNewSlide(
-      newSlideVariables,
-      createNewSlideId,
-      changeCreateNewSlideId,
-      currentlySelectedSlideId,
-      updateCurrentlySelectedSlideId,
-      allSlides,
-      updateAllSlides,
-    );
-  }
-
-  function startCreatingSlide(newSlidePosId) {
-    startCreatingNewSlide(
-      newSlidePosId,
-      createNewSlideId,
-      updateCurrentSlideVariables,
-      currentlySelectedSlideId,
-    );
-  }
-
-  function getSelectedObjectVariables() {
-    if (selectedObject.length <= 0) return ["", "", ""];
-    return [
-      selectedObject[0],
-      selectedObject[1],
-      currentSlideVariables[selectedObject[0]][selectedObject[1]],
-    ];
-  }
-
-  function deleteObject(dataType, index) {
-    delObj(
-      dataType,
-      index,
-      currentSlideVariables,
-      updateCurrentSlideVariables,
-      saveSlide,
-    );
-  }
-
-  function duplicateObject(dataType, object) {
-    dupObj(
-      dataType,
-      object,
-      currentSlideVariables,
-      updateCurrentSlideVariables,
-      saveSlide,
-    );
-  }
-
-  function updateObject(dataType, index, variableName, newValue) {
-    updObj(
-      dataType,
-      index,
-      variableName,
-      newValue,
-      currentSlideVariables,
-      updateCurrentSlideVariables,
-      saveSlide,
-    );
-  }
-
-  function createObject(type, size = 24) {
-    const [newInd, newObj] = createObj(
-      type,
-      size,
-      currentSlideVariables,
-      updateCurrentSlideVariables,
-      saveSlide,
-    );
-
-    updateObject(type, newInd, undefined, newObj);
-  }
-
-  function copyObject(type, obj) {
-    console.log(type, obj);
-    copiedObject.current = { [type]: { [1]: obj } };
-  }
-
   function pasteObject() {
-    console.log(copiedObject.current);
     Object.entries(copiedObject.current).map((entry) => {
       if (entry[0] == "" || entry[1] == {}) return;
       console.log(entry);
@@ -164,17 +59,6 @@ function App() {
         saveSlide,
       );
     });
-    saveSlide();
-  }
-
-  function getNewImage(event) {
-    getImage(
-      event,
-      usedImages,
-      selectedObject,
-      currentSlideVariables,
-      updateObject,
-    );
   }
 
   useEffect(() => {
@@ -182,7 +66,6 @@ function App() {
     fetchStyles("intro", updateNewSlidePrefabs);
     function handleKeyCombo(event) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
-        console.log("undo");
         undoChange(
           updateAllSlides,
           currentlySelectedSlideId,
@@ -191,11 +74,10 @@ function App() {
           updateNewSlidePrefabs,
           updatePageNumber,
           updateModal,
-          createNewSlideId,
+          changeCreateNewSlideId,
         );
       }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
-        console.log("redo");
         redoChange(
           updateAllSlides,
           currentlySelectedSlideId,
@@ -204,12 +86,11 @@ function App() {
           updateNewSlidePrefabs,
           updatePageNumber,
           updateModal,
-          createNewSlideId,
+          changeCreateNewSlideId,
         );
       }
 
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "v") {
-        console.log("paste");
         pasteObject();
       }
     }
@@ -224,38 +105,12 @@ function App() {
   if (Object.keys(currentSlideVariables).length > 0) {
     return (
       <div className="container">
-        {modalActive && (
-          <Modal
-            deleteCurrentSlideFunction={deleteSlide}
-            toggleModal={toggleModal}
-          />
-        )}
+        {modalActive && <Modal />}
         <div className="editorWindow">
-          <MainPresentationDisplay
-            vars={currentSlideVariables}
-            updateObject={updateObject}
-            updateSelectedObject={updateSelectedObject}
-            deleteObject={deleteObject}
-            duplicateObject={duplicateObject}
-            copyObject={copyObject}
-          />
-          <ActionPanel
-            selectedObject={getSelectedObjectVariables()}
-            getNewImage={getNewImage}
-            updateObject={updateObject}
-            createNewObject={createObject}
-          />
+          <MainPresentationDisplay />
+          <ActionPanel selectedObject={getSelectedObjectVariables()}/>
         </div>
-        <SlideTab
-          allSlides={allSlides}
-          selectSlide={selectSlide}
-          startCreatingNewSlide={startCreatingSlide}
-          currentlySelectedSlideId={currentlySelectedSlideId}
-          toggleModal={toggleModal}
-          createNewSlideId={createNewSlideId}
-          updateAllSlides={updateAllSlides}
-          createSlide={createSlide}
-        />
+        <SlideTab/>
       </div>
     );
   } else {
@@ -281,23 +136,8 @@ function App() {
             );
           })}
         </div>
-        <SlideStylePicker
-          newSlidePrefabs={newSlidePrefabs}
-          updateCurrentSlideVariables={updateCurrentSlideVariables}
-          currentPageNumber={currentPageNumber}
-          updatePageNumber={updatePageNumber}
-          createSlide={createSlide}
-        />
-        <SlideTab
-          allSlides={allSlides}
-          selectSlide={selectSlide}
-          startCreatingNewSlide={startCreatingSlide}
-          currentlySelectedSlideId={currentlySelectedSlideId}
-          toggleModal={toggleModal}
-          createNewSlideId={createNewSlideId}
-          updateAllSlides={updateAllSlides}
-          createSlide={createSlide}
-        />
+        <SlideStylePicker/>
+        <SlideTab/>
       </div>
     );
   }

@@ -1,10 +1,12 @@
 import { clamp } from "./extraFunctions";
+import { saveSlide } from "./slideFunctions";
 
 export function delObj(
   dataType,
   index,
   currentSlideVariables,
   updateCurrentSlideVariables,
+  
   saveSlide,
 ) {
   let newSlideVariables = structuredClone(currentSlideVariables);
@@ -61,7 +63,9 @@ export function updObj(
   newValue,
   currentSlideVariables,
   updateCurrentSlideVariables,
-  saveSlide,
+  updateAllSlides,
+  allSlides,
+  currentlySelectedSlideId,
 ) {
   let newSlide = structuredClone(currentSlideVariables);
   if (dataType === undefined) {
@@ -79,7 +83,7 @@ export function updObj(
   }
 
   updateCurrentSlideVariables(newSlide);
-  saveSlide(newSlide);
+  saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId);
 }
 
 export function createObj(

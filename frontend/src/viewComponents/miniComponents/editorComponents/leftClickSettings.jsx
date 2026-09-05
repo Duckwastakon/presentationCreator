@@ -1,15 +1,33 @@
 import { useState } from "react";
 import deleteIcon from "./trashcan.png";
 import activeDeleteIcon from "./trashcanOpen.png";
+import { delObj, dupObj } from "../../../objectFunctions";
+import { saveSlide } from "../../../slideFunctions";
+import { useVariables } from "../../../presentationVariables";
 
-export const LeftClickSettings = ({
-  deleteObject,
-  duplicateObject,
-  posX,
-  objectIndex,
-  objectData,
-}) => {
+export const LeftClickSettings = ({ posX, objectIndex, objectData }) => {
   const [hoverSrc, updateSrc] = useState(deleteIcon);
+
+  const {
+    currentSlideVariables,
+    updateCurrentSlideVariables,
+    updateAllSlides,
+    allSlides,
+    currentlySelectedSlideId,
+    selectedObject,
+    setUpdateVariable,
+    setSelectedObject
+  } = useVariables();
+
+  function save(newSlide) {
+    saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId);
+  }
+
+  function unselectObject() {
+    setUpdateVariable("");
+    setSelectedObject(["", ""]);
+  }
+
   return (
     <div
       style={{
@@ -23,13 +41,30 @@ export const LeftClickSettings = ({
         className="choiceButton"
         onMouseLeave={() => updateSrc(deleteIcon)}
         onMouseEnter={() => updateSrc(activeDeleteIcon)}
-        onMouseDown={() => deleteObject("text", objectIndex)}
+        onMouseDown={() => {
+          delObj(
+            selectedObject[0],
+            objectIndex,
+            currentSlideVariables,
+            updateCurrentSlideVariables,
+            save,
+          );
+          unselectObject();
+        }}
       >
         <img src={hoverSrc} style={{ width: "16px", height: "16px" }} />
       </button>
       <button
         className="choiceButton"
-        onMouseDown={() => duplicateObject("text", objectData)}
+        onMouseDown={() =>
+          dupObj(
+            selectedObject[0],
+            objectData,
+            currentSlideVariables,
+            updateCurrentSlideVariables,
+            save,
+          )
+        }
       >
         Dup
       </button>

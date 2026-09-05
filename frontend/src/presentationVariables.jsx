@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { createNewSlide } from "./slideFunctions";
+import { shuffleArray } from "./extraFunctions";
 
 const PresentationVariables = createContext(null);
 
@@ -7,7 +8,9 @@ export function VariableContainer({ children }) {
   const [allSlides, updateAllSlides] = useState({});
 
   const [currentSlideVariables, updateCurrentSlideVariables] = useState({});
-  const [selectedObject, updateSelectedObject] = useState([]);
+  const [updateVariable, setUpdateVariable] = useState([]);
+  const [selectedObject, setSelectedObject] = useState(["", ""]);
+  const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
 
   const [newSlidePrefabs, updateNewSlidePrefabs] = useState({});
   const [currentPageNumber, updatePageNumber] = useState(0);
@@ -17,28 +20,35 @@ export function VariableContainer({ children }) {
   const [modalActive, updateModal] = useState(false);
 
   const currentlySelectedSlideId = useRef();
-  function updateCurrentlySelectedSlideId(NewVal){
-    currentlySelectedSlideId.current = NewVal
+  function updateCurrentlySelectedSlideId(NewVal) {
+    currentlySelectedSlideId.current = NewVal;
   }
 
   const createNewSlideId = useRef(0);
-  function changeCreateNewSlideId(newVal){
-    createNewSlideId.current = newVal
+  function changeCreateNewSlideId(newVal) {
+    createNewSlideId.current = newVal;
   }
 
   const usedImages = useRef({});
-
-  const copiedObject = useRef({});
-  function saveCopiedObject(newVal){
-    copiedObject.current = newVal
+  function updateUsedImages(data, query) {
+    usedImages.current = {
+      ...usedImages.current,
+      [query]: shuffleArray(data),
+    };
   }
 
+  const copiedObject = useRef({});
+  function saveCopiedObject(newVal) {
+    copiedObject.current = newVal;
+  }
 
   function duplicateSlide(slideVariables) {
     createNewSlide(
       slideVariables,
       createNewSlideId,
+      changeCreateNewSlideId,
       currentlySelectedSlideId,
+      updateCurrentlySelectedSlideId,
       allSlides,
       updateAllSlides,
     );
@@ -52,7 +62,11 @@ export function VariableContainer({ children }) {
         currentSlideVariables,
         updateCurrentSlideVariables,
         selectedObject,
-        updateSelectedObject,
+        setSelectedObject,
+        updateVariable,
+        setUpdateVariable,
+        selectedObjectsVariables,
+        setSelectedObjectsVariables,
         newSlidePrefabs,
         updateNewSlidePrefabs,
         currentPageNumber,
@@ -69,8 +83,9 @@ export function VariableContainer({ children }) {
         createNewSlideId,
         changeCreateNewSlideId,
         usedImages,
+        updateUsedImages,
         copiedObject,
-        saveCopiedObject
+        saveCopiedObject,
       }}
     >
       {children}

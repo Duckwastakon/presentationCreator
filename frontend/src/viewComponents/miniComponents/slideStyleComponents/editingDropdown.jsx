@@ -30,8 +30,7 @@ export const EditingDropDown = (
       </button>
       <button
         onMouseDown={() => {
-          console.log("hey");
-          deleteSlide();
+          deleteSlide(true);
           hideDropDown();
         }}
       >

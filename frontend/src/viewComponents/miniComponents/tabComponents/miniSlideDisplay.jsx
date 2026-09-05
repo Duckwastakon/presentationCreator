@@ -7,13 +7,15 @@ export const MiniSlideDisplay = ({
   slideVal,
   ind,
   onClick,
-  currentSelected,
-  toggleModal,
   startMovingSlide,
 }) => {
-  console.log(slideVal)
+  const {
+    currentlySelectedSlideId,
+    updateModal,
+  } = useVariables();
+
   const vars = slideVal[1];
-  const selected = Number(slideVal[0]) === currentSelected.current;
+  const selected = Number(slideVal[0]) === currentlySelectedSlideId.current;
   const [MenuOpen, updateOpen] = useState(false);
   const [dropDownPos, changeDropDownPos] = useState([0, 0]);
 
@@ -30,8 +32,8 @@ export const MiniSlideDisplay = ({
     duplicateSlide(structuredClone(slideVal[1]));
   }
 
-  function changeMenuOpen(){
-    updateOpen(false)
+  function changeMenuOpen() {
+    updateOpen(false);
   }
 
   return (
@@ -55,7 +57,7 @@ export const MiniSlideDisplay = ({
           xPos={dropDownPos[0]}
           yPos={dropDownPos[1]}
           duplicateSlide={dupSlide}
-          deleteSlide={toggleModal}
+          deleteSlide={updateModal}
           hideDropDown={changeMenuOpen}
         />
       )}
@@ -75,11 +77,11 @@ export const MiniSlideDisplay = ({
         }}
       />
 
-      {Number(slideVal[0]) === currentSelected.current && (
+      {Number(slideVal[0]) === currentlySelectedSlideId.current && (
         <button
           className="deleteSlideButton"
           onMouseUp={() => {
-            toggleModal();
+            updateModal(true);
           }}
         >
           <img

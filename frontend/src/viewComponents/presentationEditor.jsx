@@ -2,20 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import "./componentStyling/presentationDisplayStyling.css";
 import { TextObject } from "./miniComponents/editorComponents/textObject";
 import { ImageObject } from "./miniComponents/editorComponents/imageObject";
+import { updObj } from "../objectFunctions";
+import { useVariables } from "../presentationVariables";
 
-const lockTolerance = 0.05;
+const lockTolerance = 0.01;
 
-export const MainPresentationDisplay = ({
-  vars,
-  ind,
-  updateObject,
-  updateSelectedObject,
-  deleteObject,
-  duplicateObject,
-  copyObject,
-}) => {
-  const [selectedObject, setSelectedObject] = useState(["", ""]);
-  const [selectedObjectsVariables, setSelectedObjectsVariables] = useState({});
+export const MainPresentationDisplay = () => {
+  const {
+    currentSlideVariables,
+    updateCurrentSlideVariables,
+    selectedObject,
+    setSelectedObject,
+    setUpdateVariable,
+    selectedObjectsVariables,
+    setSelectedObjectsVariables,
+    saveCopiedObject,
+    updateAllSlides,
+    allSlides,
+    currentlySelectedSlideId,
+  } = useVariables();
 
   let changingState = useRef(0);
   let lockedX = useRef(0);
@@ -53,13 +58,8 @@ export const MainPresentationDisplay = ({
     updateYBars([]);
   }
 
-  function deleteObj(dataType, objectIndex) {
-    deleteObject(dataType, objectIndex);
-    unselectObject();
-  }
-
   function unselectObject() {
-    updateSelectedObject("");
+    setUpdateVariable("");
     setSelectedObject(["", ""]);
   }
 
@@ -72,7 +72,9 @@ export const MainPresentationDisplay = ({
       }
 
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "c") {
-        copyObj();
+        saveCopiedObject({
+          [selectedObject[0]]: { [1]: selectedObjectsVariables[1] },
+        });
       }
     };
 
@@ -90,13 +92,6 @@ export const MainPresentationDisplay = ({
       window.removeEventListener("keyup", keyUpCheck);
     };
   }, [selectedObject, selectedObjectsVariables]);
-
-  function copyObj() {
-    console.log("coppied");
-    console.log(selectedObject[0]);
-    console.log(selectedObjectsVariables[1]);
-    copyObject(selectedObject[0], selectedObjectsVariables[1]);
-  }
 
   function handleMouseMovement(event) {
     if (changingState.current === 0) return;
@@ -127,12 +122,24 @@ export const MainPresentationDisplay = ({
     changingState.current = 0;
     if (selectedObject[0] === "") return;
 
-    let newVars = { ...vars[selectedObject[0]][selectedObject[1]] };
+    let newVars = {
+      ...currentSlideVariables[selectedObject[0]][selectedObject[1]],
+    };
     ((newVars.x = selectedObjectsVariables[1].x),
       (newVars.y = selectedObjectsVariables[1].y),
       (newVars.w = selectedObjectsVariables[1].w),
       (newVars.h = selectedObjectsVariables[1].h),
-      updateObject(selectedObject[0], selectedObject[1], undefined, newVars));
+      updObj(
+        selectedObject[0],
+        selectedObject[1],
+        undefined,
+        newVars,
+        currentSlideVariables,
+        updateCurrentSlideVariables,
+        updateAllSlides,
+        allSlides,
+        currentlySelectedSlideId,
+      ));
 
     xLocked.current = false;
     yLocked.current = false;
@@ -315,7 +322,10 @@ export const MainPresentationDisplay = ({
       return 13.333 / 2 - xWidth;
     }
 
-    let allObjects = { text: { ...vars.text }, images: { ...vars.images } };
+    let allObjects = {
+      text: { ...currentSlideVariables.text },
+      images: { ...currentSlideVariables.images },
+    };
 
     for (let type of Object.keys(allObjects)) {
       for (let variables of Object.entries(allObjects[type])) {
@@ -423,7 +433,10 @@ export const MainPresentationDisplay = ({
       return 7.5 / 2 - yHeight;
     }
 
-    let allObjects = { text: { ...vars.text }, images: { ...vars.images } };
+    let allObjects = {
+      text: { ...currentSlideVariables.text },
+      images: { ...currentSlideVariables.images },
+    };
 
     for (let type of Object.keys(allObjects)) {
       console.log(type);
@@ -572,113 +585,98 @@ export const MainPresentationDisplay = ({
   }
 
   return (
-      <div
-        className="presentationBackground"
-        style={{
-          backgroundImage: `url(${vars.backgroundImageUrl})`,
-          backgroundColor: `${vars.backgroundColor}`,
+    <div
+      className="presentationBackground"
+      style={{
+        backgroundImage: `url(${currentSlideVariables.backgroundImageUrl})`,
+        backgroundColor: `${currentSlideVariables.backgroundColor}`,
+      }}
+      onMouseMove={(event) => handleMouseMovement(event)}
+      onMouseLeave={() => {
+        stopResizing();
+      }}
+      onMouseUp={() => {
+        stopResizing();
+      }}
+    >
+      <button
+        className="backgroundButton"
+        onMouseDown={() => {
+          unselectObject();
         }}
-        key={ind}
-        onMouseMove={(event) => handleMouseMovement(event)}
-        onMouseLeave={() => {
-          stopResizing();
-        }}
-        onMouseUp={() => {
-          stopResizing();
-        }}
-      >
-        <button
-          className="backgroundButton"
-          onMouseDown={() => {
-            unselectObject();
-          }}
-        />
+      />
 
-        {Object.entries(vars.text).map((variables) => {
-          const selected =
-            "text" == selectedObject[0] && variables[0] == selectedObject[1];
+      {Object.entries(currentSlideVariables.text).map((variables) => {
+        const selected =
+          "text" == selectedObject[0] && variables[0] == selectedObject[1];
 
-          if (selected) {
-            variables[1].x = selectedObjectsVariables[1].x;
-            variables[1].y = selectedObjectsVariables[1].y;
-            variables[1].w = selectedObjectsVariables[1].w;
-            variables[1].h = selectedObjectsVariables[1].h;
-            variables[1].layer = 100;
-          }
-          return (
-            <TextObject
-              key={variables[0]}
-              startResizing={startResizing}
-              stopResizing={stopResizing}
-              variables={variables}
-              ind={variables[0]}
-              updateObject={updateObject}
-              updateSelectedObject={updateSelectedObject}
-              setSelectedObject={setSelectedObject}
-              setSelectedObjectsVariables={setSelectedObjectsVariables}
-              selected={selected}
-              deleteObject={deleteObj}
-              duplicateObject={duplicateObject}
-            />
-          );
-        })}
+        if (selected) {
+          variables[1].x = selectedObjectsVariables[1].x;
+          variables[1].y = selectedObjectsVariables[1].y;
+          variables[1].w = selectedObjectsVariables[1].w;
+          variables[1].h = selectedObjectsVariables[1].h;
+        }
+        return (
+          <TextObject
+            startResizing={startResizing}
+            stopResizing={stopResizing}
+            variables={variables}
+            ind={variables[0]}
+            selected={selected}
+          />
+        );
+      })}
 
-        {Object.entries(vars.images).map((variables) => {
-          const selected =
-            "images" == selectedObject[0] && variables[0] == selectedObject[1];
+      {Object.entries(currentSlideVariables.images).map((variables) => {
+        const selected =
+          "images" == selectedObject[0] && variables[0] == selectedObject[1];
 
-          if (selected) {
-            variables[1].x = selectedObjectsVariables[1].x;
-            variables[1].y = selectedObjectsVariables[1].y;
-            variables[1].w = selectedObjectsVariables[1].w;
-            variables[1].h = selectedObjectsVariables[1].h;
-            variables[1].layer = 100;
-          }
-          return (
-            <ImageObject
-              key={variables[0]}
-              startResizing={startResizing}
-              stopResizing={stopResizing}
-              variables={variables}
-              ind={variables[0]}
-              updateObject={updateObject}
-              updateSelectedObject={updateSelectedObject}
-              setSelectedObject={setSelectedObject}
-              setSelectedObjectsVariables={setSelectedObjectsVariables}
-              selected={selected}
-            />
-          );
-        })}
-        {yBars.map((pos, index) => {
-          return (
-            <div
-              key={index}
-              style={{
-                backgroundColor: "red",
-                height: "4px",
-                width: "100%",
-                position: "absolute",
-                top: `${pos - 2}px`,
-                left: "0px",
-              }}
-            />
-          );
-        })}
-        {xBars.map((pos, index) => {
-          return (
-            <div
-              key={index}
-              style={{
-                backgroundColor: "red",
-                height: "100%",
-                width: "4px",
-                position: "absolute",
-                top: "0",
-                left: `${pos - 2}px`,
-              }}
-            />
-          );
-        })}
-      </div>
+        if (selected) {
+          variables[1].x = selectedObjectsVariables[1].x;
+          variables[1].y = selectedObjectsVariables[1].y;
+          variables[1].w = selectedObjectsVariables[1].w;
+          variables[1].h = selectedObjectsVariables[1].h;
+        }
+        return (
+          <ImageObject
+            startResizing={startResizing}
+            stopResizing={stopResizing}
+            variables={variables}
+            ind={variables[0]}
+            selected={selected}
+          />
+        );
+      })}
+      {yBars.map((pos, index) => {
+        return (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "red",
+              height: "4px",
+              width: "100%",
+              position: "absolute",
+              top: `${pos - 2}px`,
+              left: "0px",
+            }}
+          />
+        );
+      })}
+      {xBars.map((pos, index) => {
+        return (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "red",
+              height: "100%",
+              width: "4px",
+              position: "absolute",
+              top: "0",
+              left: `${pos - 2}px`,
+            }}
+          />
+        );
+      })}
+    </div>
   );
 };

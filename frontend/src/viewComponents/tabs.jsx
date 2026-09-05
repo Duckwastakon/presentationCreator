@@ -5,20 +5,23 @@ import "./componentStyling/tabs.css";
 import { useRef, useState } from "react";
 import { MovingSlide } from "./miniComponents/tabComponents/inMovementSlide";
 import { saveChange } from "../keyBindFunctions";
+import { selectNewSlide } from "../slideFunctions";
+import { useVariables } from "../presentationVariables";
 
 const selectedColor = "blue";
 const idleColor = "white";
 
-export const SlideTab = ({
-  allSlides,
-  selectSlide,
-  startCreatingNewSlide,
-  currentlySelectedSlideId,
-  toggleModal,
-  createNewSlideId,
-  updateAllSlides,
-  createSlide,
-}) => {
+export const SlideTab = () => {
+  const {
+    allSlides,
+    updateAllSlides,
+    updateCurrentSlideVariables,
+    updateCurrentlySelectedSlideId,
+    changeCreateNewSlideId,
+    createNewSlideId,
+    currentlySelectedSlideId,
+  } = useVariables();
+
   const [movingSlide, UpdateMovingSlide] = useState({});
   const [movingSlidePos, updateMovingSlidePos] = useState([0, 0]);
 
@@ -30,6 +33,16 @@ export const SlideTab = ({
   const slidePositions = useRef([]);
 
   const [placeMovingDisp, updateShowMoving] = useState(0);
+
+  function selectSlide(slideVars, slideId) {
+    selectNewSlide(
+      slideVars,
+      slideId,
+      updateCurrentSlideVariables,
+      updateCurrentlySelectedSlideId,
+      changeCreateNewSlideId,
+    );
+  }
 
   function startMovingSlide(event, slide, slidePos) {
     slideStartingX.current = event.clientX + (80 - event.nativeEvent.offsetX);
@@ -159,17 +172,9 @@ export const SlideTab = ({
       <div className="slideTab">
         {Object.keys(allSlides).length > 0 &&
           (createNewSlideId.current == 0 ? (
-            <NewSlideButton
-              backgroundColor={selectedColor}
-              onClick={startCreatingNewSlide}
-              onClickVal={0}
-            />
+            <NewSlideButton backgroundColor={selectedColor} onClickVal={0} />
           ) : (
-            <NewSlideButton
-              backgroundColor={idleColor}
-              onClick={startCreatingNewSlide}
-              onClickVal={0}
-            />
+            <NewSlideButton backgroundColor={idleColor} onClickVal={0} />
           ))}
 
         {Object.keys(allSlides).length > 0 &&
@@ -197,7 +202,6 @@ export const SlideTab = ({
                   createNewSlideId.current !== 0 && (
                     <NewSlideButton
                       backgroundColor={selectedColor}
-                      onClick={startCreatingNewSlide}
                       onClickVal={currentlySelectedSlideId.current}
                     />
                   )}
@@ -206,7 +210,6 @@ export const SlideTab = ({
                   currentlySelectedSlideId.current !== 0 && (
                     <NewSlideButton
                       backgroundColor={idleColor}
-                      onClick={startCreatingNewSlide}
                       onClickVal={currentlySelectedSlideId.current}
                     />
                   )}
@@ -215,18 +218,20 @@ export const SlideTab = ({
                   slideVal={slideVal}
                   ind={ind}
                   onClick={selectSlide}
-                  currentSelected={currentlySelectedSlideId}
-                  toggleModal={toggleModal}
                   startMovingSlide={startMovingSlide}
-                  createSlide={createSlide}
                 />
-
+                {Number(slideVal[0]) === createNewSlideId.current &&
+                  createNewSlideId.current !==  Object.entries(allSlides).length - 1 && (
+                    <NewSlideButton
+                      backgroundColor={selectedColor}
+                      onClickVal={currentlySelectedSlideId.current + 1}
+                    />
+                  )}
                 {Number(slideVal[0]) === currentlySelectedSlideId.current &&
                   currentlySelectedSlideId.current !==
                     Object.entries(allSlides).length - 1 && (
                     <NewSlideButton
                       backgroundColor={idleColor}
-                      onClick={startCreatingNewSlide}
                       onClickVal={currentlySelectedSlideId.current + 1}
                     />
                   )}
@@ -245,13 +250,11 @@ export const SlideTab = ({
         {createNewSlideId.current === Object.keys(allSlides).length ? (
           <NewSlideButton
             backgroundColor={selectedColor}
-            onClick={startCreatingNewSlide}
             onClickVal={Object.keys(allSlides).length}
           />
         ) : (
           <NewSlideButton
             backgroundColor={idleColor}
-            onClick={startCreatingNewSlide}
             onClickVal={Object.keys(allSlides).length}
           />
         )}

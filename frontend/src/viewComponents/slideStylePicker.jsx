@@ -1,17 +1,17 @@
 import "./componentStyling/slidePickerStyling.css";
-import arrowLeft from "./arrowLeft.png"
-import arrowRight from "./arrowRight.png"
+import arrowLeft from "./arrowLeft.png";
+import arrowRight from "./arrowRight.png";
 
 import { MiniDisplay } from "./miniComponents/slideStyleComponents/miniDisplay";
+import { useVariables } from "../presentationVariables";
 
-export const SlideStylePicker = ({
-  newSlidePrefabs,
-  updateCurrentSlideVariables,
-  currentPageNumber,
-  updatePageNumber,
-  createSlide,
-  
-}) => {
+export const SlideStylePicker = () => {
+  const {
+    newSlidePrefabs,
+    currentPageNumber,
+    updatePageNumber,
+  } = useVariables();
+
   function changePage(allObj, objPerPage, newPageVal, changeFunc) {
     const possiblePages = Math.ceil(allObj / objPerPage);
     if (newPageVal > possiblePages) {
@@ -56,15 +56,13 @@ export const SlideStylePicker = ({
         }}
         className="changePageButton"
       >
-        <img className="arrowImage" src={arrowLeft}/>
+        <img className="arrowImage" src={arrowLeft} />
       </button>
       <div className="styleChoiceContainer">
         {Object.entries(possibleStyles).map((vars, index) => (
           <MiniDisplay
-            key={index}
+            ind={index}
             vars={vars[1]}
-            updateCurrentSlideVariables={updateCurrentSlideVariables}
-            createSlide={createSlide}
           />
         ))}
       </div>
@@ -79,7 +77,7 @@ export const SlideStylePicker = ({
         }}
         className="changePageButton"
       >
-        <img className="arrowImage" src={arrowRight}/>
+        <img className="arrowImage" src={arrowRight} />
       </button>
     </div>
   );

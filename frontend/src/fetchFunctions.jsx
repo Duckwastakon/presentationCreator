@@ -1,8 +1,7 @@
-import { shuffleArray } from "./extraFunctions";
-
 export function getImage(
   event,
   usedImages,
+  updateUsedImages,
   selectedObject,
   currentSlideVariables,
   updateObject,
@@ -72,11 +71,16 @@ export function getImage(
   }
 
   if (!found) {
-    fetchImage(query, selectedObject, usedImages, updateObject);
+    fetchImage(query, selectedObject, updateUsedImages, updateObject);
   }
 }
 
-export function fetchImage(query, selectedObject, usedImages, updateObject) {
+export function fetchImage(
+  query,
+  selectedObject,
+  updateUsedImages,
+  updateObject,
+) {
   fetch(`/API?query=${query}`, {
     method: "get",
   })
@@ -85,10 +89,7 @@ export function fetchImage(query, selectedObject, usedImages, updateObject) {
       console.log("gettingNewPhotos");
       console.log(data);
 
-      usedImages.current = {
-        ...usedImages.current,
-        [query]: shuffleArray(data),
-      };
+      updateUsedImages(data, query);
       var gottenRandNum = Math.floor(Math.random() * 4);
       console.log(gottenRandNum, data[gottenRandNum]);
 

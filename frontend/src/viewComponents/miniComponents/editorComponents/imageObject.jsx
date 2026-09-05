@@ -1,16 +1,21 @@
 import { ResizeDots } from "./resizeDots";
-import imageDefault from "./imagePrefab.png"
+import imageDefault from "./imagePrefab.png";
+import { useVariables } from "../../../presentationVariables";
+import { LeftClickSettings } from "./leftClickSettings";
 
 export const ImageObject = ({
   startResizing,
   stopResizing,
   variables,
   ind,
-  updateSelectedObject,
-  setSelectedObjectsVariables,
-  setSelectedObject,
   selected,
 }) => {
+  const {
+    setSelectedObject,
+    setSelectedObjectsVariables,
+    setUpdateVariable,
+  } = useVariables();
+
   return (
     <div
       key={ind}
@@ -22,15 +27,14 @@ export const ImageObject = ({
         width: (100 * (variables[1].w / 13.333)).toString() + "%",
         alignItems: "center",
         justifyContent: "center",
-        padding: 0,
-        zIndex: (variables[1].layer || 1)
+        zIndex: variables[1].layer || 1,
       }}
     >
       <img
         className="slideImage"
         style={{
           outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
-          
+
           borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
 
           display: "flex",
@@ -55,20 +59,30 @@ export const ImageObject = ({
           justifyContent: "center",
           overflow: "hidden",
           position: "absolute",
-          top: "0px"
+          top: "0px",
         }}
         onMouseDown={() => {
-          console.log(variables)
+          console.log(variables);
           if (!selected) {
-            updateSelectedObject(["images", variables[0], "src"]);
+            setUpdateVariable(["images", variables[0], "src"]);
             setSelectedObjectsVariables(structuredClone(variables));
             setSelectedObject(["images", variables[0]]);
           }
         }}
       />
-
       {selected && (
-        <ResizeDots startResizing={startResizing} stopResizing={stopResizing} objectSize={[variables[1].w, variables[1].h]}/>
+        <LeftClickSettings
+          posX={variables[1].w}
+          objectIndex={ind}
+          objectData={variables}
+        />
+      )}
+      {selected && (
+        <ResizeDots
+          startResizing={startResizing}
+          stopResizing={stopResizing}
+          objectSize={[variables[1].w, variables[1].h]}
+        />
       )}
     </div>
   );

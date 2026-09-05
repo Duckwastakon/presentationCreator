@@ -1,12 +1,31 @@
 import { clamp } from "../extraFunctions";
+import { getImage } from "../fetchFunctions";
+import { createObj, updObj } from "../objectFunctions";
+import { useVariables } from "../presentationVariables";
+import { saveSlide } from "../slideFunctions";
 import "./componentStyling/actionPanelStyling.css";
 
-export const ActionPanel = ({
-  selectedObject,
-  getNewImage,
-  updateObject,
-  createNewObject,
-}) => {
+export const ActionPanel = ({selectedObject}) => {
+  const {
+    allSlides,
+    updateAllSlides,
+    currentSlideVariables,
+    updateCurrentSlideVariables,
+    currentlySelectedSlideId,
+    usedImages,
+    updateUsedImages
+  } = useVariables();
+
+  function updateObject(dataType, index, variableName, newValue){
+    updObj(dataType, index, variableName, newValue, currentSlideVariables, updateCurrentSlideVariables, updateAllSlides, allSlides, currentlySelectedSlideId)
+  }
+
+  function getNewImage(event){
+    getImage(event, usedImages, updateUsedImages, selectedObject, currentSlideVariables, updateObject)
+  }
+
+  console.log(selectedObject)
+
   if (selectedObject[0] === "text") {
     const textAlign = selectedObject[2]["textAlign"] || "left";
     return (
@@ -371,7 +390,9 @@ export const ActionPanel = ({
         <div className="simpleOptionContainer">
           <button
             onMouseDown={() => {
-              createNewObject("text");
+              const [newInd, newObj] = createObj("text", 24, currentSlideVariables)
+
+              updateObject("text", newInd, undefined, newObj);
             }}
             className="createNewButton"
           >
@@ -381,7 +402,10 @@ export const ActionPanel = ({
         <div className="simpleOptionContainer">
           <button
             onMouseDown={() => {
-              createNewObject("images");
+              saveSlide()
+              const [newInd, newObj] = createObj("images", 24, currentSlideVariables)
+              
+              updateObject("images", newInd, undefined, newObj);
             }}
             className="createNewButton"
           >

@@ -1,8 +1,12 @@
-export const NewSlideButton = ({ backgroundColor, onClick, onClickVal }) => {
+import { useVariables } from "../../../presentationVariables";
+import { startCreatingNewSlide } from "../../../slideFunctions";
+
+export const NewSlideButton = ({ backgroundColor, onClickVal }) => {
+  const { changeCreateNewSlideId, updateCurrentSlideVariables, updateCurrentlySelectedSlideId } = useVariables()
   return (
     <button
       onClick={() => {
-        onClick(onClickVal);
+        startCreatingNewSlide(onClickVal, changeCreateNewSlideId, updateCurrentSlideVariables, updateCurrentlySelectedSlideId)
       }}
       className="newSlideButton"
       style={{ backgroundColor: backgroundColor }}

@@ -1,3 +1,5 @@
+import { updObj } from "../../../objectFunctions";
+import { useVariables } from "../../../presentationVariables";
 import { LeftClickSettings } from "./leftClickSettings";
 import { ResizeDots } from "./resizeDots";
 
@@ -6,14 +8,19 @@ export const TextObject = ({
   stopResizing,
   variables,
   ind,
-  updateObject,
-  updateSelectedObject,
-  setSelectedObjectsVariables,
-  setSelectedObject,
   selected,
-  deleteObject,
-  duplicateObject,
 }) => {
+  const {
+    currentSlideVariables,
+    updateCurrentSlideVariables,
+    setSelectedObject,
+    setSelectedObjectsVariables,
+    updateAllSlides,
+    allSlides,
+    currentlySelectedSlideId,
+    setUpdateVariable,
+  } = useVariables();
+
   return (
     <div
       style={{
@@ -32,14 +39,24 @@ export const TextObject = ({
         type="text"
         value={variables[1].text}
         onChange={(newVal) => {
-          updateObject("text", variables[0], "text", newVal.target.value);
+          updObj(
+            "text",
+            variables[0],
+            "text",
+            newVal.target.value,
+            currentSlideVariables,
+            updateCurrentSlideVariables,
+            updateAllSlides,
+            allSlides,
+            currentlySelectedSlideId,
+          );
 
-          let newVars = structuredClone(variables)
-          newVars[1].text = newVal.target.value
-          setSelectedObjectsVariables(newVars)
+          let newVars = structuredClone(variables);
+          newVars[1].text = newVal.target.value;
+          setSelectedObjectsVariables(newVars);
         }}
         onSelect={() => {
-          updateSelectedObject(["text", variables[0], undefined]);
+          setUpdateVariable(["text", variables[0], undefined]);
           setSelectedObjectsVariables(structuredClone(variables));
           setSelectedObject(["text", variables[0]]);
         }}
@@ -62,8 +79,6 @@ export const TextObject = ({
       />
       {selected && (
         <LeftClickSettings
-          deleteObject={deleteObject}
-          duplicateObject={duplicateObject}
           posX={variables[1].w}
           objectIndex={ind}
           objectData={variables}
