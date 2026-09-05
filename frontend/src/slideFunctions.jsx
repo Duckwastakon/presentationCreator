@@ -40,7 +40,8 @@ export function deleteSelectedSlide(
   allSlides,
   updateAllSlides,
   currentSlideId,
-  createNewSlideId,
+  updateCurrentlySelectedSlideId,
+  changeCreateNewSlideId,
   updateSelectedSlide,
 ) {
   let newSlides = {};
@@ -51,8 +52,8 @@ export function deleteSelectedSlide(
   });
   const createSpot = currentSlideId.current;
 
-  createNewSlideId.current = createSpot;
-  currentSlideId.current = undefined;
+  changeCreateNewSlideId(createSpot);
+  updateCurrentlySelectedSlideId(undefined);
   updateAllSlides(newSlides);
   updateSelectedSlide({});
 
@@ -67,12 +68,13 @@ export function deleteSelectedSlide(
 export function createNewSlide(
   newSlideVariables,
   createNewSlideId,
+  changeCreateNewSlideId,
   currentSelectedSlideId,
+  updateCurrentlySelectedSlideId,
   allSlides,
   updateAllSlides,
 ) {
-  console.log(createNewSlideId.current);
-  currentSelectedSlideId.current = createNewSlideId.current;
+  updateCurrentlySelectedSlideId(createNewSlideId.current);
   let newSlides = {};
   let createNew = false;
 
@@ -104,7 +106,7 @@ export function createNewSlide(
 
   console.log(newSlides)
 
-  createNewSlideId.current = undefined;
+  changeCreateNewSlideId(undefined);
   updateAllSlides(newSlides);
   saveChange({
     allSlides: structuredClone(newSlides),

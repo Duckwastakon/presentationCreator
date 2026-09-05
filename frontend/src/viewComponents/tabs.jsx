@@ -17,6 +17,7 @@ export const SlideTab = ({
   toggleModal,
   createNewSlideId,
   updateAllSlides,
+  createSlide,
 }) => {
   const [movingSlide, UpdateMovingSlide] = useState({});
   const [movingSlidePos, updateMovingSlidePos] = useState([0, 0]);
@@ -217,6 +218,7 @@ export const SlideTab = ({
                   currentSelected={currentlySelectedSlideId}
                   toggleModal={toggleModal}
                   startMovingSlide={startMovingSlide}
+                  createSlide={createSlide}
                 />
 
                 {Number(slideVal[0]) === currentlySelectedSlideId.current &&

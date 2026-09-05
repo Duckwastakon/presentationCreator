@@ -82,14 +82,14 @@ export const MainPresentationDisplay = ({
       }
     };
 
-    window.addEventListener("keydown", keyDownCheck)
-    window.addEventListener("keyup", keyUpCheck)
+    window.addEventListener("keydown", keyDownCheck);
+    window.addEventListener("keyup", keyUpCheck);
 
     return () => {
-      window.removeEventListener("keydown", keyDownCheck)
-      window.removeEventListener("keyup", keyUpCheck)
-    }
-  }, [selectedObject, selectedObjectsVariables, ]);
+      window.removeEventListener("keydown", keyDownCheck);
+      window.removeEventListener("keyup", keyUpCheck);
+    };
+  }, [selectedObject, selectedObjectsVariables]);
 
   function copyObj() {
     console.log("coppied");
@@ -572,113 +572,113 @@ export const MainPresentationDisplay = ({
   }
 
   return (
-    <div
-      className="presentationBackground"
-      style={{
-        backgroundImage: `url(${vars.backgroundImageUrl})`,
-        backgroundColor: `${vars.backgroundColor}`,
-      }}
-      key={ind}
-      onMouseMove={(event) => handleMouseMovement(event)}
-      onMouseLeave={() => {
-        stopResizing();
-      }}
-      onMouseUp={() => {
-        stopResizing();
-      }}
-    >
-      <button
-        className="backgroundButton"
-        onMouseDown={() => {
-          unselectObject();
+      <div
+        className="presentationBackground"
+        style={{
+          backgroundImage: `url(${vars.backgroundImageUrl})`,
+          backgroundColor: `${vars.backgroundColor}`,
         }}
-      />
+        key={ind}
+        onMouseMove={(event) => handleMouseMovement(event)}
+        onMouseLeave={() => {
+          stopResizing();
+        }}
+        onMouseUp={() => {
+          stopResizing();
+        }}
+      >
+        <button
+          className="backgroundButton"
+          onMouseDown={() => {
+            unselectObject();
+          }}
+        />
 
-      {Object.entries(vars.text).map((variables) => {
-        const selected =
-          "text" == selectedObject[0] && variables[0] == selectedObject[1];
+        {Object.entries(vars.text).map((variables) => {
+          const selected =
+            "text" == selectedObject[0] && variables[0] == selectedObject[1];
 
-        if (selected) {
-          variables[1].x = selectedObjectsVariables[1].x;
-          variables[1].y = selectedObjectsVariables[1].y;
-          variables[1].w = selectedObjectsVariables[1].w;
-          variables[1].h = selectedObjectsVariables[1].h;
-          variables[1].layer = 100
-        }
-        return (
-          <TextObject
-            key={variables[0]}
-            startResizing={startResizing}
-            stopResizing={stopResizing}
-            variables={variables}
-            ind={variables[0]}
-            updateObject={updateObject}
-            updateSelectedObject={updateSelectedObject}
-            setSelectedObject={setSelectedObject}
-            setSelectedObjectsVariables={setSelectedObjectsVariables}
-            selected={selected}
-            deleteObject={deleteObj}
-            duplicateObject={duplicateObject}
-          />
-        );
-      })}
+          if (selected) {
+            variables[1].x = selectedObjectsVariables[1].x;
+            variables[1].y = selectedObjectsVariables[1].y;
+            variables[1].w = selectedObjectsVariables[1].w;
+            variables[1].h = selectedObjectsVariables[1].h;
+            variables[1].layer = 100;
+          }
+          return (
+            <TextObject
+              key={variables[0]}
+              startResizing={startResizing}
+              stopResizing={stopResizing}
+              variables={variables}
+              ind={variables[0]}
+              updateObject={updateObject}
+              updateSelectedObject={updateSelectedObject}
+              setSelectedObject={setSelectedObject}
+              setSelectedObjectsVariables={setSelectedObjectsVariables}
+              selected={selected}
+              deleteObject={deleteObj}
+              duplicateObject={duplicateObject}
+            />
+          );
+        })}
 
-      {Object.entries(vars.images).map((variables) => {
-        const selected =
-          "images" == selectedObject[0] && variables[0] == selectedObject[1];
+        {Object.entries(vars.images).map((variables) => {
+          const selected =
+            "images" == selectedObject[0] && variables[0] == selectedObject[1];
 
-        if (selected) {
-          variables[1].x = selectedObjectsVariables[1].x;
-          variables[1].y = selectedObjectsVariables[1].y;
-          variables[1].w = selectedObjectsVariables[1].w;
-          variables[1].h = selectedObjectsVariables[1].h;
-          variables[1].layer = 100
-        }
-        return (
-          <ImageObject
-            key={variables[0]}
-            startResizing={startResizing}
-            stopResizing={stopResizing}
-            variables={variables}
-            ind={variables[0]}
-            updateObject={updateObject}
-            updateSelectedObject={updateSelectedObject}
-            setSelectedObject={setSelectedObject}
-            setSelectedObjectsVariables={setSelectedObjectsVariables}
-            selected={selected}
-          />
-        );
-      })}
-      {yBars.map((pos, index) => {
-        return (
-          <div
-            key={index}
-            style={{
-              backgroundColor: "red",
-              height: "4px",
-              width: "100%",
-              position: "absolute",
-              top: `${pos - 2}px`,
-              left: "0px",
-            }}
-          />
-        );
-      })}
-      {xBars.map((pos, index) => {
-        return (
-          <div
-            key={index}
-            style={{
-              backgroundColor: "red",
-              height: "100%",
-              width: "4px",
-              position: "absolute",
-              top: "0",
-              left: `${pos - 2}px`,
-            }}
-          />
-        );
-      })}
-    </div>
+          if (selected) {
+            variables[1].x = selectedObjectsVariables[1].x;
+            variables[1].y = selectedObjectsVariables[1].y;
+            variables[1].w = selectedObjectsVariables[1].w;
+            variables[1].h = selectedObjectsVariables[1].h;
+            variables[1].layer = 100;
+          }
+          return (
+            <ImageObject
+              key={variables[0]}
+              startResizing={startResizing}
+              stopResizing={stopResizing}
+              variables={variables}
+              ind={variables[0]}
+              updateObject={updateObject}
+              updateSelectedObject={updateSelectedObject}
+              setSelectedObject={setSelectedObject}
+              setSelectedObjectsVariables={setSelectedObjectsVariables}
+              selected={selected}
+            />
+          );
+        })}
+        {yBars.map((pos, index) => {
+          return (
+            <div
+              key={index}
+              style={{
+                backgroundColor: "red",
+                height: "4px",
+                width: "100%",
+                position: "absolute",
+                top: `${pos - 2}px`,
+                left: "0px",
+              }}
+            />
+          );
+        })}
+        {xBars.map((pos, index) => {
+          return (
+            <div
+              key={index}
+              style={{
+                backgroundColor: "red",
+                height: "100%",
+                width: "4px",
+                position: "absolute",
+                top: "0",
+                left: `${pos - 2}px`,
+              }}
+            />
+          );
+        })}
+      </div>
   );
 };

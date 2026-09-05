@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import "./styling/appStyle.css";
 import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
@@ -14,26 +14,31 @@ import {
 import { SlideStylePicker } from "./viewComponents/slideStylePicker";
 import { createObj, delObj, dupObj, updObj } from "./objectFunctions";
 import { fetchAllStyles, fetchStyles, getImage } from "./fetchFunctions";
+import { useVariables } from "./presentationVariables";
 
 function App() {
-  const [allSlides, updateAllSlides] = useState({});
-  const currentlySelectedSlideId = useRef();
-
-  const [currentSlideVariables, updateCurrentSlideVariables] = useState({});
-  const [selectedObject, updateSelectedObject] = useState([]);
-
-  const [newSlidePrefabs, updateNewSlidePrefabs] = useState({});
-  const [currentPageNumber, updatePageNumber] = useState(0);
-  const [prefabTypes, updatePrefabTypes] = useState([]);
-  const [selectedPrefabType, changeSelectedPrefabType] = useState("intro");
-
-  const [modalActive, updateModal] = useState(false);
-
-  const createNewSlideId = useRef(0);
-
-  const usedImages = useRef({});
-
-  const copiedObject = useRef({});
+  const {
+    allSlides,
+    updateAllSlides,
+    currentSlideVariables,
+    updateCurrentSlideVariables,
+    selectedObject,
+    updateSelectedObject,
+    newSlidePrefabs,
+    updateNewSlidePrefabs,
+    currentPageNumber,
+    updatePageNumber,
+    prefabTypes,
+    updatePrefabTypes,
+    selectedPrefabType,
+    changeSelectedPrefabType,
+    modalActive,
+    updateModal,
+    currentlySelectedSlideIda,
+    updateCurrentlySelectedSlideIda,
+    createNewSlideIda,
+    changeCreateNewSlideIda,
+  } = useVariables();
 
   function toggleModal() {
     updateModal(!modalActive);
@@ -54,7 +59,8 @@ function App() {
       allSlides,
       updateAllSlides,
       currentlySelectedSlideId,
-      createNewSlideId,
+      updateCurrentlySelectedSlideId,
+      changeCreateNewSlideId,
       updateCurrentSlideVariables,
     );
   }
@@ -70,7 +76,9 @@ function App() {
     createNewSlide(
       newSlideVariables,
       createNewSlideId,
+      changeCreateNewSlideId,
       currentlySelectedSlideId,
+      updateCurrentlySelectedSlideId,
       allSlides,
       updateAllSlides,
     );
@@ -138,16 +146,16 @@ function App() {
     updateObject(type, newInd, undefined, newObj);
   }
 
-  function copyObject(type, obj){
-    console.log(type, obj)
-    copiedObject.current = {[type]: {[1]: obj}}
+  function copyObject(type, obj) {
+    console.log(type, obj);
+    copiedObject.current = { [type]: { [1]: obj } };
   }
 
   function pasteObject() {
     console.log(copiedObject.current);
     Object.entries(copiedObject.current).map((entry) => {
-      if(entry[0] == "" || entry[1] == {}) return
-      console.log(entry)
+      if (entry[0] == "" || entry[1] == {}) return;
+      console.log(entry);
       dupObj(
         entry[0],
         entry[1],
@@ -156,7 +164,7 @@ function App() {
         saveSlide,
       );
     });
-    saveSlide()
+    saveSlide();
   }
 
   function getNewImage(event) {
@@ -246,6 +254,7 @@ function App() {
           toggleModal={toggleModal}
           createNewSlideId={createNewSlideId}
           updateAllSlides={updateAllSlides}
+          createSlide={createSlide}
         />
       </div>
     );
@@ -287,6 +296,7 @@ function App() {
           toggleModal={toggleModal}
           createNewSlideId={createNewSlideId}
           updateAllSlides={updateAllSlides}
+          createSlide={createSlide}
         />
       </div>
     );

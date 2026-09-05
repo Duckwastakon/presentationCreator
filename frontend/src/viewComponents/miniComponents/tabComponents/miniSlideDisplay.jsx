@@ -1,4 +1,7 @@
+import { useState } from "react";
 import cross from "./delete.png";
+import { EditingDropDown } from "../slideStyleComponents/editingDropdown";
+import { useVariables } from "../../../presentationVariables";
 
 export const MiniSlideDisplay = ({
   slideVal,
@@ -8,13 +11,27 @@ export const MiniSlideDisplay = ({
   toggleModal,
   startMovingSlide,
 }) => {
+  console.log(slideVal)
   const vars = slideVal[1];
   const selected = Number(slideVal[0]) === currentSelected.current;
+  const [MenuOpen, updateOpen] = useState(false);
+  const [dropDownPos, changeDropDownPos] = useState([0, 0]);
+
   let shadowColor;
   if (selected) {
     shadowColor = "cyan";
   } else {
     shadowColor = "grey";
+  }
+
+  const { duplicateSlide } = useVariables();
+
+  function dupSlide() {
+    duplicateSlide(structuredClone(slideVal[1]));
+  }
+
+  function changeMenuOpen(){
+    updateOpen(false)
   }
 
   return (
@@ -25,11 +42,29 @@ export const MiniSlideDisplay = ({
         backgroundColor: vars.backgroundColor,
       }}
       className="miniSlideTab"
+      onContextMenu={(event) => {
+        console.log("pressed");
+        event.preventDefault();
+
+        changeDropDownPos([event.clientX, event.clientY]);
+        updateOpen(true);
+      }}
     >
+      {selected && MenuOpen && (
+        <EditingDropDown
+          xPos={dropDownPos[0]}
+          yPos={dropDownPos[1]}
+          duplicateSlide={dupSlide}
+          deleteSlide={toggleModal}
+          hideDropDown={changeMenuOpen}
+        />
+      )}
+      {MenuOpen.current && <button>Hey</button>}
       <button
         className="selectSlideButton"
         onMouseUp={() => {
           if (!selected) {
+            console.log("hey");
             onClick(slideVal[1], ind);
           }
         }}
