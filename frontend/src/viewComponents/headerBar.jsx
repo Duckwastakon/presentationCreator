@@ -1,3 +1,4 @@
+import { savePresentation } from "../fetchFunctions";
 import { useVariables } from "../presentationVariables";
 import saveButton from "./save.png";
 
@@ -37,7 +38,7 @@ export const HeaderBar = () => {
       </button>
       <button
         onMouseUp={() => {
-          console.log("tried to download presentation");
+            savePresentation(allSlides)
         }}
         className="saveButton"
       >

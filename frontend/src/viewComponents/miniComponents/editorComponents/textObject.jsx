@@ -77,7 +77,7 @@ export const TextObject = ({
           top: "0",
           width: "100%",
           height: "100%",
-          fontSize: (variables[1].fontSize * 2.5).toString() + "px",
+          fontSize: (variables[1].fontSize).toString() + "px",
           color:  variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
           WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,

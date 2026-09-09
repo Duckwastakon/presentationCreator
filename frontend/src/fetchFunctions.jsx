@@ -32,9 +32,7 @@ export function getImage(
         let i = 0;
         for (const img of entry[1]) {
           console.log(currentImageId);
-          if (
-            img.src.original === currentImageId
-          ) {
+          if (img.src.original === currentImageId) {
             console.log("got same pic");
             if (i + 1 >= entry[1].length) i = 0;
 
@@ -150,4 +148,27 @@ export function fetchAllStyles(updatePrefabTypes) {
     .then((data) => {
       updatePrefabTypes(data);
     });
+}
+
+export async function savePresentation(allSlides) {
+  const resp = await fetch("/generateFile/", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ slides: allSlides }),
+  });
+
+  const blob = await resp.blob();
+
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "presentation.pptx";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  window.URL.revokeObjectURL(url);
 }
