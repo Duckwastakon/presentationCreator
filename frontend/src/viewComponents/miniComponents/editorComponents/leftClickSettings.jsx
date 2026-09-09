@@ -16,11 +16,13 @@ export const LeftClickSettings = ({ posX, objectIndex, objectData }) => {
     currentlySelectedSlideId,
     selectedObject,
     setUpdateVariable,
-    setSelectedObject
+    setSelectedObject,
+    saveNewChanges
   } = useVariables();
 
   function save(newSlide) {
-    saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId);
+    let newAllSlides = saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId);
+    saveNewChanges({allSlidesOverride: newAllSlides, currentSlideVariablesOverride: newSlide})
   }
 
   function unselectObject() {

@@ -6,7 +6,6 @@ export function delObj(
   index,
   currentSlideVariables,
   updateCurrentSlideVariables,
-  
   saveSlide,
 ) {
   let newSlideVariables = structuredClone(currentSlideVariables);
@@ -68,7 +67,7 @@ export function updObj(
   currentlySelectedSlideId,
 ) {
   let newSlide = structuredClone(currentSlideVariables);
-  if (dataType === undefined) {
+  if (dataType === undefined || dataType === "") {
     newSlide[variableName] = newValue;
   } else {
     if (index === undefined) {
@@ -83,7 +82,8 @@ export function updObj(
   }
 
   updateCurrentSlideVariables(newSlide);
-  saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId);
+  console.log(newSlide)
+  return [newSlide, saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId)];
 }
 
 export function createObj(

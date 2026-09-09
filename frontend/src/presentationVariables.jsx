@@ -1,6 +1,7 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { createNewSlide } from "./slideFunctions";
 import { shuffleArray } from "./extraFunctions";
+import { saveChange } from "./keyBindFunctions";
 
 const PresentationVariables = createContext(null);
 
@@ -42,16 +43,54 @@ export function VariableContainer({ children }) {
     copiedObject.current = newVal;
   }
 
+  const dupePos = useRef(0);
   function duplicateSlide(slideVariables) {
-    createNewSlide(
+    dupePos.current = currentlySelectedSlideId.current + 1
+    let newVals = createNewSlide(
       slideVariables,
-      createNewSlideId,
+      dupePos,
       changeCreateNewSlideId,
       currentlySelectedSlideId,
       updateCurrentlySelectedSlideId,
       allSlides,
       updateAllSlides,
     );
+
+    console.log(newVals);
+    saveNewChanges({
+      allSlidesOverride: newVals[0],
+      currentlySelectedSlideIdOverride: newVals[1],
+      currentSlideVariablesOverride: slideVariables,
+    });
+  }
+
+  function saveNewChanges({
+    allSlidesOverride,
+    currentSlideVariablesOverride,
+    updateVariableOverride,
+    selectedObjectOverride,
+    newSlidePrefabsOverride,
+    currentPageNumberOverride,
+    selectedPrefabTypeOverride,
+    modalActiveOverride,
+    currentlySelectedSlideIdOverride,
+    createNewSlideIdOverride,
+  } = {}) {
+    console.log(currentlySelectedSlideIdOverride)
+    saveChange({
+      allSlides: allSlidesOverride || allSlides,
+      currentSlideVariables:
+        currentSlideVariablesOverride || currentSlideVariables,
+      updateVariable: updateVariableOverride || updateVariable,
+      selectedObject: selectedObjectOverride || selectedObject,
+      newSlidePrefabs: newSlidePrefabsOverride || newSlidePrefabs,
+      currentPageNumber: currentPageNumberOverride || currentPageNumber,
+      selectedPrefabType: selectedPrefabTypeOverride || selectedPrefabType,
+      modalActive: modalActiveOverride ?? modalActive,
+      currentlySelectedSlideId:
+        currentlySelectedSlideIdOverride ?? currentlySelectedSlideId.current ?? -1,
+      createNewSlideId: createNewSlideIdOverride ?? createNewSlideId.current ?? -1,
+    });
   }
 
   return (
@@ -86,6 +125,7 @@ export function VariableContainer({ children }) {
         updateUsedImages,
         copiedObject,
         saveCopiedObject,
+        saveNewChanges,
       }}
     >
       {children}

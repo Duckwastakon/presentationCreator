@@ -4,11 +4,12 @@ import { SlideTab } from "./viewComponents/tabs";
 import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
 import { ActionPanel } from "./viewComponents/actionPanel";
 import { Modal } from "./viewComponents/modal";
-import { redoChange, undoChange } from "./keyBindFunctions";
 import { SlideStylePicker } from "./viewComponents/slideStylePicker";
 import { dupObj } from "./objectFunctions";
 import { fetchAllStyles, fetchStyles } from "./fetchFunctions";
 import { useVariables } from "./presentationVariables";
+import { changeHistory } from "./keyBindFunctions";
+import { HeaderBar } from "./viewComponents/headerBar";
 
 function App() {
   const {
@@ -18,7 +19,6 @@ function App() {
     updateCurrentSlideVariables,
     currentlySelectedSlideId,
     updateVariable,
-    updateSelectedObject,
     updateNewSlidePrefabs,
     updatePageNumber,
     prefabTypes,
@@ -28,7 +28,11 @@ function App() {
     modalActive,
     updateModal,
     copiedObject,
-    changeCreateNewSlideId
+    changeCreateNewSlideId,
+    setUpdateVariable,
+    setSelectedObject,
+    updateCurrentlySelectedSlideId,
+    saveNewChanges,
   } = useVariables();
 
   function getSelectedObjectVariables() {
@@ -40,17 +44,31 @@ function App() {
     ];
   }
 
-  function saveSlide(newSlide) {
+  async function saveSlide(newSlide) {
     updateAllSlides({
       ...allSlides,
       [currentlySelectedSlideId.current]: newSlide,
+    });
+
+    let newSlidesOverride = {
+      ...allSlides,
+      [currentlySelectedSlideId.current]: newSlide,
+    };
+    console.log(currentSlideVariables);
+    console.log(newSlide);
+    console.log(allSlides);
+    console.log("newChangeSaved");
+    console.log(newSlidesOverride);
+    saveNewChanges({
+      currentSlideVariablesOverride: newSlide,
+      allSlidesOverride: newSlidesOverride,
     });
   }
 
   function pasteObject() {
     Object.entries(copiedObject.current).map((entry) => {
-      if (entry[0] == "" || entry[1] == {}) return;
       console.log(entry);
+      if (entry[0] == "" || entry[1] == {}) return;
       dupObj(
         entry[0],
         entry[1],
@@ -63,29 +81,48 @@ function App() {
 
   useEffect(() => {
     fetchAllStyles(updatePrefabTypes);
-    fetchStyles("intro", updateNewSlidePrefabs);
+    fetchStyles("intro", updateNewSlidePrefabs, saveNewChanges);
+  }, []);
+
+  useEffect(() => {
     function handleKeyCombo(event) {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
-        undoChange(
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "z" &&
+        !event.repeat
+      ) {
+        console.log("undo");
+        changeHistory(
+          -1,
           updateAllSlides,
-          currentlySelectedSlideId,
           updateCurrentSlideVariables,
-          updateSelectedObject,
+          setUpdateVariable,
+          setSelectedObject,
           updateNewSlidePrefabs,
           updatePageNumber,
+          changeSelectedPrefabType,
           updateModal,
+          updateCurrentlySelectedSlideId,
           changeCreateNewSlideId,
         );
       }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
-        redoChange(
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "y" &&
+        !event.repeat
+      ) {
+        console.log("redo");
+        changeHistory(
+          1,
           updateAllSlides,
-          currentlySelectedSlideId,
           updateCurrentSlideVariables,
-          updateSelectedObject,
+          setUpdateVariable,
+          setSelectedObject,
           updateNewSlidePrefabs,
           updatePageNumber,
+          changeSelectedPrefabType,
           updateModal,
+          updateCurrentlySelectedSlideId,
           changeCreateNewSlideId,
         );
       }
@@ -107,10 +144,11 @@ function App() {
       <div className="container">
         {modalActive && <Modal />}
         <div className="editorWindow">
+          <HeaderBar/>
           <MainPresentationDisplay />
-          <ActionPanel selectedObject={getSelectedObjectVariables()}/>
+          <ActionPanel selectedObject={getSelectedObjectVariables()} />
         </div>
-        <SlideTab/>
+        <SlideTab />
       </div>
     );
   } else {
@@ -126,7 +164,7 @@ function App() {
                 key={i}
                 className="slideTypeButton"
                 onMouseDown={() => {
-                  fetchStyles(val, updateNewSlidePrefabs);
+                  fetchStyles(val, updateNewSlidePrefabs, saveNewChanges);
                   changeSelectedPrefabType(val);
                 }}
                 style={{ backgroundColor: bgColor }}
@@ -136,8 +174,8 @@ function App() {
             );
           })}
         </div>
-        <SlideStylePicker/>
-        <SlideTab/>
+        <SlideStylePicker />
+        <SlideTab />
       </div>
     );
   }

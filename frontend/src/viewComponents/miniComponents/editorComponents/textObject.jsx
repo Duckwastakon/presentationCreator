@@ -15,12 +15,17 @@ export const TextObject = ({
     updateCurrentSlideVariables,
     setSelectedObject,
     setSelectedObjectsVariables,
+    selectedObjectsVariables,
     updateAllSlides,
     allSlides,
     currentlySelectedSlideId,
     setUpdateVariable,
+    saveNewChanges,
   } = useVariables();
-
+  let ExtraVariables = {};
+  if (selected) {
+    ExtraVariables.textColor = selectedObjectsVariables.textColor;
+  }
   return (
     <div
       style={{
@@ -39,7 +44,7 @@ export const TextObject = ({
         type="text"
         value={variables[1].text}
         onChange={(newVal) => {
-          updObj(
+          let newAllSlides = updObj(
             "text",
             variables[0],
             "text",
@@ -54,6 +59,11 @@ export const TextObject = ({
           let newVars = structuredClone(variables);
           newVars[1].text = newVal.target.value;
           setSelectedObjectsVariables(newVars);
+
+          saveNewChanges({
+            currentSlideVariablesOverride: newAllSlides[0],
+            allSlidesOverride: newAllSlides[1],
+          });
         }}
         onSelect={() => {
           setUpdateVariable(["text", variables[0], undefined]);
@@ -68,9 +78,9 @@ export const TextObject = ({
           width: "100%",
           height: "100%",
           fontSize: (variables[1].fontSize * 2.5).toString() + "px",
-          color: variables[1].textColor || "black",
+          color:  variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
-          WebkitTextStrokeWidth: `${variables[1].outlineWidth}px`,
+          WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,
           WebkitTextStrokeColor: variables[1].outlineColor || "black",
           textDecoration: variables[1].textDecoration || "none",
           fontStyle: variables[1].fontStyle || "normal",

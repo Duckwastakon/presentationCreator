@@ -4,7 +4,6 @@ import { NewSlideButton } from "./miniComponents/tabComponents/newSlideButton";
 import "./componentStyling/tabs.css";
 import { useRef, useState } from "react";
 import { MovingSlide } from "./miniComponents/tabComponents/inMovementSlide";
-import { saveChange } from "../keyBindFunctions";
 import { selectNewSlide } from "../slideFunctions";
 import { useVariables } from "../presentationVariables";
 
@@ -20,6 +19,7 @@ export const SlideTab = () => {
     changeCreateNewSlideId,
     createNewSlideId,
     currentlySelectedSlideId,
+    saveNewChanges,
   } = useVariables();
 
   const [movingSlide, UpdateMovingSlide] = useState({});
@@ -42,6 +42,8 @@ export const SlideTab = () => {
       updateCurrentlySelectedSlideId,
       changeCreateNewSlideId,
     );
+
+    saveNewChanges({currentlySelectedSlideIdOverride: slideId, CurrentSlideVariablesOverride: slideVars, createNewSlideIdOverride: -1})
   }
 
   function startMovingSlide(event, slide, slidePos) {
@@ -145,8 +147,9 @@ export const SlideTab = () => {
 
       UpdateMovingSlide({});
       updateAllSlides(newSlideOrder);
-      selectSlide(movingSlide, newSlidePos);
-      saveChange({ slides: newSlideOrder, currentSlideId: newSlidePos });
+      updateCurrentSlideVariables(movingSlide);
+      updateCurrentlySelectedSlideId(newSlidePos);
+      saveNewChanges({allSlidesOverride: newSlideOrder, currentlySelectedSlideIdOverride: newSlidePos, CurrentSlideVariablesOverride: movingSlide})
     }
   }
 

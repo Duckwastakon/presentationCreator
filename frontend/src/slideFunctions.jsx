@@ -1,29 +1,31 @@
-import { saveChange } from "./keyBindFunctions";
-
 export function selectNewSlide(
   slideVariables,
   slideId,
   updateSelectedSlide,
   updateCurrentSlideId,
-  updateCreateNewSlideId
+  updateCreateNewSlideId,
 ) {
   updateCurrentSlideId(slideId);
   updateCreateNewSlideId(undefined);
   updateSelectedSlide(slideVariables);
-
-  saveChange({
-    currentlySelectedSlideId: slideId,
-    currentSlideVariables: structuredClone(slideVariables),
-    createNewSlideId: undefined,
-  });
 }
 
-export function saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId) {
-    updateAllSlides({
-      ...allSlides,
-      [currentlySelectedSlideId.current]: newSlide,
-    });
-  }
+export function saveSlide(
+  newSlide,
+  updateAllSlides,
+  allSlides,
+  currentlySelectedSlideId,
+) {
+  updateAllSlides({
+    ...allSlides,
+    [currentlySelectedSlideId.current]: newSlide,
+  });
+
+  return {
+    ...allSlides,
+    [currentlySelectedSlideId.current]: newSlide,
+  };
+}
 
 export function startCreatingNewSlide(
   newSlidePosId,
@@ -34,13 +36,6 @@ export function startCreatingNewSlide(
   updateCreateNewSlideId(newSlidePosId);
   updateSelectedSlide({});
   updateCurrentSlideId(undefined);
-  console.log(newSlidePosId)
-
-  saveChange({
-    currentlySelectedSlideId: -1,
-    currentSlideVariables: {},
-    createNewSlideId: newSlidePosId,
-  });
 }
 
 export function deleteSelectedSlide(
@@ -64,12 +59,7 @@ export function deleteSelectedSlide(
   updateAllSlides(newSlides);
   updateSelectedSlide({});
 
-  saveChange({
-    allSlides: structuredClone(newSlides),
-    currentSlideId: -1,
-    createNewSlideId: createSpot,
-    currentSlideVariables: {},
-  });
+  return [newSlides, createSpot];
 }
 
 export function createNewSlide(
@@ -81,7 +71,8 @@ export function createNewSlide(
   allSlides,
   updateAllSlides,
 ) {
-  updateCurrentlySelectedSlideId(createNewSlideId.current);
+  let val = createNewSlideId.current;
+  updateCurrentlySelectedSlideId(val);
   let newSlides = {};
   let createNew = false;
 
@@ -113,10 +104,5 @@ export function createNewSlide(
 
   changeCreateNewSlideId(undefined);
   updateAllSlides(newSlides);
-  saveChange({
-    allSlides: structuredClone(newSlides),
-    createNewSlideId: undefined,
-    currentSelectedSlideId: currentlySelectedSlideId.current,
-    currentSlideVariables: structuredClone(newSlideVariables),
-  });
+  return [newSlides, val];
 }

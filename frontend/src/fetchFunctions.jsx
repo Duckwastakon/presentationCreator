@@ -20,9 +20,10 @@ export function getImage(
     console.log(savedImages);
     savedImages.map((entry) => {
       if (entry[0] === query) {
+        console.log(selectedObject);
         found = true;
         let currentImageId;
-        if (selectedObject[0] != undefined) {
+        if (selectedObject[0] != undefined && selectedObject[0] != "") {
           currentImageId =
             currentSlideVariables[selectedObject[0]][selectedObject[1]]["src"];
         } else {
@@ -30,24 +31,30 @@ export function getImage(
         }
         let i = 0;
         for (const img of entry[1]) {
-          if (img.src.original === currentImageId) {
+          console.log(currentImageId);
+          if (
+            img.src.original === currentImageId
+          ) {
+            console.log("got same pic");
             if (i + 1 >= entry[1].length) i = 0;
 
-            if (selectedObject.length > 0) {
+            if (selectedObject.length > 0 && selectedObject[0] !== "") {
               updateObject(
                 selectedObject[0],
                 selectedObject[1],
                 selectedObject[2],
                 entry[1][i + 1].src.original,
               );
-              const val = entry[1][i + 1].width / entry[1][i + 1].height;
-              updateObject(
-                selectedObject[0],
-                selectedObject[1],
-                "aspectRatio",
-                val,
-              );
+              //const val = entry[1][i + 1].width / entry[1][i + 1].height;
+              //updateObject(
+              //  selectedObject[0],
+              //  selectedObject[1],
+              //  "aspectRatio",
+              //  val,
+              //);
             } else {
+              console.log("bg");
+              console.log(entry[1][i + 1].src.original);
               updateObject(
                 undefined,
                 undefined,
@@ -55,21 +62,26 @@ export function getImage(
                 entry[1][i + 1].src.original,
               );
             }
-
             return;
           }
 
           i += 1;
         }
-
         console.log("cant find next image");
         console.log(entry);
+
+        updateObject(
+          selectedObject[0],
+          selectedObject[1],
+          selectedObject[2],
+          entry[1][0].src.original,
+        );
 
         console.log(savedImages);
       }
     });
   }
-
+  console.log(found);
   if (!found) {
     fetchImage(query, selectedObject, updateUsedImages, updateObject);
   }
@@ -93,8 +105,9 @@ export function fetchImage(
       var gottenRandNum = Math.floor(Math.random() * 4);
       console.log(gottenRandNum, data[gottenRandNum]);
 
-      if (selectedObject.length > 0) {
+      if (selectedObject.length > 0 && selectedObject[0] !== "") {
         console.log("has");
+        console.log(selectedObject);
         updateObject(
           selectedObject[0],
           selectedObject[1],
@@ -102,8 +115,9 @@ export function fetchImage(
           data[gottenRandNum].src.original,
         );
         const val = data[gottenRandNum].width / data[gottenRandNum].height;
-        updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val);
+        //updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val);
       } else {
+        console.log("updateBackground");
         updateObject(
           undefined,
           undefined,
@@ -114,13 +128,17 @@ export function fetchImage(
     });
 }
 
-export function fetchStyles(type, updateNewSlidePrefabs) {
+export function fetchStyles(type, updateNewSlidePrefabs, SaveNewChanges) {
   fetch(`/styles?type=${type}`, {
     method: "get",
   })
     .then((res) => res.json())
     .then((data) => {
       updateNewSlidePrefabs(data);
+      SaveNewChanges({
+        newSlidePrefabsOverride: data,
+        selectedPrefabType: type,
+      });
     });
 }
 

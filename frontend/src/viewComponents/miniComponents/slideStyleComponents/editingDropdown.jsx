@@ -1,10 +1,13 @@
-export const EditingDropDown = (
-  {xPos,
+import { useVariables } from "../../../presentationVariables";
+
+export const EditingDropDown = ({
+  xPos,
   yPos,
   duplicateSlide,
   deleteSlide,
-  hideDropDown,}
-) => {
+  hideDropDown,
+}) => {
+  const { saveNewChanges } = useVariables();
   return (
     <div
       style={{
@@ -13,10 +16,10 @@ export const EditingDropDown = (
         height: "100px",
         position: "fixed",
         left: `${xPos}px`,
-        top: `${yPos-100}px`,
+        top: `${yPos - 100}px`,
         alignItems: "center",
         justifyContent: "center",
-        zIndex: 102,
+        zIndex: 110,
       }}
     >
       <button
@@ -32,6 +35,7 @@ export const EditingDropDown = (
         onMouseDown={() => {
           deleteSlide(true);
           hideDropDown();
+          saveNewChanges({ modalActiveOverride: true });
         }}
       >
         delete

@@ -1,34 +1,35 @@
 let history = {};
 let currentHistoryId = 0;
 
-export function undoChange(
+export function changeHistory(
+  change,
   updateAllSlides,
-  currentlySelectedSlideId,
   updateCurrentSlideVariables,
-  updateSelectedObject,
+  setUpdateVariable,
+  setSelectedObject,
   updateNewSlidePrefabs,
   updatePageNumber,
+  changeSelectedPrefabType,
   updateModal,
-  createNewSlideId,
+  updateCurrentlySelectedSlideId,
+  changeCreateNewSlideId,
 ) {
-  if (currentHistoryId > 1) {
-    currentHistoryId -= 1;
+  if (Object.keys(history).includes(String(currentHistoryId + change))) {
+    currentHistoryId += change;
     if (history[currentHistoryId][0] != undefined) {
       updateAllSlides(history[currentHistoryId][0]);
     }
     if (history[currentHistoryId][1] != undefined) {
-      if (history[currentHistoryId][1] == -1) {
-        currentlySelectedSlideId.current = undefined;
-      } else {
-        currentlySelectedSlideId.current = history[currentHistoryId][1];
-      }
+      updateCurrentSlideVariables(history[currentHistoryId][1]);
     }
-    if (history[currentHistoryId][2] != undefined) {
-      updateCurrentSlideVariables(history[currentHistoryId][2]);
-    }
-    if (history[currentHistoryId][3] != undefined) {
-      updateSelectedObject(history[currentHistoryId][3]);
-    }
+    //if (history[currentHistoryId][2] != undefined) {
+    //  setUpdateVariable(history[currentHistoryId][2]);
+    //}
+    setUpdateVariable([])
+    setSelectedObject(["", ""])
+    //if (history[currentHistoryId][3] != undefined) {
+    //  setSelectedObject(history[currentHistoryId][3]);
+    //}
     if (history[currentHistoryId][4] != undefined) {
       updateNewSlidePrefabs(history[currentHistoryId][4]);
     }
@@ -36,78 +37,58 @@ export function undoChange(
       updatePageNumber(history[currentHistoryId][5]);
     }
     if (history[currentHistoryId][6] != undefined) {
-      updateModal(history[currentHistoryId][6]);
+      changeSelectedPrefabType(history[currentHistoryId][6]);
     }
     if (history[currentHistoryId][7] != undefined) {
-      createNewSlideId.current = history[currentHistoryId][7];
+      updateModal(history[currentHistoryId][7]);
     }
-  }
-}
-
-export function redoChange(
-  updateAllSlides,
-  currentlySelectedSlideId,
-  updateCurrentSlideVariables,
-  updateSelectedObject,
-  updateNewSlidePrefabs,
-  updatePageNumber,
-  updateModal,
-  createNewSlideId,
-) {
-  if (Object.keys(history).length > currentHistoryId - 1) {
-    currentHistoryId += 1;
-    if (history[currentHistoryId][0] != undefined) {
-      updateAllSlides(history[currentHistoryId][0]);
-    }
-    if (history[currentHistoryId][1] != undefined) {
-      if (history[currentHistoryId][1] == -1) {
-        currentlySelectedSlideId.current = undefined;
+    if (history[currentHistoryId][8] != undefined) {
+      if (history[currentHistoryId][8] == -1) {
+        updateCurrentlySelectedSlideId(undefined);
       } else {
-        currentlySelectedSlideId.current = history[currentHistoryId][1];
+        updateCurrentlySelectedSlideId(history[currentHistoryId][8]);
       }
     }
-    if (history[currentHistoryId][2] != undefined) {
-      updateCurrentSlideVariables(history[currentHistoryId][2]);
-    }
-    if (history[currentHistoryId][3] != undefined) {
-      updateSelectedObject(history[currentHistoryId][3]);
-    }
-    if (history[currentHistoryId][4] != undefined) {
-      updateNewSlidePrefabs(history[currentHistoryId][4]);
-    }
-    if (history[currentHistoryId][5] != undefined) {
-      updatePageNumber(history[currentHistoryId][5]);
-    }
-    if (history[currentHistoryId][6] != undefined) {
-      updateModal(history[currentHistoryId][6]);
-    }
-    if (history[currentHistoryId][7] != undefined) {
-      createNewSlideId.current = history[currentHistoryId][7];
+    if (history[currentHistoryId][9] != undefined) {
+      if (history[currentHistoryId][9] == -1) {
+        changeCreateNewSlideId(undefined);
+      } else {
+        changeCreateNewSlideId(history[currentHistoryId][9]);
+      }
     }
   }
 }
 
 export function saveChange({
   allSlides,
-  currentlySelectedSlideId,
   currentSlideVariables,
+  updateVariable,
   selectedObject,
   newSlidePrefabs,
   currentPageNumber,
+  selectedPrefabType,
   modalActive,
+  currentlySelectedSlideId,
   createNewSlideId,
 }) {
   currentHistoryId += 1;
   history[currentHistoryId] = {
     [0]: allSlides,
-    [1]: currentlySelectedSlideId,
-    [2]: currentSlideVariables,
+    [1]: currentSlideVariables,
+    [2]: updateVariable,
     [3]: selectedObject,
     [4]: newSlidePrefabs,
     [5]: currentPageNumber,
-    [6]: modalActive,
-    [7]: createNewSlideId,
+    [6]: selectedPrefabType,
+    [7]: modalActive,
+    [8]: currentlySelectedSlideId,
+    [9]: createNewSlideId,
   };
+  Object.entries(history).map((val) => {
+    if (Number(val[0]) > currentHistoryId) {
+      delete history[val[0]];
+    }
+  });
   console.log(history);
 }
 

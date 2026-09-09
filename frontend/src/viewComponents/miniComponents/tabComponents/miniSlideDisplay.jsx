@@ -12,6 +12,7 @@ export const MiniSlideDisplay = ({
   const {
     currentlySelectedSlideId,
     updateModal,
+    saveNewChanges
   } = useVariables();
 
   const vars = slideVal[1];
@@ -82,6 +83,8 @@ export const MiniSlideDisplay = ({
           className="deleteSlideButton"
           onMouseUp={() => {
             updateModal(true);
+
+            saveNewChanges({modalActiveOverride: true})
           }}
         >
           <img

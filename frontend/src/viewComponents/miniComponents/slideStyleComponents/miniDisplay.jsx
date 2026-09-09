@@ -10,6 +10,7 @@ export const MiniDisplay = ({ vars, ind }) => {
     updateCurrentlySelectedSlideId,
     allSlides,
     updateAllSlides,
+    saveNewChanges,
   } = useVariables();
 
   return (
@@ -18,7 +19,7 @@ export const MiniDisplay = ({ vars, ind }) => {
       onClick={() => {
         const slideClone = structuredClone(vars);
         updateCurrentSlideVariables(slideClone);
-        createNewSlide(
+        let newValues = createNewSlide(
           slideClone,
           createNewSlideId,
           changeCreateNewSlideId,
@@ -27,6 +28,15 @@ export const MiniDisplay = ({ vars, ind }) => {
           allSlides,
           updateAllSlides,
         );
+
+        console.log(newValues)
+
+        saveNewChanges({
+          currentlySelectedSlideIdOverride: newValues[1],
+          allSlidesOverride: newValues[0],
+          currentSlideVariablesOverride: slideClone,
+          createNewSlideIdOverride: -1,
+        });
       }}
     >
       <div className="miniPresentation">

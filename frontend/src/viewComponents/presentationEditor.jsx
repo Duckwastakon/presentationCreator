@@ -20,6 +20,7 @@ export const MainPresentationDisplay = () => {
     updateAllSlides,
     allSlides,
     currentlySelectedSlideId,
+    saveNewChanges,
   } = useVariables();
 
   let changingState = useRef(0);
@@ -97,6 +98,8 @@ export const MainPresentationDisplay = () => {
     if (changingState.current === 0) return;
 
     if (changingState.current < 9) {
+      console.log(selectedObjectsVariables);
+      console.log(currentSlideVariables[selectedObject[0]][selectedObject[1]]);
       handleMouseResize(event);
     } else {
       handleObjectMove(event);
@@ -106,8 +109,8 @@ export const MainPresentationDisplay = () => {
   function startResizing(event, newState) {
     StartingXY.current = [event.clientX, event.clientY];
     startingXYPos.current = [
-      selectedObjectsVariables[1].x,
-      selectedObjectsVariables[1].y,
+      structuredClone(selectedObjectsVariables)[1].x,
+      structuredClone(selectedObjectsVariables)[1].y,
     ];
     lockedX.current = event.clientX;
     lockedY.current = event.clientY;
@@ -122,55 +125,48 @@ export const MainPresentationDisplay = () => {
     changingState.current = 0;
     if (selectedObject[0] === "") return;
 
-    let newVars = {
-      ...currentSlideVariables[selectedObject[0]][selectedObject[1]],
-    };
-    ((newVars.x = selectedObjectsVariables[1].x),
-      (newVars.y = selectedObjectsVariables[1].y),
-      (newVars.w = selectedObjectsVariables[1].w),
-      (newVars.h = selectedObjectsVariables[1].h),
-      updObj(
-        selectedObject[0],
-        selectedObject[1],
-        undefined,
-        newVars,
-        currentSlideVariables,
-        updateCurrentSlideVariables,
-        updateAllSlides,
-        allSlides,
-        currentlySelectedSlideId,
-      ));
+    let newVars = structuredClone(currentSlideVariables[selectedObject[0]][selectedObject[1]]);
+    console.log(newVars)
+    newVars.x = selectedObjectsVariables[1].x;
+    newVars.y = selectedObjectsVariables[1].y;
+    newVars.w = selectedObjectsVariables[1].w;
+    newVars.h = selectedObjectsVariables[1].h;
+
+    let updateValues = updObj(
+      selectedObject[0],
+      selectedObject[1],
+      undefined,
+      newVars,
+      currentSlideVariables,
+      updateCurrentSlideVariables,
+      updateAllSlides,
+      allSlides,
+      currentlySelectedSlideId,
+    );
 
     xLocked.current = false;
     yLocked.current = false;
     removeXBar();
     removeYBar();
+
+    saveNewChanges({
+      currentSlideVariablesOverride: structuredClone(updateValues[0]),
+      allSlidesOverride: structuredClone(updateValues[1]),
+    });
   }
 
   function handleMouseResize(event) {
     let xDiff = lastX.current - event.clientX;
     let yDiff = lastY.current - event.clientY;
 
-    let dotTLPos = [
-      selectedObjectsVariables[1].x,
-      selectedObjectsVariables[1].y,
-    ];
-    let dotTRPos = [
-      selectedObjectsVariables[1].x + selectedObjectsVariables[1].w,
-      selectedObjectsVariables[1].y,
-    ];
-    let dotBLPos = [
-      selectedObjectsVariables[1].x,
-      selectedObjectsVariables[1].y + selectedObjectsVariables[1].h,
-    ];
-    let dotBRPos = [
-      selectedObjectsVariables[1].x + selectedObjectsVariables[1].w,
-      selectedObjectsVariables[1].y + selectedObjectsVariables[1].h,
-    ];
+    let newVals = structuredClone(selectedObjectsVariables);
+
+    let dotTLPos = [newVals[1].x, newVals[1].y];
+    let dotTRPos = [newVals[1].x + newVals[1].w, newVals[1].y];
+    let dotBLPos = [newVals[1].x, newVals[1].y + newVals[1].h];
+    let dotBRPos = [newVals[1].x + newVals[1].w, newVals[1].y + newVals[1].h];
 
     let valDifference = [13.333 * (xDiff / 800), 7.5 * (yDiff / 450)];
-
-    let newVals = structuredClone(selectedObjectsVariables);
 
     switch (changingState.current) {
       case 1:
@@ -297,6 +293,10 @@ export const MainPresentationDisplay = () => {
     lastX.current = event.clientX;
     lastY.current = event.clientY;
 
+    console.log(selectedObjectsVariables);
+    console.log(currentSlideVariables);
+    console.log(newVals);
+
     setSelectedObjectsVariables(newVals);
   }
 
@@ -329,9 +329,7 @@ export const MainPresentationDisplay = () => {
 
     for (let type of Object.keys(allObjects)) {
       for (let variables of Object.entries(allObjects[type])) {
-        if (selectedObject[0] == type && selectedObject[1] == variables[0])
-          console.log("a");
-        else {
+        if (selectedObject[0] !== type && selectedObject[1] !== variables[0]) {
           if (
             Math.abs(variables[1].x + variables[1].w / 2 - xPos) < lockTolerance
           ) {
@@ -439,11 +437,8 @@ export const MainPresentationDisplay = () => {
     };
 
     for (let type of Object.keys(allObjects)) {
-      console.log(type);
       for (let variables of Object.entries(allObjects[type])) {
-        if (selectedObject[0] == type && selectedObject[1] == variables[0])
-          console.log("a");
-        else {
+        if (selectedObject[0] !== type && selectedObject[1] !== variables[0]) {
           if (
             Math.abs(variables[1].y + variables[1].h / 2 - yPos) < lockTolerance
           ) {
@@ -589,7 +584,7 @@ export const MainPresentationDisplay = () => {
       className="presentationBackground"
       style={{
         backgroundImage: `url(${currentSlideVariables.backgroundImageUrl})`,
-        backgroundColor: `${currentSlideVariables.backgroundColor}`,
+        backgroundColor: `${selectedObjectsVariables.backgroundColor || currentSlideVariables.backgroundColor}`,
       }}
       onMouseMove={(event) => handleMouseMovement(event)}
       onMouseLeave={() => {
@@ -609,18 +604,21 @@ export const MainPresentationDisplay = () => {
       {Object.entries(currentSlideVariables.text).map((variables) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
-
+        const gottenVariables = structuredClone(variables)
         if (selected) {
-          variables[1].x = selectedObjectsVariables[1].x;
-          variables[1].y = selectedObjectsVariables[1].y;
-          variables[1].w = selectedObjectsVariables[1].w;
-          variables[1].h = selectedObjectsVariables[1].h;
+          gottenVariables[1].x = selectedObjectsVariables[1].x;
+          gottenVariables[1].y = selectedObjectsVariables[1].y;
+          gottenVariables[1].w = selectedObjectsVariables[1].w;
+          gottenVariables[1].h = selectedObjectsVariables[1].h;
+          gottenVariables[1].textColor = selectedObjectsVariables[1].textColor;
+          gottenVariables[1].outlineColor = selectedObjectsVariables[1].outlineColor;
+          gottenVariables[1].outlineWidth = selectedObjectsVariables[1].outlineWidth;
         }
         return (
           <TextObject
             startResizing={startResizing}
             stopResizing={stopResizing}
-            variables={variables}
+            variables={gottenVariables}
             ind={variables[0]}
             selected={selected}
           />
@@ -630,18 +628,22 @@ export const MainPresentationDisplay = () => {
       {Object.entries(currentSlideVariables.images).map((variables) => {
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
-
+        
+        const gottenVariables = structuredClone(variables)
         if (selected) {
-          variables[1].x = selectedObjectsVariables[1].x;
-          variables[1].y = selectedObjectsVariables[1].y;
-          variables[1].w = selectedObjectsVariables[1].w;
-          variables[1].h = selectedObjectsVariables[1].h;
+          gottenVariables[1].x = selectedObjectsVariables[1].x;
+          gottenVariables[1].y = selectedObjectsVariables[1].y;
+          gottenVariables[1].w = selectedObjectsVariables[1].w;
+          gottenVariables[1].h = selectedObjectsVariables[1].h;
+          gottenVariables[1].cornerRadius = selectedObjectsVariables[1].cornerRadius
+          gottenVariables[1].borderWidth = selectedObjectsVariables[1].borderWidth
+          gottenVariables[1].borderColor = selectedObjectsVariables[1].borderColor
         }
         return (
           <ImageObject
             startResizing={startResizing}
             stopResizing={stopResizing}
-            variables={variables}
+            variables={gottenVariables}
             ind={variables[0]}
             selected={selected}
           />

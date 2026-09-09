@@ -6,11 +6,8 @@ import { MiniDisplay } from "./miniComponents/slideStyleComponents/miniDisplay";
 import { useVariables } from "../presentationVariables";
 
 export const SlideStylePicker = () => {
-  const {
-    newSlidePrefabs,
-    currentPageNumber,
-    updatePageNumber,
-  } = useVariables();
+  const { newSlidePrefabs, currentPageNumber, updatePageNumber } =
+    useVariables();
 
   function changePage(allObj, objPerPage, newPageVal, changeFunc) {
     const possiblePages = Math.ceil(allObj / objPerPage);
@@ -26,12 +23,12 @@ export const SlideStylePicker = () => {
 
   let possibleStyles = {};
   for (let i = 0; i < 4; i++) {
-    if (newSlidePrefabs[i + currentPageNumber * 4] != null) {
-      possibleStyles = {
-        ...possibleStyles,
-        [i]: newSlidePrefabs[i + currentPageNumber * 4],
-      };
-    }
+      if (newSlidePrefabs[i + currentPageNumber * 4] != null) {
+        possibleStyles = {
+          ...possibleStyles,
+          [i]: newSlidePrefabs[i + currentPageNumber * 4],
+        };
+      }
   }
 
   return (
@@ -60,10 +57,7 @@ export const SlideStylePicker = () => {
       </button>
       <div className="styleChoiceContainer">
         {Object.entries(possibleStyles).map((vars, index) => (
-          <MiniDisplay
-            ind={index}
-            vars={vars[1]}
-          />
+          <MiniDisplay ind={index} vars={vars[1]} />
         ))}
       </div>
       <button

@@ -10,11 +10,8 @@ export const ImageObject = ({
   ind,
   selected,
 }) => {
-  const {
-    setSelectedObject,
-    setSelectedObjectsVariables,
-    setUpdateVariable,
-  } = useVariables();
+  const { setSelectedObject, setSelectedObjectsVariables, setUpdateVariable } =
+    useVariables();
 
   return (
     <div
@@ -28,15 +25,14 @@ export const ImageObject = ({
         alignItems: "center",
         justifyContent: "center",
         zIndex: variables[1].layer || 1,
+        outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
+
+        borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
       }}
     >
       <img
         className="slideImage"
         style={{
-          outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
-
-          borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
-
           display: "flex",
           width: "100%",
           height: "100%",

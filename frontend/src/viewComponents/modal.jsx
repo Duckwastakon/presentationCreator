@@ -11,6 +11,7 @@ export const Modal = () => {
     updateCurrentlySelectedSlideId,
     changeCreateNewSlideId,
     updateCurrentSlideVariables,
+    saveNewChanges,
   } = useVariables();
   return (
     <div className="modal">
@@ -19,12 +20,18 @@ export const Modal = () => {
           <p className="modalText">
             Are you sure you would like to delete the current slide?
           </p>
-          <button onMouseUp={() => updateModal(false)} className="cancelButton">
+          <button
+            onMouseUp={() => {
+              updateModal(false);
+              saveNewChanges({ modalActiveOverride: false });
+            }}
+            className="cancelButton"
+          >
             <p className="buttonText">cancel</p>
           </button>
           <button
             onMouseUp={() => {
-              deleteSelectedSlide(
+              let newValues = deleteSelectedSlide(
                 allSlides,
                 updateAllSlides,
                 currentlySelectedSlideId,
@@ -33,6 +40,14 @@ export const Modal = () => {
                 updateCurrentSlideVariables,
               );
               updateModal(false);
+
+              saveNewChanges({
+                modalActiveOverride: false,
+                allSlidesOverride: newValues[0],
+                currentlySelectedSlideIdOverride: -1,
+                createNewSlideIdOverride: newValues[1],
+                currentSlideVariablesOverride: {},
+              });
             }}
             className="continueButton"
           >
