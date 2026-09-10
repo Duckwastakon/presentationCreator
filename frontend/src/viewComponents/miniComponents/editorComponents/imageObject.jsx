@@ -26,8 +26,6 @@ export const ImageObject = ({
         justifyContent: "center",
         zIndex: variables[1].layer || 1,
         outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
-
-        borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
       }}
     >
       <img

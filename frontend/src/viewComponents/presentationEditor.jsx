@@ -635,7 +635,6 @@ export const MainPresentationDisplay = () => {
           gottenVariables[1].y = selectedObjectsVariables[1].y;
           gottenVariables[1].w = selectedObjectsVariables[1].w;
           gottenVariables[1].h = selectedObjectsVariables[1].h;
-          gottenVariables[1].cornerRadius = selectedObjectsVariables[1].cornerRadius
           gottenVariables[1].borderWidth = selectedObjectsVariables[1].borderWidth
           gottenVariables[1].borderColor = selectedObjectsVariables[1].borderColor
         }

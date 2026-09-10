@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { savePresentation } from "../fetchFunctions";
 import { useVariables } from "../presentationVariables";
 import saveButton from "./save.png";
@@ -13,8 +14,10 @@ export const HeaderBar = () => {
     saveNewChanges,
   } = useVariables();
 
+  const [presentationName, updateName] = useState("New presentation");
+
   return (
-    <div style={{zIndex: 110}}>
+    <div className="headerBar" style={{ zIndex: 110 }}>
       <button
         onMouseUp={() => {
           console.log("hey");
@@ -34,15 +37,22 @@ export const HeaderBar = () => {
         }}
         className="clearButton"
       >
-        Clear and start making a new presentation
+        start new presentation
       </button>
+      <input
+        className="presentationNameInput"
+        value={presentationName}
+        onInput={(newVal) => {
+          updateName(newVal.target.value);
+        }}
+      />
       <button
         onMouseUp={() => {
-            savePresentation(allSlides)
+          savePresentation(allSlides, presentationName);
         }}
         className="saveButton"
       >
-        <img src={saveButton} />
+        <img className="saveImage" src={saveButton} />
       </button>
     </div>
   );

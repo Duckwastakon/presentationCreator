@@ -150,13 +150,13 @@ export function fetchAllStyles(updatePrefabTypes) {
     });
 }
 
-export async function savePresentation(allSlides) {
+export async function savePresentation(allSlides, presentationsName) {
   const resp = await fetch("/generateFile/", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ slides: allSlides }),
+    body: JSON.stringify({ slides: allSlides, presentationName: presentationsName }),
   });
 
   const blob = await resp.blob();
@@ -165,7 +165,7 @@ export async function savePresentation(allSlides) {
 
   const link = document.createElement("a");
   link.href = url;
-  link.download = "presentation.pptx";
+  link.download = `${presentationsName}.pptx`;
   document.body.appendChild(link);
   link.click();
   link.remove();

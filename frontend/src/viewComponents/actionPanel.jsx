@@ -3,11 +3,10 @@ import { clamp } from "../extraFunctions";
 import { getImage } from "../fetchFunctions";
 import { createObj, updObj } from "../objectFunctions";
 import { useVariables } from "../presentationVariables";
-import { saveSlide } from "../slideFunctions";
 import "./componentStyling/actionPanelStyling.css";
 
-import upArrow from "./changeUp.png"
-import downArrow from "./changeDown.png"
+import upArrow from "./changeUp.png";
+import downArrow from "./changeDown.png";
 
 export const ActionPanel = ({ selectedObject }) => {
   const {
@@ -536,46 +535,6 @@ export const ActionPanel = ({ selectedObject }) => {
           />
         </div>
         <div className="simpleOptionContainer">
-          <p className="simpleText">corner radius</p>
-          <div className="multipleOptions">
-            <input
-              type="range"
-              value={selectedObjectsVariables[1]["cornerRadius"] || 0}
-              min={0}
-              max={16}
-              step={1}
-              onInput={(newOutlineWidth) => {
-                let newObjData = structuredClone(selectedObjectsVariables);
-                newObjData[1].cornerRadius = newOutlineWidth.target.value;
-                setSelectedObjectsVariables(newObjData);
-              }}
-              onMouseUp={() => {
-                saveTempValues();
-              }}
-            />
-            <input
-              style={{ width: "36px" }}
-              className="simpleTextInput"
-              type="number"
-              value={selectedObjectsVariables[1]["cornerRadius"] ?? 0}
-              min={0}
-              max={16}
-              step={1}
-              onInput={(newOutlineWidth) => {
-                let newObjData = structuredClone(selectedObjectsVariables);
-                newObjData[1].cornerRadius = newOutlineWidth.target.value;
-                setSelectedObjectsVariables(newObjData);
-                updateObject(
-                  selectedObject[0],
-                  selectedObject[1],
-                  "cornerRadius",
-                  newOutlineWidth.target.value,
-                );
-              }}
-            />
-          </div>
-        </div>
-        <div className="simpleOptionContainer">
           <p className="simpleText">aspect ratio</p>
           <button
             onMouseUp={() => {
@@ -692,7 +651,9 @@ export const ActionPanel = ({ selectedObject }) => {
         </div>
         <div className="simpleOptionContainer">
           <button
-          style={{background: "linear-gradient(to right, #aa55fa, #ee32ff)"}}
+            style={{
+              background: "linear-gradient(to right, #aa55fa, #ee32ff)",
+            }}
             onMouseDown={() => {
               const [newInd, newObj] = createObj(
                 "text",
@@ -704,14 +665,17 @@ export const ActionPanel = ({ selectedObject }) => {
             }}
             className="createNewButton"
           >
-            <p style={{color: "white"}}  className="simpleText">add new text</p>
+            <p style={{ color: "white" }} className="simpleText">
+              add new text
+            </p>
           </button>
         </div>
         <div className="simpleOptionContainer">
           <button
-          style={{background: "linear-gradient(to right, #52acff, #0044d7)"}}
+            style={{
+              background: "linear-gradient(to right, #52acff, #0044d7)",
+            }}
             onMouseDown={() => {
-              saveSlide();
               const [newInd, newObj] = createObj(
                 "images",
                 24,
@@ -722,7 +686,9 @@ export const ActionPanel = ({ selectedObject }) => {
             }}
             className="createNewButton"
           >
-            <p style={{color: "white"}} className="simpleText">add new image</p>
+            <p style={{ color: "white" }} className="simpleText">
+              add new image
+            </p>
           </button>
         </div>
       </div>

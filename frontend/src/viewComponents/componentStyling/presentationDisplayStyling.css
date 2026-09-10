@@ -59,17 +59,102 @@
 }
 
 .diagonal1:hover {
-  cursor: url(./images/resizeOne.png) 16 16, auto;
+  cursor:
+    url(./images/resizeOne.png) 16 16,
+    auto;
 }
 
 .diagonal2 {
-  cursor: url(./images/resizeTwo.png) 16 16, auto;
+  cursor:
+    url(./images/resizeTwo.png) 16 16,
+    auto;
 }
 
 .horizontal {
-  cursor: url(./images/resizeHorizontal.png) 16 16, auto;
+  cursor:
+    url(./images/resizeHorizontal.png) 16 16,
+    auto;
 }
 
 .vertical {
-  cursor: url(./images/resizeVertical.png) 16 16, auto;
+  cursor:
+    url(./images/resizeVertical.png) 16 16,
+    auto;
+}
+
+.headerBar {
+  width: 60%;
+  max-height: 10%;
+  background-color: beige;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clearButton {
+  color: burlywood;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.saveButton {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.saveImage {
+  width: 32px;
+  height: 32px;
+}
+
+.presentationNameInput {
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background-color: burlywood;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.presentationNameInput:hover {
+  background-color: bisque;
+}
+
+.saveButton {
+  height: 32px;
+  width: 32px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background-color: antiquewhite;
+  position: relative;
+  right: 0;
+}
+
+.saveButton:hover {
+  background-color: bisque;
+}
+
+.clearButton {
+  height: 32px;
+  width: 92px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background-color: antiquewhite;
+  position: relative;
+  left: 0;
+}
+
+.clearButton:hover {
+  background-color: bisque;
 }

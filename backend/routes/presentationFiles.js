@@ -8,6 +8,8 @@ const presentationFileRouter = express.Router();
 
 presentationFileRouter.post("/", async (req, res) => {
   const gottenBody = req.body.slides;
+  const presentationName = JSON.stringify(req.body.presentationName)
+  console.log(presentationName)
 
   const pptgen = new pptxgenjs();
 
@@ -16,7 +18,10 @@ presentationFileRouter.post("/", async (req, res) => {
   Object.entries(gottenBody).map((slideVariables) => {
     const newSlide = pptgen.addSlide();
 
-    newSlide.background = { color: slideVariables[1]["backgroundColor"] || "#ffffff", path: slideVariables[1]["backgroundImageUrl"]}
+    newSlide.background = {
+      color: slideVariables[1]["backgroundColor"] || "#ffffff",
+      path: slideVariables[1]["backgroundImageUrl"],
+    };
 
     Object.entries(slideVariables[1]["text"]).map((textVariables) => {
       newSlide.addText(textVariables[1].text, {
@@ -37,6 +42,24 @@ presentationFileRouter.post("/", async (req, res) => {
     });
 
     Object.entries(slideVariables[1]["images"]).map((imageVariables) => {
+      let borderWidth = imageVariables[1].borderWidth
+      if (borderWidth !== 0 && borderWidth !== undefined) {
+        newSlide.addShape(pptgen.ShapeType.rect, {
+          x: imageVariables[1].x,
+          y: imageVariables[1].y,
+          w: imageVariables[1].w,
+          h: imageVariables[1].h,
+
+          fill: {
+            transparency: 100
+          },
+
+          line: {
+            color: "#000000",
+            width: borderWidth * 1.5
+          }
+        });
+      }
       console.log(imageVariables);
       newSlide.addImage({
         altText: "failed to load",
@@ -45,6 +68,7 @@ presentationFileRouter.post("/", async (req, res) => {
         w: imageVariables[1].w,
         h: imageVariables[1].h,
         path: imageVariables[1].src,
+        rounding: imageVariables[1].rounded || false,
       });
     });
   });
@@ -60,7 +84,7 @@ presentationFileRouter.post("/", async (req, res) => {
 
   res.setHeader(
     "Content-Disposition",
-    'attachment; filename="presentation.pptx"',
+    `attachment; filename="${presentationName}.pptx"`,
   );
 
   res.send(generatedPresentation);
