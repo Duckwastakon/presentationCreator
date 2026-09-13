@@ -2,7 +2,7 @@ import "./componentStyling/slidePickerStyling.css";
 import arrowLeft from "./arrowLeft.png";
 import arrowRight from "./arrowRight.png";
 
-import { MiniDisplay } from "./miniComponents/slideStyleComponents/miniDisplay";
+import { MiniDisplay } from "../mainComponents/slidesTab/components/miniDisplay";
 import { useVariables } from "../presentationVariables";
 
 export const SlideStylePicker = () => {

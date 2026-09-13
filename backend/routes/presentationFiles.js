@@ -38,6 +38,7 @@ presentationFileRouter.post("/", async (req, res) => {
         bold: textVariables[1].bold == "700",
         italic: textVariables[1].fontStyle == "italic",
         underline: textVariables[1].textDecoration == "underline",
+        align: textVariables[1].textAlign || "left"
       });
     });
 

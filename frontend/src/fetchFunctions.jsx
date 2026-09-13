@@ -1,4 +1,4 @@
-export function getImage(
+export async function getImage(
   event,
   usedImages,
   updateUsedImages,
@@ -18,7 +18,7 @@ export function getImage(
 
   if (savedImages.length > 0) {
     console.log(savedImages);
-    savedImages.map((entry) => {
+    await savedImages.map(async (entry) => {
       if (entry[0] === query) {
         console.log(selectedObject);
         found = true;
@@ -37,7 +37,7 @@ export function getImage(
             if (i + 1 >= entry[1].length) i = 0;
 
             if (selectedObject.length > 0 && selectedObject[0] !== "") {
-              updateObject(
+              await updateObject(
                 selectedObject[0],
                 selectedObject[1],
                 selectedObject[2],
@@ -53,7 +53,7 @@ export function getImage(
             } else {
               console.log("bg");
               console.log(entry[1][i + 1].src.original);
-              updateObject(
+              await updateObject(
                 undefined,
                 undefined,
                 "backgroundImageUrl",
@@ -68,7 +68,7 @@ export function getImage(
         console.log("cant find next image");
         console.log(entry);
 
-        updateObject(
+        await updateObject(
           selectedObject[0],
           selectedObject[1],
           selectedObject[2],
@@ -81,21 +81,21 @@ export function getImage(
   }
   console.log(found);
   if (!found) {
-    fetchImage(query, selectedObject, updateUsedImages, updateObject);
+    await fetchImage(query, selectedObject, updateUsedImages, updateObject);
   }
 }
 
-export function fetchImage(
+export async function fetchImage(
   query,
   selectedObject,
   updateUsedImages,
   updateObject,
 ) {
-  fetch(`/API?query=${query}`, {
+  await fetch(`/API?query=${query}`, {
     method: "get",
   })
     .then((res) => res.json())
-    .then((data) => {
+    .then(async (data) => {
       console.log("gettingNewPhotos");
       console.log(data);
 
@@ -106,7 +106,7 @@ export function fetchImage(
       if (selectedObject.length > 0 && selectedObject[0] !== "") {
         console.log("has");
         console.log(selectedObject);
-        updateObject(
+        await updateObject(
           selectedObject[0],
           selectedObject[1],
           selectedObject[2],
@@ -116,13 +116,16 @@ export function fetchImage(
         //updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val);
       } else {
         console.log("updateBackground");
-        updateObject(
+        await updateObject(
           undefined,
           undefined,
           "backgroundImageUrl",
           data[gottenRandNum].src.original,
         );
       }
+    }).finally(() => {
+      console.log("image fetched")
+      return
     });
 }
 
@@ -156,7 +159,10 @@ export async function savePresentation(allSlides, presentationsName) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ slides: allSlides, presentationName: presentationsName }),
+    body: JSON.stringify({
+      slides: allSlides,
+      presentationName: presentationsName,
+    }),
   });
 
   const blob = await resp.blob();

@@ -1,15 +1,16 @@
 import { useEffect } from "react";
-import "./styling/appStyle.css";
-import { SlideTab } from "./viewComponents/tabs";
-import { MainPresentationDisplay } from "./viewComponents/presentationEditor";
-import { ActionPanel } from "./viewComponents/actionPanel";
-import { Modal } from "./viewComponents/modal";
+import "./mainComponents/appStyle.css";
+import { SlideTab } from "./mainComponents/slidesTab/tabs";
+import { ActionPanel } from "./mainComponents/variableEditor/actionPanel";
 import { SlideStylePicker } from "./viewComponents/slideStylePicker";
 import { dupObj } from "./objectFunctions";
 import { fetchAllStyles, fetchStyles } from "./fetchFunctions";
 import { useVariables } from "./presentationVariables";
 import { changeHistory } from "./keyBindFunctions";
-import { HeaderBar } from "./viewComponents/headerBar";
+import { HeaderBar } from "./mainComponents/headerComponent/headerBar";
+import { MainPresentationDisplay } from "./mainComponents/presentationEditor/presentationEditor";
+import { Modal } from "./mainComponents/deleteModal/modal";
+import { LoadingDiv } from "./mainComponents/loadingComponent/loadingDiv";
 
 function App() {
   const {
@@ -141,14 +142,19 @@ function App() {
 
   if (Object.keys(currentSlideVariables).length > 0) {
     return (
-      <div className="container">
-        {modalActive && <Modal />}
-        <div className="editorWindow">
-          <HeaderBar/>
-          <MainPresentationDisplay />
-          <ActionPanel selectedObject={getSelectedObjectVariables()} />
+      <div className="background">
+        <div className="container">
+          {modalActive && <Modal />}
+          <LoadingDiv />
+          <div className="editorWindow">
+            <div className="creatorContainer">
+              <MainPresentationDisplay />
+              <ActionPanel selectedObject={getSelectedObjectVariables()} />
+            </div>
+            <HeaderBar />
+          </div>
+          <SlideTab />
         </div>
-        <SlideTab />
       </div>
     );
   } else {

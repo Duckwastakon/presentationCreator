@@ -1,4 +1,4 @@
-import whiteDot from "./whiteDot.png";
+import whiteDot from "../images/whiteDot.png";
 
 export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
   const yResizePos = (450 / 7.5) * (objectSize[1] / 2) - 7.5;

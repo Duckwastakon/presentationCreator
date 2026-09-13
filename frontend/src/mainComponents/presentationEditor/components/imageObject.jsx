@@ -1,7 +1,8 @@
-import { ResizeDots } from "./resizeDots";
-import imageDefault from "./imagePrefab.png";
 import { useVariables } from "../../../presentationVariables";
-import { LeftClickSettings } from "./leftClickSettings";
+import { ObjectChanges } from "./objectChanges";
+import { ResizeDots } from "./resizeDots";
+import imageDefault from "../images/imagePrefab.png"
+
 
 export const ImageObject = ({
   startResizing,
@@ -65,7 +66,7 @@ export const ImageObject = ({
         }}
       />
       {selected && (
-        <LeftClickSettings
+        <ObjectChanges
           posX={variables[1].w}
           objectIndex={ind}
           objectData={variables}

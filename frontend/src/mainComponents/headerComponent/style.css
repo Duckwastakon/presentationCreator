@@ -1,0 +1,126 @@
+.headerBar {
+  width: 60%;
+  max-height: 10%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.saveImage {
+  width: 32px;
+  height: 32px;
+}
+
+.presentationNameInput {
+  height: 48px;
+  min-width: 40%;
+  max-width: 60%;
+  border-radius: 4px;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: transparent;
+  color: black;
+  outline: 2pc;
+}
+
+.presentationNameInput:hover {
+  text-decoration: underline;
+}
+
+.presentationNameInput:active {
+  border: none;
+}
+
+.saveButton {
+  height: auto;
+  width: auto;
+  aspect-ratio: 1/1;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accentColor2);
+  position: absolute;
+  right: 5%;
+}
+
+.saveButton:hover {
+  background-color: bisque;
+}
+
+.confirmButton {
+  height: 48px;
+  width: 64px;
+  aspect-ratio: 1/1;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accentColor2);
+}
+
+.confirmButton:hover {
+  background-color: bisque;
+}
+
+.clearButton {
+  position: absolute;
+  left: 5%;
+  height: 32px;
+  width: 92px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accentColor1);
+}
+
+.clearButton:hover {
+  background-color: bisque;
+}
+
+.closeImage {
+  max-width: 36px;
+  max-height: 36px;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.closeImage:hover {
+  filter: brightness(0) saturate(100%) invert(15%) sepia(100%) saturate(7000%)
+    hue-rotate(355deg);
+}
+
+.backgroundDiv {
+  width: 40%;
+  height: 40%;
+  background-color: white;
+  border: 4px solid black;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  width: 10%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

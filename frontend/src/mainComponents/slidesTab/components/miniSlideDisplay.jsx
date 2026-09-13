@@ -1,6 +1,6 @@
 import { useState } from "react";
-import cross from "./delete.png";
-import { EditingDropDown } from "../slideStyleComponents/editingDropdown";
+import cross from "../images/delete.png";
+import { EditingDropDown } from "./editingDropdown";
 import { useVariables } from "../../../presentationVariables";
 
 export const MiniSlideDisplay = ({
@@ -9,11 +9,8 @@ export const MiniSlideDisplay = ({
   onClick,
   startMovingSlide,
 }) => {
-  const {
-    currentlySelectedSlideId,
-    updateModal,
-    saveNewChanges
-  } = useVariables();
+  const { currentlySelectedSlideId, updateModal, saveNewChanges } =
+    useVariables();
 
   const vars = slideVal[1];
   const selected = Number(slideVal[0]) === currentlySelectedSlideId.current;
@@ -22,7 +19,7 @@ export const MiniSlideDisplay = ({
 
   let shadowColor;
   if (selected) {
-    shadowColor = "cyan";
+    shadowColor = "white";
   } else {
     shadowColor = "grey";
   }
@@ -42,7 +39,7 @@ export const MiniSlideDisplay = ({
       style={{
         boxShadow: `0px 0px 10px ${shadowColor}`,
         backgroundImage: `url(${vars.backgroundImageUrl})`,
-        backgroundColor: vars.backgroundColor,
+        backgroundColor: vars.backgroundColor || "white",
       }}
       className="miniSlideTab"
       onContextMenu={(event) => {
@@ -84,16 +81,23 @@ export const MiniSlideDisplay = ({
           onMouseUp={() => {
             updateModal(true);
 
-            saveNewChanges({modalActiveOverride: true})
+            saveNewChanges({ modalActiveOverride: true });
           }}
         >
-          <img
-            src={cross}
+          <svg
             style={{
               width: "100%",
-              aspectRatio: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              aspectRatio: "1/1"
             }}
-          />
+          >
+            <image
+              href={cross}
+              className="deleteQuickButton"
+            />
+          </svg>
         </button>
       )}
       {Object.entries(vars.text).map((variables, indv) => {

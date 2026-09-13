@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import "./componentStyling/presentationDisplayStyling.css";
-import { TextObject } from "./miniComponents/editorComponents/textObject";
-import { ImageObject } from "./miniComponents/editorComponents/imageObject";
-import { updObj } from "../objectFunctions";
-import { useVariables } from "../presentationVariables";
+import "./style.css";
+import { useVariables } from "../../presentationVariables";
+import { updObj } from "../../objectFunctions";
+import { ImageObject } from "./components/imageObject";
+import { TextObject } from "./components/textObject";
+
 
 const lockTolerance = 0.01;
 

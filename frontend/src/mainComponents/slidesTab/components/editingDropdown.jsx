@@ -1,5 +1,6 @@
 import { useVariables } from "../../../presentationVariables";
 
+
 export const EditingDropDown = ({
   xPos,
   yPos,
@@ -13,12 +14,12 @@ export const EditingDropDown = ({
       style={{
         backgroundColor: "gray",
         width: "100px",
-        height: "100px",
+        height: "60px",
         position: "fixed",
         left: `${xPos}px`,
-        top: `${yPos - 100}px`,
+        top: `${yPos - 60}px`,
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-around",
         zIndex: 110,
       }}
     >

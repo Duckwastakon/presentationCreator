@@ -1,7 +1,8 @@
 import { updObj } from "../../../objectFunctions";
 import { useVariables } from "../../../presentationVariables";
-import { LeftClickSettings } from "./leftClickSettings";
+import { ObjectChanges } from "./objectChanges";
 import { ResizeDots } from "./resizeDots";
+
 
 export const TextObject = ({
   startResizing,
@@ -88,7 +89,7 @@ export const TextObject = ({
         }}
       />
       {selected && (
-        <LeftClickSettings
+        <ObjectChanges
           posX={variables[1].w}
           objectIndex={ind}
           objectData={variables}

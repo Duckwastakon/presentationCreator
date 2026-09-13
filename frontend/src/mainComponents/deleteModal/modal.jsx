@@ -1,6 +1,6 @@
-import { useVariables } from "../presentationVariables";
-import { deleteSelectedSlide } from "../slideFunctions";
-import "./componentStyling/modalStyling.css";
+import { useVariables } from "../../presentationVariables";
+import { deleteSelectedSlide } from "../../slideFunctions";
+import "./style.css";
 
 export const Modal = () => {
   const {

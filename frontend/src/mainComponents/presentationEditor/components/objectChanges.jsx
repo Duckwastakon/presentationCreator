@@ -1,11 +1,11 @@
 import { useState } from "react";
-import deleteIcon from "./trashcan.png";
-import activeDeleteIcon from "./trashcanOpen.png";
-import { delObj, dupObj } from "../../../objectFunctions";
-import { saveSlide } from "../../../slideFunctions";
+import deleteIcon from "../images/trashcan.png";
+import activeDeleteIcon from "../images/trashcanOpen.png";
 import { useVariables } from "../../../presentationVariables";
+import { saveSlide } from "../../../slideFunctions";
+import { delObj, dupObj } from "../../../objectFunctions";
 
-export const LeftClickSettings = ({ posX, objectIndex, objectData }) => {
+export const ObjectChanges = ({ posX, objectIndex, objectData }) => {
   const [hoverSrc, updateSrc] = useState(deleteIcon);
 
   const {

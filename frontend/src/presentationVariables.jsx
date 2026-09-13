@@ -43,6 +43,8 @@ export function VariableContainer({ children }) {
     copiedObject.current = newVal;
   }
 
+  const [objectLoading, changeLoading] = useState(false)
+
   const dupePos = useRef(0);
   function duplicateSlide(slideVariables) {
     dupePos.current = currentlySelectedSlideId.current + 1
@@ -126,6 +128,8 @@ export function VariableContainer({ children }) {
         copiedObject,
         saveCopiedObject,
         saveNewChanges,
+        objectLoading,
+        changeLoading,
       }}
     >
       {children}

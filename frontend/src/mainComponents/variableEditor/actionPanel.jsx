@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { clamp } from "../extraFunctions";
-import { getImage } from "../fetchFunctions";
-import { createObj, updObj } from "../objectFunctions";
-import { useVariables } from "../presentationVariables";
-import "./componentStyling/actionPanelStyling.css";
-
-import upArrow from "./changeUp.png";
-import downArrow from "./changeDown.png";
+import "./style.css";
+import upArrow from "./images/changeUp.png";
+import downArrow from "./images/changeDown.png";
+import search from "./images/search.png";
+import { useVariables } from "../../presentationVariables";
+import { createObj, updObj } from "../../objectFunctions";
+import { getImage } from "../../fetchFunctions";
+import { clamp } from "../../extraFunctions";
 
 export const ActionPanel = ({ selectedObject }) => {
   const {
@@ -21,6 +21,7 @@ export const ActionPanel = ({ selectedObject }) => {
     updateUsedImages,
     saveNewChanges,
     updateVariable,
+    changeLoading
   } = useVariables();
 
   function updateObject(dataType, index, variableName, newValue) {
@@ -42,11 +43,12 @@ export const ActionPanel = ({ selectedObject }) => {
     });
   }
 
-  function getNewImage(event) {
+  async function getNewImage(event) {
     console.log(updateVariable);
     console.log(selectedObject);
 
-    getImage(
+    changeLoading(true)
+    await getImage(
       event,
       usedImages,
       updateUsedImages,
@@ -54,6 +56,7 @@ export const ActionPanel = ({ selectedObject }) => {
       currentSlideVariables,
       updateObject,
     );
+    changeLoading(false)
   }
 
   function saveTempValues() {
@@ -87,14 +90,8 @@ export const ActionPanel = ({ selectedObject }) => {
         let currentObject = structuredClone(selectedObjectsVariables);
         let slideClone = structuredClone(currentSlideVariables);
 
-        console.log(currentObject);
-
         let changed = false;
         Object.entries(currentObject[1]).map((val) => {
-          console.log(val[0], val[1]);
-          console.log(
-            currentVariables[selectedObject[0]][selectedObject[1]][val[0]],
-          );
           if (
             val[1] !==
             currentVariables[selectedObject[0]][selectedObject[1]][val[0]]
@@ -106,13 +103,11 @@ export const ActionPanel = ({ selectedObject }) => {
               val[0] != "h"
             ) {
               changed = true;
-              console.log("newChange");
             }
           }
         });
 
         if (!changed) {
-          console.log("nothing new");
           return;
         }
 
@@ -130,15 +125,15 @@ export const ActionPanel = ({ selectedObject }) => {
           allSlidesOverride: newSlides,
           currentSlideVariablesOverride: slideClone,
         });
-        console.log("saved");
       }
     };
   }, [updateVariable]);
   if (selectedObject[0] === "text") {
     return (
       <div className="actionPanel">
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Row">
           <p className="simpleText">font size</p>
+          <button>-</button>
           <input
             style={{ width: "40px" }}
             className="simpleTextInput"
@@ -149,13 +144,15 @@ export const ActionPanel = ({ selectedObject }) => {
                 selectedObject[0],
                 selectedObject[1],
                 "fontSize",
-                newFontSize.target.value,
+                newFontSize.target.value.replace(/\D/g, ""),
               );
             }}
-            type="number"
+            type="text"
+            inputMode="numeric"
           />
+          <button>+</button>
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">color</p>
           <input
             className="simpleColorInput"
@@ -170,176 +167,178 @@ export const ActionPanel = ({ selectedObject }) => {
             }}
           />
         </div>
-        <div className="simpleOptionContainer">
-          <p className="simpleText">text align</p>
-          <div className="multipleOptions">
-            <button
-              className="simpleInputButton"
-              style={{
-                backgroundColor:
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .textAlign == "left"
-                    ? "#b5b5b5"
-                    : currentSlideVariables[selectedObject[0]][
-                        selectedObject[1]
-                      ].textAlign == undefined && "#b5b5b5",
-                fontWeight: "500",
-              }}
-              onClick={() => {
-                updateObject(
-                  selectedObject[0],
-                  selectedObject[1],
-                  "textAlign",
-                  "left",
-                );
-              }}
-            >
-              L
-            </button>
-            <button
-              className="simpleInputButton"
-              style={{
-                backgroundColor:
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .textAlign == "center" && "#b5b5b5",
-                fontWeight: "500",
-              }}
-              onClick={() => {
-                updateObject(
-                  selectedObject[0],
-                  selectedObject[1],
-                  "textAlign",
-                  "center",
-                );
-              }}
-            >
-              C
-            </button>
-            <button
-              className="simpleInputButton"
-              style={{
-                backgroundColor:
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .textAlign == "right" && "#b5b5b5",
-                fontWeight: "500",
-              }}
-              onClick={() => {
-                updateObject(
-                  selectedObject[0],
-                  selectedObject[1],
-                  "textAlign",
-                  "right",
-                );
-              }}
-            >
-              R
-            </button>
+        <div className="simpleOptionContainer_Row">
+          <div className="simpleOptionContainer_Column">
+            <p className="simpleText">text align</p>
+            <div className="multipleOptions">
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .textAlign == "left"
+                      ? "#b5b5b5"
+                      : currentSlideVariables[selectedObject[0]][
+                          selectedObject[1]
+                        ].textAlign == undefined && "#b5b5b5",
+                  fontWeight: "500",
+                }}
+                onClick={() => {
+                  updateObject(
+                    selectedObject[0],
+                    selectedObject[1],
+                    "textAlign",
+                    "left",
+                  );
+                }}
+              >
+                L
+              </button>
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .textAlign == "center" && "#b5b5b5",
+                  fontWeight: "500",
+                }}
+                onClick={() => {
+                  updateObject(
+                    selectedObject[0],
+                    selectedObject[1],
+                    "textAlign",
+                    "center",
+                  );
+                }}
+              >
+                C
+              </button>
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .textAlign == "right" && "#b5b5b5",
+                  fontWeight: "500",
+                }}
+                onClick={() => {
+                  updateObject(
+                    selectedObject[0],
+                    selectedObject[1],
+                    "textAlign",
+                    "right",
+                  );
+                }}
+              >
+                R
+              </button>
+            </div>
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <p className="simpleText">font extras</p>
+            <div className="multipleOptions">
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .bold == "700" && "#b5b5b5",
+                  fontWeight: "bold",
+                }}
+                onClick={() => {
+                  let currentVal =
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .bold;
+
+                  if (currentVal == "700") {
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "bold",
+                      "400",
+                    );
+                  } else {
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "bold",
+                      "700",
+                    );
+                  }
+                }}
+              >
+                B
+              </button>
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .textDecoration == "underline" && "#b5b5b5",
+                  textDecoration: "underline",
+                  fontWidth: "500",
+                }}
+                onClick={() => {
+                  let currentVal =
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .textDecoration;
+
+                  if (currentVal == "underline") {
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "textDecoration",
+                      "none",
+                    );
+                  } else {
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "textDecoration",
+                      "underline",
+                    );
+                  }
+                }}
+              >
+                U
+              </button>
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .fontStyle == "italic" && "#b5b5b5",
+                  fontStyle: "italic",
+                  fontWidth: "500",
+                }}
+                onClick={() => {
+                  let currentVal =
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .fontStyle;
+
+                  if (currentVal == "italic") {
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "fontStyle",
+                      "normal",
+                    );
+                  } else {
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "fontStyle",
+                      "italic",
+                    );
+                  }
+                }}
+              >
+                I
+              </button>
+            </div>
           </div>
         </div>
-        <div className="simpleOptionContainer">
-          <p className="simpleText">font extras</p>
-          <div className="multipleOptions">
-            <button
-              className="simpleInputButton"
-              style={{
-                backgroundColor:
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .bold == "700" && "#b5b5b5",
-                fontWeight: "bold",
-              }}
-              onClick={() => {
-                let currentVal =
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .bold;
-
-                if (currentVal == "700") {
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "bold",
-                    "400",
-                  );
-                } else {
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "bold",
-                    "700",
-                  );
-                }
-              }}
-            >
-              B
-            </button>
-            <button
-              className="simpleInputButton"
-              style={{
-                backgroundColor:
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .textDecoration == "underline" && "#b5b5b5",
-                textDecoration: "underline",
-                fontWidth: "500",
-              }}
-              onClick={() => {
-                let currentVal =
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .textDecoration;
-
-                if (currentVal == "underline") {
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "textDecoration",
-                    "none",
-                  );
-                } else {
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "textDecoration",
-                    "underline",
-                  );
-                }
-              }}
-            >
-              U
-            </button>
-            <button
-              className="simpleInputButton"
-              style={{
-                backgroundColor:
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .fontStyle == "italic" && "#b5b5b5",
-                fontStyle: "italic",
-                fontWidth: "500",
-              }}
-              onClick={() => {
-                let currentVal =
-                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                    .fontStyle;
-
-                if (currentVal == "italic") {
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "fontStyle",
-                    "normal",
-                  );
-                } else {
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "fontStyle",
-                    "italic",
-                  );
-                }
-              }}
-            >
-              I
-            </button>
-          </div>
-        </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">outline width</p>
           <div className="multipleOptions">
             <input
@@ -361,14 +360,12 @@ export const ActionPanel = ({ selectedObject }) => {
             <input
               style={{ width: "36px" }}
               className="simpleTextInput"
-              type="number"
-              value={selectedObjectsVariables[1]["outlineWidth"] ?? 0}
-              max={10}
-              min={0}
-              step={0.5}
+              value={selectedObjectsVariables[1]["outlineWidth"] || 0}
               onInput={(newOutlineWidth) => {
                 let newObjData = structuredClone(selectedObjectsVariables);
-                newObjData[1].outlineWidth = newOutlineWidth.target.value;
+                newObjData[1].outlineWidth = clamp(
+                Number(newOutlineWidth.target.value.replace(/\D/g, "")), 0, 10);
+                
                 setSelectedObjectsVariables(newObjData);
                 updateObject(
                   selectedObject[0],
@@ -377,10 +374,13 @@ export const ActionPanel = ({ selectedObject }) => {
                   newOutlineWidth.target.value,
                 );
               }}
+              type="text"
+              inputMode="numeric"
+              max={"10"}
             />
           </div>
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">outline color</p>
           <input
             className="simpleColorInput"
@@ -397,7 +397,7 @@ export const ActionPanel = ({ selectedObject }) => {
             }}
           />
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">layer</p>
           <div className="multipleOptions">
             <button
@@ -460,7 +460,7 @@ export const ActionPanel = ({ selectedObject }) => {
   if (selectedObject[0] === "images") {
     return (
       <div className="actionPanel">
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">Set image</p>
           <form className="inLine" onSubmit={getNewImage}>
             <input
@@ -470,11 +470,11 @@ export const ActionPanel = ({ selectedObject }) => {
               type="text"
             />
             <button className="submitButton" type="submit">
-              <p className="simpleText">search</p>
+              <img className="submitImage" src={search} />
             </button>
           </form>
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">border width</p>
           <div className="multipleOptions">
             <input
@@ -496,14 +496,11 @@ export const ActionPanel = ({ selectedObject }) => {
             <input
               style={{ width: "36px" }}
               className="simpleTextInput"
-              type="number"
-              value={selectedObjectsVariables[1]["borderWidth"] ?? 0}
-              min={0}
-              max={20}
-              step={1}
+              value={selectedObjectsVariables[1]["borderWidth"] || 0}
               onInput={(newOutlineWidth) => {
                 let newObjData = structuredClone(selectedObjectsVariables);
-                newObjData[1].borderWidth = newOutlineWidth.target.value;
+                newObjData[1].borderWidth = clamp(
+                Number(newOutlineWidth.target.value.replace(/\D/g, "")), 0, 20);
                 setSelectedObjectsVariables(newObjData);
                 updateObject(
                   selectedObject[0],
@@ -512,10 +509,13 @@ export const ActionPanel = ({ selectedObject }) => {
                   newOutlineWidth.target.value,
                 );
               }}
+              type="text"
+              inputMode="numeric"
+              max={"20"}
             />
           </div>
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Column">
           <p className="simpleText">border color</p>
           <input
             className="simpleColorInput"
@@ -534,7 +534,7 @@ export const ActionPanel = ({ selectedObject }) => {
             }}
           />
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_Row">
           <p className="simpleText">aspect ratio</p>
           <button
             onMouseUp={() => {
@@ -556,7 +556,7 @@ export const ActionPanel = ({ selectedObject }) => {
             <p className="simpleText">restore</p>
           </button>
         </div>
-        <div className="simpleOptionContainer">
+        <div className="simpleOptionContainer_column">
           <p className="simpleText">layer</p>
           <div className="multipleOptions">
             <button
@@ -619,77 +619,71 @@ export const ActionPanel = ({ selectedObject }) => {
   if (selectedObject[0] == "") {
     return (
       <div className="actionPanel">
-        <div className="simpleOptionContainer">
-          <p className="simpleText">background image</p>
-          <form className="inLine" onSubmit={getNewImage}>
+        <div className="sectionDiv" style={{ flex: 1, gap: "4px" }}>
+          <div className="simpleOptionContainer_Column">
+            <p className="simpleText">background image</p>
+            <form className="inLine" onSubmit={getNewImage}>
+              <input
+                className="simpleTextInput"
+                placeholder="example `ducks`"
+                name="query"
+                type="text"
+              />
+              <button className="submitButton" type="submit">
+                <img className="submitImage" src={search} />
+              </button>
+            </form>
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <p className="simpleText">background color</p>
             <input
-              className="simpleTextInput"
-              placeholder="example `ducks`"
-              name="query"
-              type="text"
+              className="simpleColorInput"
+              type="color"
+              value={selectedObject[2]["backgroundColor"] || "#ffffff"}
+              onChange={(newVal) => {
+                updateObject(
+                  undefined,
+                  undefined,
+                  "backgroundColor",
+                  newVal.target.value,
+                );
+              }}
             />
-            <button className="submitButton" type="submit">
-              <p className="simpleText">search</p>
+          </div>
+        </div>
+        <div className="sectionDiv">
+          <div className="simpleOptionContainer_Column">
+            <button
+              onMouseDown={() => {
+                const [newInd, newObj] = createObj(
+                  "text",
+                  24,
+                  currentSlideVariables,
+                );
+
+                updateObject("text", newInd, undefined, newObj);
+              }}
+              className="createNewButton"
+            >
+              + add new text
             </button>
-          </form>
-        </div>
-        <div className="simpleOptionContainer">
-          <p className="simpleText">background color</p>
-          <input
-            className="simpleColorInput"
-            type="color"
-            value={selectedObject[2]["backgroundColor"] || "#ffffff"}
-            onChange={(newVal) => {
-              updateObject(
-                undefined,
-                undefined,
-                "backgroundColor",
-                newVal.target.value,
-              );
-            }}
-          />
-        </div>
-        <div className="simpleOptionContainer">
-          <button
-            style={{
-              background: "linear-gradient(to right, #aa55fa, #ee32ff)",
-            }}
-            onMouseDown={() => {
-              const [newInd, newObj] = createObj(
-                "text",
-                24,
-                currentSlideVariables,
-              );
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <button
+              onMouseDown={() => {
+                const [newInd, newObj] = createObj(
+                  "images",
+                  24,
+                  currentSlideVariables,
+                );
 
-              updateObject("text", newInd, undefined, newObj);
-            }}
-            className="createNewButton"
-          >
-            <p style={{ color: "white" }} className="simpleText">
-              add new text
-            </p>
-          </button>
-        </div>
-        <div className="simpleOptionContainer">
-          <button
-            style={{
-              background: "linear-gradient(to right, #52acff, #0044d7)",
-            }}
-            onMouseDown={() => {
-              const [newInd, newObj] = createObj(
-                "images",
-                24,
-                currentSlideVariables,
-              );
-
-              updateObject("images", newInd, undefined, newObj);
-            }}
-            className="createNewButton"
-          >
-            <p style={{ color: "white" }} className="simpleText">
-              add new image
-            </p>
-          </button>
+                updateObject("images", newInd, undefined, newObj);
+              }}
+              className="createNewButton"
+            >
+              + add new image
+            </button>
+          </div>
         </div>
       </div>
     );

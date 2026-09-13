@@ -1,6 +1,7 @@
 import { useVariables } from "../../../presentationVariables";
 import { createNewSlide } from "../../../slideFunctions";
 
+
 export const MiniDisplay = ({ vars, ind }) => {
   const {
     updateCurrentSlideVariables,

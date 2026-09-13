@@ -1,11 +1,11 @@
-import { MiniSlideDisplay } from "./miniComponents/tabComponents/miniSlideDisplay";
-import { NewSlideButton } from "./miniComponents/tabComponents/newSlideButton";
+import { MiniSlideDisplay } from "./components/miniSlideDisplay";
+import { NewSlideButton } from "./components/newSlideButton";
 
-import "./componentStyling/tabs.css";
+import "./style.css";
 import { useRef, useState } from "react";
-import { MovingSlide } from "./miniComponents/tabComponents/inMovementSlide";
-import { selectNewSlide } from "../slideFunctions";
-import { useVariables } from "../presentationVariables";
+import { MovingSlide } from "./components/inMovementSlide";
+import { useVariables } from "../../presentationVariables";
+import { selectNewSlide } from "../../slideFunctions";
 
 const selectedColor = "blue";
 const idleColor = "white";
@@ -142,8 +142,6 @@ export const SlideTab = () => {
           [Object.keys(newSlideOrder).length]: movingSlide,
         };
       }
-
-      console.log(newSlideOrder);
 
       UpdateMovingSlide({});
       updateAllSlides(newSlideOrder);
