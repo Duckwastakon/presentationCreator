@@ -20,6 +20,9 @@ export function VariableContainer({ children }) {
 
   const [modalActive, updateModal] = useState(false);
 
+  const [MenuOpen, updateOpen] = useState(false);
+  const [dropDownPos, changeDropDownPos] = useState([0, 0]);
+
   const currentlySelectedSlideId = useRef();
   function updateCurrentlySelectedSlideId(NewVal) {
     currentlySelectedSlideId.current = NewVal;
@@ -38,16 +41,21 @@ export function VariableContainer({ children }) {
     };
   }
 
+  const dropDownSlideId = useRef(0);
+  function updateDropDownSlideId(val){
+    dropDownSlideId.current = val
+  }
+
   const copiedObject = useRef({});
   function saveCopiedObject(newVal) {
     copiedObject.current = newVal;
   }
 
-  const [objectLoading, changeLoading] = useState(false)
+  const [objectLoading, changeLoading] = useState(false);
 
   const dupePos = useRef(0);
   function duplicateSlide(slideVariables) {
-    dupePos.current = currentlySelectedSlideId.current + 1
+    dupePos.current = currentlySelectedSlideId.current + 1;
     let newVals = createNewSlide(
       slideVariables,
       dupePos,
@@ -78,7 +86,7 @@ export function VariableContainer({ children }) {
     currentlySelectedSlideIdOverride,
     createNewSlideIdOverride,
   } = {}) {
-    console.log(currentlySelectedSlideIdOverride)
+    console.log(currentlySelectedSlideIdOverride);
     saveChange({
       allSlides: allSlidesOverride || allSlides,
       currentSlideVariables:
@@ -90,8 +98,11 @@ export function VariableContainer({ children }) {
       selectedPrefabType: selectedPrefabTypeOverride || selectedPrefabType,
       modalActive: modalActiveOverride ?? modalActive,
       currentlySelectedSlideId:
-        currentlySelectedSlideIdOverride ?? currentlySelectedSlideId.current ?? -1,
-      createNewSlideId: createNewSlideIdOverride ?? createNewSlideId.current ?? -1,
+        currentlySelectedSlideIdOverride ??
+        currentlySelectedSlideId.current ??
+        -1,
+      createNewSlideId:
+        createNewSlideIdOverride ?? createNewSlideId.current ?? -1,
     });
   }
 
@@ -130,6 +141,12 @@ export function VariableContainer({ children }) {
         saveNewChanges,
         objectLoading,
         changeLoading,
+        MenuOpen,
+        updateOpen,
+        dropDownPos,
+        changeDropDownPos,
+        dropDownSlideId,
+        updateDropDownSlideId,
       }}
     >
       {children}

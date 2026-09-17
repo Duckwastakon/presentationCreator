@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import deleteIcon from "../images/trashcan.png";
 import activeDeleteIcon from "../images/trashcanOpen.png";
 import { useVariables } from "../../../presentationVariables";
 import { saveSlide } from "../../../slideFunctions";
 import { delObj, dupObj } from "../../../objectFunctions";
 
-export const ObjectChanges = ({ posX, objectIndex, objectData }) => {
+export const ObjectChanges = ({ objectIndex, objectData }) => {
   const [hoverSrc, updateSrc] = useState(deleteIcon);
 
   const {
@@ -17,12 +17,20 @@ export const ObjectChanges = ({ posX, objectIndex, objectData }) => {
     selectedObject,
     setUpdateVariable,
     setSelectedObject,
-    saveNewChanges
+    saveNewChanges,
   } = useVariables();
 
   function save(newSlide) {
-    let newAllSlides = saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId);
-    saveNewChanges({allSlidesOverride: newAllSlides, currentSlideVariablesOverride: newSlide})
+    let newAllSlides = saveSlide(
+      newSlide,
+      updateAllSlides,
+      allSlides,
+      currentlySelectedSlideId,
+    );
+    saveNewChanges({
+      allSlidesOverride: newAllSlides,
+      currentSlideVariablesOverride: newSlide,
+    });
   }
 
   function unselectObject() {
@@ -30,12 +38,21 @@ export const ObjectChanges = ({ posX, objectIndex, objectData }) => {
     setSelectedObject(["", ""]);
   }
 
+  const selfElement = useRef(null);
+  const [objWidth, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(selfElement.current.parentElement.getBoundingClientRect().width);
+    console.log(selfElement.current.parentElement.getBoundingClientRect().width)
+  }, []);
+
   return (
     <div
+      ref={selfElement}
       style={{
         position: "absolute",
         bottom: "-75px",
-        left: `${(800 / 13.333) * (posX / 2) - 56}px`,
+        left: `${(objWidth / 2) - 56}px`,
       }}
       className="extraButtonContainer"
     >

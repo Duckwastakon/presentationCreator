@@ -1,10 +1,10 @@
 .headerBar {
-  width: 60%;
+  width: 95%;
   max-height: 10%;
   background-color: transparent;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .saveImage {
@@ -39,15 +39,16 @@
 .saveButton {
   height: auto;
   width: auto;
-  aspect-ratio: 1/1;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   text-align: center;
   justify-content: center;
   align-items: center;
   border: none;
   border-radius: 8px;
   background-color: var(--accentColor2);
-  position: absolute;
-  right: 5%;
 }
 
 .saveButton:hover {
@@ -71,8 +72,6 @@
 }
 
 .clearButton {
-  position: absolute;
-  left: 5%;
   height: 32px;
   width: 92px;
   text-align: center;
@@ -100,24 +99,25 @@
 }
 
 .backgroundDiv {
-  width: 40%;
-  height: 40%;
+  position: relative;
+  width: 80%;
+  aspect-ratio: 5 / 2;
   background-color: white;
   border: 4px solid black;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   gap: 8px;
 }
 
 .closeButton {
   background: none;
   border: none;
-  position: fixed;
+  position: absolute;
   top: 5%;
-  left: 5%;
+  left: 2.5%;
   width: 10%;
   height: 10%;
   display: flex;

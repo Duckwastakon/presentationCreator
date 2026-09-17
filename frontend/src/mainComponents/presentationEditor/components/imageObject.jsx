@@ -11,7 +11,7 @@ export const ImageObject = ({
   ind,
   selected,
 }) => {
-  const { setSelectedObject, setSelectedObjectsVariables, setUpdateVariable } =
+  const { setSelectedObject, setSelectedObjectsVariables, setUpdateVariable, updateOpen } =
     useVariables();
 
   return (
@@ -57,7 +57,7 @@ export const ImageObject = ({
           top: "0px",
         }}
         onMouseDown={() => {
-          console.log(variables);
+          updateOpen(false)
           if (!selected) {
             setUpdateVariable(["images", variables[0], "src"]);
             setSelectedObjectsVariables(structuredClone(variables));

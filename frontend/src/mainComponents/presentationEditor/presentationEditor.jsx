@@ -5,7 +5,6 @@ import { updObj } from "../../objectFunctions";
 import { ImageObject } from "./components/imageObject";
 import { TextObject } from "./components/textObject";
 
-
 const lockTolerance = 0.01;
 
 export const MainPresentationDisplay = () => {
@@ -22,7 +21,12 @@ export const MainPresentationDisplay = () => {
     allSlides,
     currentlySelectedSlideId,
     saveNewChanges,
+    updateOpen,
   } = useVariables();
+
+  const slideSizeRef = useRef(null);
+  const [slideSizeMultiplier, updateSizeMulti] = useState(1);
+  const [slideSizes, updateSlideSizes] = useState(null);
 
   let changingState = useRef(0);
   let lockedX = useRef(0);
@@ -66,6 +70,8 @@ export const MainPresentationDisplay = () => {
   }
 
   useEffect(() => {
+    updateSizeMulti(850 / slideSizeRef.current.getBoundingClientRect().width);
+    updateSlideSizes(slideSizeRef.current.getBoundingClientRect());
     const keyDownCheck = (event) => {
       if (event.shiftKey && Object.keys(selectedObjectsVariables).length > 0) {
         holdingShift.current = true;
@@ -126,8 +132,10 @@ export const MainPresentationDisplay = () => {
     changingState.current = 0;
     if (selectedObject[0] === "") return;
 
-    let newVars = structuredClone(currentSlideVariables[selectedObject[0]][selectedObject[1]]);
-    console.log(newVars)
+    let newVars = structuredClone(
+      currentSlideVariables[selectedObject[0]][selectedObject[1]],
+    );
+    console.log(newVars);
     newVars.x = selectedObjectsVariables[1].x;
     newVars.y = selectedObjectsVariables[1].y;
     newVars.w = selectedObjectsVariables[1].w;
@@ -157,8 +165,8 @@ export const MainPresentationDisplay = () => {
   }
 
   function handleMouseResize(event) {
-    let xDiff = lastX.current - event.clientX;
-    let yDiff = lastY.current - event.clientY;
+    let xDiff = (lastX.current - event.clientX) * slideSizeMultiplier;
+    let yDiff = (lastY.current - event.clientY) * slideSizeMultiplier;
 
     let newVals = structuredClone(selectedObjectsVariables);
 
@@ -330,7 +338,8 @@ export const MainPresentationDisplay = () => {
 
     for (let type of Object.keys(allObjects)) {
       for (let variables of Object.entries(allObjects[type])) {
-        if (selectedObject[0] !== type && selectedObject[1] !== variables[0]) {
+        if (selectedObject[0] == type && selectedObject[1] == variables[0]) {
+        } else {
           if (
             Math.abs(variables[1].x + variables[1].w / 2 - xPos) < lockTolerance
           ) {
@@ -520,8 +529,10 @@ export const MainPresentationDisplay = () => {
   }
 
   function handleObjectMove(event) {
-    const startDiffX = StartingXY.current[0] - event.clientX;
-    const startDiffY = StartingXY.current[1] - event.clientY;
+    const startDiffX =
+      (StartingXY.current[0] - event.clientX) * slideSizeMultiplier;
+    const startDiffY =
+      (StartingXY.current[1] - event.clientY) * slideSizeMultiplier;
 
     if (Object.entries(selectedObjectsVariables).length < 1) {
       return;
@@ -582,38 +593,44 @@ export const MainPresentationDisplay = () => {
 
   return (
     <div
+      ref={slideSizeRef}
       className="presentationBackground"
       style={{
         backgroundImage: `url(${currentSlideVariables.backgroundImageUrl})`,
         backgroundColor: `${selectedObjectsVariables.backgroundColor || currentSlideVariables.backgroundColor}`,
       }}
-      onMouseMove={(event) => handleMouseMovement(event)}
-      onMouseLeave={() => {
+      onPointerMove={(event) => {
+        handleMouseMovement(event);
+      }}
+      onPointerLeave={() => {
         stopResizing();
       }}
-      onMouseUp={() => {
+      onPointerUp={() => {
         stopResizing();
       }}
     >
       <button
         className="backgroundButton"
-        onMouseDown={() => {
+        onPointerDown={() => {
           unselectObject();
+          updateOpen(false);
         }}
       />
 
       {Object.entries(currentSlideVariables.text).map((variables) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
-        const gottenVariables = structuredClone(variables)
+        const gottenVariables = structuredClone(variables);
         if (selected) {
           gottenVariables[1].x = selectedObjectsVariables[1].x;
           gottenVariables[1].y = selectedObjectsVariables[1].y;
           gottenVariables[1].w = selectedObjectsVariables[1].w;
           gottenVariables[1].h = selectedObjectsVariables[1].h;
           gottenVariables[1].textColor = selectedObjectsVariables[1].textColor;
-          gottenVariables[1].outlineColor = selectedObjectsVariables[1].outlineColor;
-          gottenVariables[1].outlineWidth = selectedObjectsVariables[1].outlineWidth;
+          gottenVariables[1].outlineColor =
+            selectedObjectsVariables[1].outlineColor;
+          gottenVariables[1].outlineWidth =
+            selectedObjectsVariables[1].outlineWidth;
         }
         return (
           <TextObject
@@ -629,15 +646,17 @@ export const MainPresentationDisplay = () => {
       {Object.entries(currentSlideVariables.images).map((variables) => {
         const selected =
           "images" == selectedObject[0] && variables[0] == selectedObject[1];
-        
-        const gottenVariables = structuredClone(variables)
+
+        const gottenVariables = structuredClone(variables);
         if (selected) {
           gottenVariables[1].x = selectedObjectsVariables[1].x;
           gottenVariables[1].y = selectedObjectsVariables[1].y;
           gottenVariables[1].w = selectedObjectsVariables[1].w;
           gottenVariables[1].h = selectedObjectsVariables[1].h;
-          gottenVariables[1].borderWidth = selectedObjectsVariables[1].borderWidth
-          gottenVariables[1].borderColor = selectedObjectsVariables[1].borderColor
+          gottenVariables[1].borderWidth =
+            selectedObjectsVariables[1].borderWidth;
+          gottenVariables[1].borderColor =
+            selectedObjectsVariables[1].borderColor;
         }
         return (
           <ImageObject
@@ -650,6 +669,7 @@ export const MainPresentationDisplay = () => {
         );
       })}
       {yBars.map((pos, index) => {
+        let realPos = slideSizes.height * (pos / 450);
         return (
           <div
             key={index}
@@ -658,13 +678,14 @@ export const MainPresentationDisplay = () => {
               height: "4px",
               width: "100%",
               position: "absolute",
-              top: `${pos - 2}px`,
+              top: `${realPos - 2}px`,
               left: "0px",
             }}
           />
         );
       })}
       {xBars.map((pos, index) => {
+        let realPos = slideSizes.width * (pos / 800);
         return (
           <div
             key={index}
@@ -674,7 +695,7 @@ export const MainPresentationDisplay = () => {
               width: "4px",
               position: "absolute",
               top: "0",
-              left: `${pos - 2}px`,
+              left: `${realPos - 2}px`,
             }}
           />
         );

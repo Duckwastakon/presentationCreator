@@ -1,6 +1,4 @@
-import { useState } from "react";
 import cross from "../images/delete.png";
-import { EditingDropDown } from "./editingDropdown";
 import { useVariables } from "../../../presentationVariables";
 
 export const MiniSlideDisplay = ({
@@ -14,8 +12,6 @@ export const MiniSlideDisplay = ({
 
   const vars = slideVal[1];
   const selected = Number(slideVal[0]) === currentlySelectedSlideId.current;
-  const [MenuOpen, updateOpen] = useState(false);
-  const [dropDownPos, changeDropDownPos] = useState([0, 0]);
 
   let shadowColor;
   if (selected) {
@@ -24,15 +20,8 @@ export const MiniSlideDisplay = ({
     shadowColor = "grey";
   }
 
-  const { duplicateSlide } = useVariables();
-
-  function dupSlide() {
-    duplicateSlide(structuredClone(slideVal[1]));
-  }
-
-  function changeMenuOpen() {
-    updateOpen(false);
-  }
+  const { updateOpen, changeDropDownPos, updateDropDownSlideId } =
+    useVariables();
 
   return (
     <div
@@ -48,18 +37,9 @@ export const MiniSlideDisplay = ({
 
         changeDropDownPos([event.clientX, event.clientY]);
         updateOpen(true);
+        updateDropDownSlideId(Number(slideVal[0]));
       }}
     >
-      {selected && MenuOpen && (
-        <EditingDropDown
-          xPos={dropDownPos[0]}
-          yPos={dropDownPos[1]}
-          duplicateSlide={dupSlide}
-          deleteSlide={updateModal}
-          hideDropDown={changeMenuOpen}
-        />
-      )}
-      {MenuOpen.current && <button>Hey</button>}
       <button
         className="selectSlideButton"
         onMouseUp={() => {
@@ -67,6 +47,7 @@ export const MiniSlideDisplay = ({
             console.log("hey");
             onClick(slideVal[1], ind);
           }
+          updateOpen(false)
         }}
         onMouseDown={(event) => {
           if (selected) {
@@ -90,13 +71,10 @@ export const MiniSlideDisplay = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              aspectRatio: "1/1"
+              aspectRatio: "1/1",
             }}
           >
-            <image
-              href={cross}
-              className="deleteQuickButton"
-            />
+            <image href={cross} className="deleteQuickButton" />
           </svg>
         </button>
       )}

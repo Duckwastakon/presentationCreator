@@ -39,6 +39,8 @@ export const MiniDisplay = ({ vars, ind }) => {
           createNewSlideIdOverride: -1,
         });
       }}
+
+      style={{background: "transparent", border: "none", outline: "none"}}
     >
       <div className="miniPresentation">
         {Object.entries(vars.text).map((variables, indv) => (

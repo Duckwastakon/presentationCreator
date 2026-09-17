@@ -70,8 +70,8 @@ export const SlideTab = () => {
 
     slidePositions.current = slideXVals;
 
-    UpdateMovingSlide(slide);
     updateMovingSlidePos([startXPos, startYPos]);
+    UpdateMovingSlide(slide);
   }
 
   function moveSlide(event) {
@@ -112,6 +112,7 @@ export const SlideTab = () => {
 
       Object.entries(allSlides).map((slideVal, ind) => {
         if (newSlidePos == ind && newSlidePos <= startingSlidePos.current) {
+          console.log(newSlidePos)
           console.log(ind, "placed");
           newSlideOrder = {
             ...newSlideOrder,
@@ -221,13 +222,6 @@ export const SlideTab = () => {
                   onClick={selectSlide}
                   startMovingSlide={startMovingSlide}
                 />
-                {Number(slideVal[0]) === createNewSlideId.current &&
-                  createNewSlideId.current !==  Object.entries(allSlides).length - 1 && (
-                    <NewSlideButton
-                      backgroundColor={selectedColor}
-                      onClickVal={currentlySelectedSlideId.current + 1}
-                    />
-                  )}
                 {Number(slideVal[0]) === currentlySelectedSlideId.current &&
                   currentlySelectedSlideId.current !==
                     Object.entries(allSlides).length - 1 && (

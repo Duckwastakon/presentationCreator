@@ -1,14 +1,22 @@
+import { useEffect, useRef, useState } from "react";
 import whiteDot from "../images/whiteDot.png";
 
 export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
-  const yResizePos = (450 / 7.5) * (objectSize[1] / 2) - 7.5;
-  const xResizePos = (800 / 13.333) * (objectSize[0] / 2) - 7.5;
+  const slideSizeRef = useRef(null)
+  
+  const [yResizePos, updateY] = useState(0)
+  const [xResizePos, updateX] = useState(0)
+
+  useEffect(()=> {
+    updateY((slideSizeRef.current.parentElement.parentElement.getBoundingClientRect().height / 7.5) * (objectSize[1] / 2) - 7.5)
+    updateX((slideSizeRef.current.parentElement.parentElement.getBoundingClientRect().width / 13.333) * (objectSize[0] / 2) - 7.5)
+  }, [objectSize])
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
+    <div ref={slideSizeRef} style={{ width: "100%", height: "100%" }}>
       <button
         className="moveObjectArea"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 9);
         }}
         style={{
@@ -21,7 +29,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       />
       <button
         className="moveObjectArea"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 9);
         }}
         style={{
@@ -34,7 +42,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       />
       <button
         className="moveObjectArea"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 9);
         }}
         style={{
@@ -47,7 +55,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       />
       <button
         className="moveObjectArea"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 9);
         }}
         style={{

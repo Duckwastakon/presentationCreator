@@ -2,10 +2,9 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
   width: 70%;
+  grid-template-columns: repeat(2, 40%);
 }
 
 .changePageButton {
@@ -26,5 +25,5 @@
 }
 
 .arrowImage:hover {
-    background-color: rgb(139, 224, 255);
+  background-color: rgb(139, 224, 255);
 }

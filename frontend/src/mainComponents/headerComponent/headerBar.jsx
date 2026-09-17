@@ -18,7 +18,7 @@ export const HeaderBar = () => {
     changeLoading,
   } = useVariables();
 
-  const [presentationName, updateName] = useState("New presentation");
+  const [presentationName, updateName] = useState("Presentation name");
   const [saveWindow, updateSave] = useState(false);
 
   return (
@@ -75,6 +75,7 @@ export const HeaderBar = () => {
                 <p>save</p>
               </button>
             </div>
+            <p>Exporting might take a few moments</p>
           </div>
         </div>
       )}

@@ -1,8 +1,8 @@
+import { useEffect, useRef, useState } from "react";
 import { updObj } from "../../../objectFunctions";
 import { useVariables } from "../../../presentationVariables";
 import { ObjectChanges } from "./objectChanges";
 import { ResizeDots } from "./resizeDots";
-
 
 export const TextObject = ({
   startResizing,
@@ -22,13 +22,27 @@ export const TextObject = ({
     currentlySelectedSlideId,
     setUpdateVariable,
     saveNewChanges,
+    updateOpen,
   } = useVariables();
   let ExtraVariables = {};
   if (selected) {
     ExtraVariables.textColor = selectedObjectsVariables.textColor;
   }
+  const objectElement = useRef(null);
+  const [textSize, updateTextSize] = useState(24);
+
+  useEffect(() => {
+    const parentElement = objectElement.current.parentElement;
+
+    updateTextSize(
+      variables[1].fontSize *
+        (parentElement.getBoundingClientRect().width / 850),
+    );
+  }, []);
+
   return (
     <div
+      ref={objectElement}
       style={{
         position: "absolute",
         top: (100 * (variables[1].y / 7.5)).toString() + "%",
@@ -67,9 +81,12 @@ export const TextObject = ({
           });
         }}
         onSelect={() => {
-          setUpdateVariable(["text", variables[0], undefined]);
-          setSelectedObjectsVariables(structuredClone(variables));
-          setSelectedObject(["text", variables[0]]);
+          if (!selected) {
+            setUpdateVariable(["text", variables[0], undefined]);
+            setSelectedObjectsVariables(structuredClone(variables));
+            setSelectedObject(["text", variables[0]]);
+          }
+          updateOpen(false);
         }}
         className="presentationTextEditBox"
         style={{
@@ -78,8 +95,8 @@ export const TextObject = ({
           top: "0",
           width: "100%",
           height: "100%",
-          fontSize: (variables[1].fontSize).toString() + "px",
-          color:  variables[1].textColor || "black",
+          fontSize: textSize.toString() + "px",
+          color: variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
           WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,
           WebkitTextStrokeColor: variables[1].outlineColor || "black",

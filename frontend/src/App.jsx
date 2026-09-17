@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import "./mainComponents/appStyle.css";
 import { SlideTab } from "./mainComponents/slidesTab/tabs";
 import { ActionPanel } from "./mainComponents/variableEditor/actionPanel";
-import { SlideStylePicker } from "./viewComponents/slideStylePicker";
 import { dupObj } from "./objectFunctions";
 import { fetchAllStyles, fetchStyles } from "./fetchFunctions";
 import { useVariables } from "./presentationVariables";
@@ -11,6 +10,8 @@ import { HeaderBar } from "./mainComponents/headerComponent/headerBar";
 import { MainPresentationDisplay } from "./mainComponents/presentationEditor/presentationEditor";
 import { Modal } from "./mainComponents/deleteModal/modal";
 import { LoadingDiv } from "./mainComponents/loadingComponent/loadingDiv";
+import { EditingDropDown } from "./mainComponents/slidesTab/components/editingDropdown";
+import { SlideStylePicker } from "./mainComponents/chooseNewSlides/slideStylePicker";
 
 function App() {
   const {
@@ -34,6 +35,11 @@ function App() {
     setSelectedObject,
     updateCurrentlySelectedSlideId,
     saveNewChanges,
+    MenuOpen,
+    updateOpen,
+    dropDownPos,
+    duplicateSlide,
+    dropDownSlideId,
   } = useVariables();
 
   function getSelectedObjectVariables() {
@@ -55,11 +61,6 @@ function App() {
       ...allSlides,
       [currentlySelectedSlideId.current]: newSlide,
     };
-    console.log(currentSlideVariables);
-    console.log(newSlide);
-    console.log(allSlides);
-    console.log("newChangeSaved");
-    console.log(newSlidesOverride);
     saveNewChanges({
       currentSlideVariablesOverride: newSlide,
       allSlidesOverride: newSlidesOverride,
@@ -78,6 +79,10 @@ function App() {
         saveSlide,
       );
     });
+  }
+
+  function dupSlide() {
+    duplicateSlide(structuredClone(allSlides[dropDownSlideId.current]));
   }
 
   useEffect(() => {
@@ -145,6 +150,15 @@ function App() {
       <div className="background">
         <div className="container">
           {modalActive && <Modal />}
+          {MenuOpen && (
+            <EditingDropDown
+              xPos={dropDownPos[0]}
+              yPos={dropDownPos[1]}
+              duplicateSlide={dupSlide}
+              deleteSlide={updateModal}
+              hideDropDown={updateOpen}
+            />
+          )}
           <LoadingDiv />
           <div className="editorWindow">
             <div className="creatorContainer">

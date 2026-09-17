@@ -1,9 +1,9 @@
-import "./componentStyling/slidePickerStyling.css";
-import arrowLeft from "./arrowLeft.png";
-import arrowRight from "./arrowRight.png";
+import "./style.css";
+import arrowLeft from "./images/arrowLeft.png";
+import arrowRight from "./images/arrowRight.png";
 
-import { MiniDisplay } from "../mainComponents/slidesTab/components/miniDisplay";
-import { useVariables } from "../presentationVariables";
+import { useVariables } from "../../presentationVariables";
+import { MiniDisplay } from "../slidesTab/components/miniDisplay";
 
 export const SlideStylePicker = () => {
   const { newSlidePrefabs, currentPageNumber, updatePageNumber } =

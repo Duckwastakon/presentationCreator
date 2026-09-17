@@ -1,6 +1,5 @@
 import { useVariables } from "../../../presentationVariables";
 
-
 export const EditingDropDown = ({
   xPos,
   yPos,
@@ -11,31 +10,23 @@ export const EditingDropDown = ({
   const { saveNewChanges } = useVariables();
   return (
     <div
-      style={{
-        backgroundColor: "gray",
-        width: "100px",
-        height: "60px",
-        position: "fixed",
-        left: `${xPos}px`,
-        top: `${yPos - 60}px`,
-        alignItems: "center",
-        justifyContent: "space-around",
-        zIndex: 110,
-      }}
+      className="optionBackground"
+      style={{ left: `${xPos}px`, top: `${yPos - 60}px` }}
     >
       <button
+        className="option"
         onMouseDown={() => {
-          console.log("hey");
           duplicateSlide();
-          hideDropDown();
+          hideDropDown(false);
         }}
       >
         duplicate
       </button>
       <button
+        className="option"
         onMouseDown={() => {
           deleteSlide(true);
-          hideDropDown();
+          hideDropDown(false);
           saveNewChanges({ modalActiveOverride: true });
         }}
       >
