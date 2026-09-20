@@ -56,12 +56,11 @@ presentationFileRouter.post("/", async (req, res) => {
           },
 
           line: {
-            color: "#000000",
+            color: imageVariables[1].borderColor || "#000000",
             width: borderWidth * 1.5
           }
         });
       }
-      console.log(imageVariables);
       newSlide.addImage({
         altText: "failed to load",
         x: imageVariables[1].x,

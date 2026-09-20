@@ -23,6 +23,7 @@ export const TextObject = ({
     setUpdateVariable,
     saveNewChanges,
     updateOpen,
+    saveChangedVariables
   } = useVariables();
   let ExtraVariables = {};
   if (selected) {
@@ -36,7 +37,7 @@ export const TextObject = ({
 
     updateTextSize(
       variables[1].fontSize *
-        (parentElement.getBoundingClientRect().width / 850),
+        (parentElement.getBoundingClientRect().width / 800),
     );
   }, []);
 
@@ -59,7 +60,7 @@ export const TextObject = ({
         type="text"
         value={variables[1].text}
         onChange={(newVal) => {
-          let newAllSlides = updObj(
+          let newAllSlides = updObj( 
             "text",
             variables[0],
             "text",
@@ -82,6 +83,7 @@ export const TextObject = ({
         }}
         onSelect={() => {
           if (!selected) {
+            saveChangedVariables()
             setUpdateVariable(["text", variables[0], undefined]);
             setSelectedObjectsVariables(structuredClone(variables));
             setSelectedObject(["text", variables[0]]);

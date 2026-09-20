@@ -11,7 +11,7 @@ export const MiniSlideDisplay = ({
     useVariables();
 
   const vars = slideVal[1];
-  const selected = Number(slideVal[0]) === currentlySelectedSlideId.current;
+  const selected = Number(slideVal[0]) == currentlySelectedSlideId.current;
 
   let shadowColor;
   if (selected) {
@@ -42,24 +42,24 @@ export const MiniSlideDisplay = ({
     >
       <button
         className="selectSlideButton"
-        onMouseUp={() => {
+        onPointerUp={() => {
           if (!selected) {
             console.log("hey");
             onClick(slideVal[1], ind);
           }
           updateOpen(false)
         }}
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           if (selected) {
             startMovingSlide(event, slideVal[1], slideVal[0]);
           }
         }}
       />
 
-      {Number(slideVal[0]) === currentlySelectedSlideId.current && (
+      {selected && (
         <button
           className="deleteSlideButton"
-          onMouseUp={() => {
+          onPointerUp={() => {
             updateModal(true);
 
             saveNewChanges({ modalActiveOverride: true });

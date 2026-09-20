@@ -7,6 +7,17 @@
   grid-template-columns: repeat(2, 40%);
 }
 
+@media (max-width: 700px) {
+  .styleChoiceContainer {
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  display: grid;
+  width: 70%;
+  grid-template-columns: repeat(1, 100%);
+}
+}
+
 .changePageButton {
   display: flex;
   align-items: center;

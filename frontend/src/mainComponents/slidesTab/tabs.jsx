@@ -20,6 +20,9 @@ export const SlideTab = () => {
     createNewSlideId,
     currentlySelectedSlideId,
     saveNewChanges,
+    saveChangedVariables,
+    setSelectedObject,
+    setUpdateVariable
   } = useVariables();
 
   const [movingSlide, UpdateMovingSlide] = useState({});
@@ -35,6 +38,9 @@ export const SlideTab = () => {
   const [placeMovingDisp, updateShowMoving] = useState(0);
 
   function selectSlide(slideVars, slideId) {
+    saveChangedVariables();
+    setUpdateVariable("");
+    setSelectedObject(["", ""]);
     selectNewSlide(
       slideVars,
       slideId,
@@ -43,7 +49,11 @@ export const SlideTab = () => {
       changeCreateNewSlideId,
     );
 
-    saveNewChanges({currentlySelectedSlideIdOverride: slideId, CurrentSlideVariablesOverride: slideVars, createNewSlideIdOverride: -1})
+    saveNewChanges({
+      currentlySelectedSlideIdOverride: slideId,
+      CurrentSlideVariablesOverride: slideVars,
+      createNewSlideIdOverride: -1,
+    });
   }
 
   function startMovingSlide(event, slide, slidePos) {
@@ -112,7 +122,7 @@ export const SlideTab = () => {
 
       Object.entries(allSlides).map((slideVal, ind) => {
         if (newSlidePos == ind && newSlidePos <= startingSlidePos.current) {
-          console.log(newSlidePos)
+          console.log(newSlidePos);
           console.log(ind, "placed");
           newSlideOrder = {
             ...newSlideOrder,
@@ -148,21 +158,26 @@ export const SlideTab = () => {
       updateAllSlides(newSlideOrder);
       updateCurrentSlideVariables(movingSlide);
       updateCurrentlySelectedSlideId(newSlidePos);
-      saveNewChanges({allSlidesOverride: newSlideOrder, currentlySelectedSlideIdOverride: newSlidePos, CurrentSlideVariablesOverride: movingSlide})
+      saveNewChanges({
+        allSlidesOverride: newSlideOrder,
+        currentlySelectedSlideIdOverride: newSlidePos,
+        CurrentSlideVariablesOverride: movingSlide,
+      });
     }
   }
 
   return (
     <div
+      style={{ touchAction: "none" }}
       className="slideMovingContainer"
-      onMouseLeave={stopMovingSlide}
-      onMouseMove={moveSlide}
-      onMouseUp={stopMovingSlide}
+      onPointerLeave={stopMovingSlide}
+      onPointerMove={moveSlide}
+      onPointerUp={stopMovingSlide}
     >
       {Object.keys(movingSlide).length > 0 && (
         <div
           style={{
-            zIndex: "999",
+            zIndex: "998",
             position: "fixed",
             left: `${movingSlidePos[0] - 80}px`,
             top: `${movingSlidePos[1] - 45}px`,
@@ -208,8 +223,8 @@ export const SlideTab = () => {
                     />
                   )}
 
-                {Number(slideVal[0]) === currentlySelectedSlideId.current &&
-                  currentlySelectedSlideId.current !== 0 && (
+                {Number(slideVal[0]) == currentlySelectedSlideId.current &&
+                  currentlySelectedSlideId.current != 0 && (
                     <NewSlideButton
                       backgroundColor={idleColor}
                       onClickVal={currentlySelectedSlideId.current}
@@ -222,8 +237,8 @@ export const SlideTab = () => {
                   onClick={selectSlide}
                   startMovingSlide={startMovingSlide}
                 />
-                {Number(slideVal[0]) === currentlySelectedSlideId.current &&
-                  currentlySelectedSlideId.current !==
+                {Number(slideVal[0]) == currentlySelectedSlideId.current &&
+                  currentlySelectedSlideId.current !=
                     Object.entries(allSlides).length - 1 && (
                     <NewSlideButton
                       backgroundColor={idleColor}

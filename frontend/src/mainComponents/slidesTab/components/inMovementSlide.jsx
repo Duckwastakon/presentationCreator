@@ -7,7 +7,7 @@ export const MovingSlide = ({ slideComponents }) => {
       style={{
         boxShadow: `0px 0px 10px ${shadowColor}`,
         backgroundImage: `url(${vars.backgroundImageUrl})`,
-        backgroundColor: vars.backgroundColor,
+        backgroundColor: vars.backgroundColor || "#ffffff",
       }}
       className="miniSlideTab"
     >

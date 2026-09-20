@@ -96,26 +96,20 @@ export async function fetchImage(
   })
     .then((res) => res.json())
     .then(async (data) => {
-      console.log("gettingNewPhotos");
-      console.log(data);
-
       updateUsedImages(data, query);
       var gottenRandNum = Math.floor(Math.random() * 4);
       console.log(gottenRandNum, data[gottenRandNum]);
 
       if (selectedObject.length > 0 && selectedObject[0] !== "") {
-        console.log("has");
-        console.log(selectedObject);
-        await updateObject(
+        let newSlide = await updateObject(
           selectedObject[0],
           selectedObject[1],
           selectedObject[2],
           data[gottenRandNum].src.original,
         );
         const val = data[gottenRandNum].width / data[gottenRandNum].height;
-        //updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val);
+        updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val, newSlide, false);
       } else {
-        console.log("updateBackground");
         await updateObject(
           undefined,
           undefined,
@@ -124,7 +118,6 @@ export async function fetchImage(
         );
       }
     }).finally(() => {
-      console.log("image fetched")
       return
     });
 }

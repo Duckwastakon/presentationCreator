@@ -1,7 +1,7 @@
 import express, { text } from "express";
 
 const designs = {
-  intro: {
+  "intro slides": {
     0: {
       backgroundImageUrl: "",
       text: {

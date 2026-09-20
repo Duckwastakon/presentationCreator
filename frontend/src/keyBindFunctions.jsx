@@ -14,7 +14,7 @@ export function changeHistory(
   updateCurrentlySelectedSlideId,
   changeCreateNewSlideId,
 ) {
-  if (Object.keys(history).includes(String(currentHistoryId + change))) {
+  if (Object.keys(history).includes(String(currentHistoryId + change)) && currentHistoryId + change >= 2) {
     currentHistoryId += change;
     if (history[currentHistoryId][0] != undefined) {
       updateAllSlides(history[currentHistoryId][0]);
@@ -89,10 +89,20 @@ export function saveChange({
       delete history[val[0]];
     }
   });
-  console.log(history);
 }
 
 export function emptyChanges() {
   history = {};
   currentHistoryId = 0;
+}
+
+export function getButtonStates(){
+  let states = [false, true]
+  if(currentHistoryId <= 2){
+    states[0] = true
+  }
+  if(Object.keys(history).includes(String(currentHistoryId + 1))){
+    states[1] = false
+  }
+  return states
 }

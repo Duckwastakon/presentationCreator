@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "./style.css";
 import upArrow from "./images/changeUp.png";
 import downArrow from "./images/changeDown.png";
@@ -24,23 +24,33 @@ export const ActionPanel = ({ selectedObject }) => {
     changeLoading,
   } = useVariables();
 
-  function updateObject(dataType, index, variableName, newValue) {
+  function updateObject(
+    dataType,
+    index,
+    variableName,
+    newValue,
+    newSlide = undefined,
+    save = true,
+  ) {
     let newSaveables = updObj(
       dataType,
       index,
       variableName,
       newValue,
-      currentSlideVariables,
+      newSlide ?? currentSlideVariables,
       updateCurrentSlideVariables,
       updateAllSlides,
       allSlides,
       currentlySelectedSlideId,
     );
 
-    saveNewChanges({
-      currentSlideVariablesOverride: newSaveables[0],
-      allSlidesOverride: newSaveables[1],
-    });
+    if (save) {
+      saveNewChanges({
+        currentSlideVariablesOverride: newSaveables[0],
+        allSlidesOverride: newSaveables[1],
+      });
+    }
+    return newSaveables[0];
   }
 
   async function getNewImage(event) {
@@ -80,54 +90,7 @@ export const ActionPanel = ({ selectedObject }) => {
       currentSlideVariablesOverride: slideClone,
     });
   }
-
-  useEffect(() => {
-    let slidePos = currentlySelectedSlideId.current;
-    let currentVariables = currentSlideVariables;
-
-    return () => {
-      if (selectedObject[0] !== "") {
-        let currentObject = structuredClone(selectedObjectsVariables);
-        let slideClone = structuredClone(currentSlideVariables);
-
-        let changed = false;
-        Object.entries(currentObject[1]).map((val) => {
-          if (
-            val[1] !==
-            currentVariables[selectedObject[0]][selectedObject[1]][val[0]]
-          ) {
-            if (
-              val[0] != "x" &&
-              val[0] != "y" &&
-              val[0] != "w" &&
-              val[0] != "h"
-            ) {
-              changed = true;
-            }
-          }
-        });
-
-        if (!changed) {
-          return;
-        }
-
-        slideClone[selectedObject[0]][selectedObject[1]] = currentObject[1];
-
-        updateCurrentSlideVariables(slideClone);
-
-        let newSlides = {
-          ...allSlides,
-          [slidePos]: slideClone,
-        };
-        updateAllSlides(newSlides);
-
-        saveNewChanges({
-          allSlidesOverride: newSlides,
-          currentSlideVariablesOverride: slideClone,
-        });
-      }
-    };
-  }, [updateVariable]);
+  
   if (selectedObject[0] === "text") {
     return (
       <div className="actionPanel">

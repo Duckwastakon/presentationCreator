@@ -58,6 +58,8 @@
 .presentationTextEditBox {
   background: transparent;
   border-width: 0px;
+  resize: none;
+  box-sizing: border-box;
 }
 
 .extraButtonContainer {

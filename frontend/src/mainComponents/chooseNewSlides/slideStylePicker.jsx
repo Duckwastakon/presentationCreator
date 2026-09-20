@@ -4,10 +4,15 @@ import arrowRight from "./images/arrowRight.png";
 
 import { useVariables } from "../../presentationVariables";
 import { MiniDisplay } from "../slidesTab/components/miniDisplay";
+import { useEffect, useRef, useState } from "react";
+import { clamp } from "../../extraFunctions";
 
 export const SlideStylePicker = () => {
   const { newSlidePrefabs, currentPageNumber, updatePageNumber } =
     useVariables();
+
+  const [maxDisplayedPrefabs, updateMaxDisplayedPrefabs] = useState(4);
+  const prefabContainer = useRef(null);
 
   function changePage(allObj, objPerPage, newPageVal, changeFunc) {
     const possiblePages = Math.ceil(allObj / objPerPage);
@@ -19,17 +24,35 @@ export const SlideStylePicker = () => {
     }
 
     changeFunc(newPageVal);
+    getNewStyles(objPerPage);
   }
 
-  let possibleStyles = {};
-  for (let i = 0; i < 4; i++) {
-      if (newSlidePrefabs[i + currentPageNumber * 4] != null) {
-        possibleStyles = {
-          ...possibleStyles,
-          [i]: newSlidePrefabs[i + currentPageNumber * 4],
+  const [possibleStyles, updateStyles] = useState({});
+
+  function getNewStyles(maxStyles) {
+    let newPrefabs = {};
+    for (let i = 0; i < maxStyles; i++) {
+      if (newSlidePrefabs[i + currentPageNumber * maxStyles] != null) {
+        newPrefabs = {
+          ...newPrefabs,
+          [i]: newSlidePrefabs[i + currentPageNumber * maxStyles],
         };
       }
+    }
+
+    updateStyles(newPrefabs);
   }
+
+  useEffect(() => {
+    let fullWidth = prefabContainer.current.getBoundingClientRect().width;
+    let prefabsRows = Math.round(fullWidth / 320)
+    let width = clamp(fullWidth, 0, 320)
+    let onePrefabHeight = (width / 800) * 450;
+    let height = window.innerHeight * 0.5;
+
+    updateMaxDisplayedPrefabs(clamp(Math.round(height / (onePrefabHeight + 8))  * prefabsRows, 1, 4));
+    getNewStyles(clamp(Math.round(height / (onePrefabHeight + 8))  * prefabsRows, 1, 4));
+  }, [newSlidePrefabs]);
 
   return (
     <div
@@ -46,7 +69,7 @@ export const SlideStylePicker = () => {
         onClick={() => {
           changePage(
             Object.entries(possibleStyles).length,
-            4,
+            maxDisplayedPrefabs,
             currentPageNumber - 1,
             updatePageNumber,
           );
@@ -55,16 +78,16 @@ export const SlideStylePicker = () => {
       >
         <img className="arrowImage" src={arrowLeft} />
       </button>
-      <div className="styleChoiceContainer">
+      <div ref={prefabContainer} className="styleChoiceContainer">
         {Object.entries(possibleStyles).map((vars, index) => (
-          <MiniDisplay ind={index} vars={vars[1]} />
+          <MiniDisplay key={index} ind={index} vars={vars[1]} />
         ))}
       </div>
       <button
         onClick={() => {
           changePage(
             Object.entries(possibleStyles).length,
-            4,
+            maxDisplayedPrefabs,
             currentPageNumber + 1,
             updatePageNumber,
           );

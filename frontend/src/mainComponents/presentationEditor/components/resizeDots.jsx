@@ -68,8 +68,8 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       />
 
       <button
-        onMouseUp={() => stopResizing()}
-        onMouseDown={(event) => {
+        onPointerUp={() => stopResizing()}
+        onPointerDown={(event) => {
           startResizing(event, 1);
         }}
         className="diagonal1"
@@ -108,7 +108,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
 
       <button
         className="diagonal2"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 2);
         }}
         style={{
@@ -144,7 +144,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 3);
         }}
         className="diagonal2"
@@ -181,7 +181,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 4);
         }}
         className="diagonal1"
@@ -218,7 +218,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 5);
         }}
         className="vertical"
@@ -256,7 +256,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 6);
         }}
         className="horizontal"
@@ -294,7 +294,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       </button>
       <button
         className="vertical"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 7);
         }}
         style={{
@@ -331,7 +331,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       </button>
       <button
       className="horizontal"
-        onMouseDown={(event) => {
+        onPointerDown={(event) => {
           startResizing(event, 8);
         }}
         style={{

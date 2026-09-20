@@ -1,8 +1,7 @@
 import { useVariables } from "../../../presentationVariables";
 import { ObjectChanges } from "./objectChanges";
 import { ResizeDots } from "./resizeDots";
-import imageDefault from "../images/imagePrefab.png"
-
+import imageDefault from "../images/imagePrefab.png";
 
 export const ImageObject = ({
   startResizing,
@@ -11,8 +10,13 @@ export const ImageObject = ({
   ind,
   selected,
 }) => {
-  const { setSelectedObject, setSelectedObjectsVariables, setUpdateVariable, updateOpen } =
-    useVariables();
+  const {
+    setSelectedObject,
+    setSelectedObjectsVariables,
+    setUpdateVariable,
+    updateOpen,
+    saveChangedVariables,
+  } = useVariables();
 
   return (
     <div
@@ -56,8 +60,9 @@ export const ImageObject = ({
           position: "absolute",
           top: "0px",
         }}
-        onMouseDown={() => {
-          updateOpen(false)
+        onPointerDown={() => {
+          saveChangedVariables();
+          updateOpen(false);
           if (!selected) {
             setUpdateVariable(["images", variables[0], "src"]);
             setSelectedObjectsVariables(structuredClone(variables));

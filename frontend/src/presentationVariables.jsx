@@ -74,6 +74,48 @@ export function VariableContainer({ children }) {
     });
   }
 
+  function saveChangedVariables(){
+    let slidePos = currentlySelectedSlideId.current;
+    let currentVariables = currentSlideVariables;
+
+    let changed = false;
+
+    let currentObject = structuredClone(selectedObjectsVariables);
+    let slideClone = structuredClone(currentSlideVariables);
+
+    if(selectedObject[0] === "") return
+
+    Object.entries(currentObject[1]).map((val) => {
+      if (
+        val[1] !==
+        currentVariables[selectedObject[0]][selectedObject[1]][val[0]]
+      ) {
+        if (val[0] != "x" && val[0] != "y" && val[0] != "w" && val[0] != "h") {
+          changed = true;
+        }
+      }
+    });
+
+    if (!changed) {
+      return;
+    }
+
+    slideClone[selectedObject[0]][selectedObject[1]] = currentObject[1];
+
+    updateCurrentSlideVariables(slideClone);
+
+    let newSlides = {
+      ...allSlides,
+      [slidePos]: slideClone,
+    };
+    updateAllSlides(newSlides);
+
+    saveNewChanges({
+      allSlidesOverride: newSlides,
+      currentSlideVariablesOverride: slideClone,
+    });
+  }
+
   function saveNewChanges({
     allSlidesOverride,
     currentSlideVariablesOverride,
@@ -86,7 +128,6 @@ export function VariableContainer({ children }) {
     currentlySelectedSlideIdOverride,
     createNewSlideIdOverride,
   } = {}) {
-    console.log(currentlySelectedSlideIdOverride);
     saveChange({
       allSlides: allSlidesOverride || allSlides,
       currentSlideVariables:
@@ -147,6 +188,7 @@ export function VariableContainer({ children }) {
         changeDropDownPos,
         dropDownSlideId,
         updateDropDownSlideId,
+        saveChangedVariables,
       }}
     >
       {children}

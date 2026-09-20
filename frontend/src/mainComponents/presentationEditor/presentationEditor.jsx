@@ -22,6 +22,7 @@ export const MainPresentationDisplay = () => {
     currentlySelectedSlideId,
     saveNewChanges,
     updateOpen,
+    saveChangedVariables
   } = useVariables();
 
   const slideSizeRef = useRef(null);
@@ -65,6 +66,7 @@ export const MainPresentationDisplay = () => {
   }
 
   function unselectObject() {
+    saveChangedVariables()
     setUpdateVariable("");
     setSelectedObject(["", ""]);
   }
@@ -163,6 +165,8 @@ export const MainPresentationDisplay = () => {
       allSlidesOverride: structuredClone(updateValues[1]),
     });
   }
+
+  
 
   function handleMouseResize(event) {
     let xDiff = (lastX.current - event.clientX) * slideSizeMultiplier;
@@ -338,8 +342,7 @@ export const MainPresentationDisplay = () => {
 
     for (let type of Object.keys(allObjects)) {
       for (let variables of Object.entries(allObjects[type])) {
-        if (selectedObject[0] == type && selectedObject[1] == variables[0]) {
-        } else {
+        if (selectedObject[0] !== type || selectedObject[1] !== variables[0]) {
           if (
             Math.abs(variables[1].x + variables[1].w / 2 - xPos) < lockTolerance
           ) {
@@ -596,6 +599,7 @@ export const MainPresentationDisplay = () => {
       ref={slideSizeRef}
       className="presentationBackground"
       style={{
+        touchAction: "none",
         backgroundImage: `url(${currentSlideVariables.backgroundImageUrl})`,
         backgroundColor: `${selectedObjectsVariables.backgroundColor || currentSlideVariables.backgroundColor}`,
       }}
