@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import "./style.css";
 import upArrow from "./images/changeUp.png";
 import downArrow from "./images/changeDown.png";
@@ -22,6 +21,8 @@ export const ActionPanel = ({ selectedObject }) => {
     saveNewChanges,
     updateVariable,
     changeLoading,
+    imageArtists,
+    updateArtists,
   } = useVariables();
 
   function updateObject(
@@ -65,6 +66,8 @@ export const ActionPanel = ({ selectedObject }) => {
       updateVariable,
       currentSlideVariables,
       updateObject,
+      imageArtists,
+      updateArtists,
     );
     changeLoading(false);
   }
@@ -90,7 +93,7 @@ export const ActionPanel = ({ selectedObject }) => {
       currentSlideVariablesOverride: slideClone,
     });
   }
-  
+
   if (selectedObject[0] === "text") {
     return (
       <div className="actionPanel">
@@ -623,14 +626,21 @@ export const ActionPanel = ({ selectedObject }) => {
             <input
               className="simpleColorInput"
               type="color"
-              value={selectedObject[2]["backgroundColor"] || "#ffffff"}
+              value={
+                selectedObjectsVariables["backgroundColor"] ||
+                currentSlideVariables["backgroundColor"] ||
+                "#ffffff"
+              }
               onChange={(newVal) => {
-                updateObject(
-                  undefined,
-                  undefined,
-                  "backgroundColor",
-                  newVal.target.value,
-                );
+                let newObjData = structuredClone(selectedObjectsVariables);
+                newObjData.backgroundColor = newVal.target.value;
+                setSelectedObjectsVariables(newObjData);
+                //updateObject(
+                // undefined,
+                // undefined,
+                // "backgroundColor",
+                // newVal.target.value,
+                //);
               }}
             />
           </div>

@@ -23,6 +23,8 @@ export function VariableContainer({ children }) {
   const [MenuOpen, updateOpen] = useState(false);
   const [dropDownPos, changeDropDownPos] = useState([0, 0]);
 
+  const [imageArtists, updateArtists] = useState([]);
+
   const currentlySelectedSlideId = useRef();
   function updateCurrentlySelectedSlideId(NewVal) {
     currentlySelectedSlideId.current = NewVal;
@@ -42,8 +44,8 @@ export function VariableContainer({ children }) {
   }
 
   const dropDownSlideId = useRef(0);
-  function updateDropDownSlideId(val){
-    dropDownSlideId.current = val
+  function updateDropDownSlideId(val) {
+    dropDownSlideId.current = val;
   }
 
   const copiedObject = useRef({});
@@ -74,7 +76,7 @@ export function VariableContainer({ children }) {
     });
   }
 
-  function saveChangedVariables(){
+  function saveChangedVariables() {
     let slidePos = currentlySelectedSlideId.current;
     let currentVariables = currentSlideVariables;
 
@@ -83,7 +85,28 @@ export function VariableContainer({ children }) {
     let currentObject = structuredClone(selectedObjectsVariables);
     let slideClone = structuredClone(currentSlideVariables);
 
-    if(selectedObject[0] === "") return
+    if (currentObject.backgroundColor != undefined) {
+      console.log(currentVariables.backgroundColor);
+      if (currentObject.backgroundColor != currentVariables.backgroundColor) {
+        slideClone.backgroundColor = currentObject.backgroundColor;
+
+        updateCurrentSlideVariables(slideClone);
+
+        let newSlides = {
+          ...allSlides,
+          [slidePos]: slideClone,
+        };
+        updateAllSlides(newSlides);
+
+        saveNewChanges({
+          allSlidesOverride: newSlides,
+          currentSlideVariablesOverride: slideClone,
+        });
+        console.log("changed");
+      }
+    }
+
+    if (selectedObject[0] === "") return;
 
     Object.entries(currentObject[1]).map((val) => {
       if (
@@ -189,6 +212,8 @@ export function VariableContainer({ children }) {
         dropDownSlideId,
         updateDropDownSlideId,
         saveChangedVariables,
+        imageArtists,
+        updateArtists,
       }}
     >
       {children}

@@ -601,7 +601,7 @@ export const MainPresentationDisplay = () => {
       style={{
         touchAction: "none",
         backgroundImage: `url(${currentSlideVariables.backgroundImageUrl})`,
-        backgroundColor: `${selectedObjectsVariables.backgroundColor || currentSlideVariables.backgroundColor}`,
+        backgroundColor: `${selectedObjectsVariables.backgroundColor || currentSlideVariables.backgroundColor || "#ffffff"}`,
       }}
       onPointerMove={(event) => {
         handleMouseMovement(event);

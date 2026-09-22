@@ -40,6 +40,7 @@ function App() {
     dropDownPos,
     duplicateSlide,
     dropDownSlideId,
+    setSelectedObjectsVariables
   } = useVariables();
 
   function getSelectedObjectVariables() {
@@ -88,6 +89,7 @@ function App() {
   useEffect(() => {
     fetchAllStyles(updatePrefabTypes);
     fetchStyles("intro slides", updateNewSlidePrefabs, saveNewChanges);
+    changeSelectedPrefabType("intro slides")
   }, []);
 
   useEffect(() => {
@@ -110,6 +112,7 @@ function App() {
           updateModal,
           updateCurrentlySelectedSlideId,
           changeCreateNewSlideId,
+          setSelectedObjectsVariables
         );
       }
       if (
@@ -130,6 +133,7 @@ function App() {
           updateModal,
           updateCurrentlySelectedSlideId,
           changeCreateNewSlideId,
+          setSelectedObjectsVariables
         );
       }
 
@@ -180,6 +184,7 @@ function App() {
                 updateModal,
                 updateCurrentlySelectedSlideId,
                 changeCreateNewSlideId,
+                setSelectedObjectsVariables
               );
             }}
             className="redoundoButton"
@@ -202,6 +207,7 @@ function App() {
                 updateModal,
                 updateCurrentlySelectedSlideId,
                 changeCreateNewSlideId,
+                setSelectedObjectsVariables
               );
             }}
             className="redoundoButton"
@@ -265,6 +271,7 @@ function App() {
                 updateModal,
                 updateCurrentlySelectedSlideId,
                 changeCreateNewSlideId,
+                setSelectedObjectsVariables
               );
             }}
             className="redoundoButton"
@@ -287,6 +294,7 @@ function App() {
                 updateModal,
                 updateCurrentlySelectedSlideId,
                 changeCreateNewSlideId,
+                setSelectedObjectsVariables
               );
             }}
             className="redoundoButton"

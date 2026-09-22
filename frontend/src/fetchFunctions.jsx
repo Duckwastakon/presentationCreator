@@ -5,6 +5,8 @@ export async function getImage(
   selectedObject,
   currentSlideVariables,
   updateObject,
+  imageArtists,
+  updateArtists,
 ) {
   event.preventDefault();
 
@@ -17,7 +19,6 @@ export async function getImage(
   const savedImages = Object.entries(usedImages.current);
 
   if (savedImages.length > 0) {
-    console.log(savedImages);
     await savedImages.map(async (entry) => {
       if (entry[0] === query) {
         console.log(selectedObject);
@@ -31,10 +32,23 @@ export async function getImage(
         }
         let i = 0;
         for (const img of entry[1]) {
-          console.log(currentImageId);
           if (img.src.original === currentImageId) {
             console.log("got same pic");
+            var a = [];
+            var remove = false;
+            console.log(imageArtists);
+            imageArtists.map((val) => {
+              if (remove || val != img.photographer) {
+                a.push(val);
+              } else {
+                remove = true;
+              }
+            });
             if (i + 1 >= entry[1].length) i = 0;
+
+            a.push(entry[1][i + 1].photographer);
+            updateArtists(a);
+            console.log(a);
 
             if (selectedObject.length > 0 && selectedObject[0] !== "") {
               await updateObject(
@@ -65,6 +79,9 @@ export async function getImage(
 
           i += 1;
         }
+        var b = structuredClone(imageArtists);
+        b.push(entry[1][0].photographer);
+        updateArtists(b);
         console.log("cant find next image");
         console.log(entry);
 
@@ -81,7 +98,14 @@ export async function getImage(
   }
   console.log(found);
   if (!found) {
-    await fetchImage(query, selectedObject, updateUsedImages, updateObject);
+    await fetchImage(
+      query,
+      selectedObject,
+      updateUsedImages,
+      updateObject,
+      imageArtists,
+      updateArtists,
+    );
   }
 }
 
@@ -90,6 +114,8 @@ export async function fetchImage(
   selectedObject,
   updateUsedImages,
   updateObject,
+  imageArtists,
+  updateArtists,
 ) {
   await fetch(`/API?query=${query}`, {
     method: "get",
@@ -100,6 +126,11 @@ export async function fetchImage(
       var gottenRandNum = Math.floor(Math.random() * 4);
       console.log(gottenRandNum, data[gottenRandNum]);
 
+      var a = structuredClone(imageArtists);
+      a.push(data[gottenRandNum].photographer);
+      updateArtists(a);
+      console.log(a);
+
       if (selectedObject.length > 0 && selectedObject[0] !== "") {
         let newSlide = await updateObject(
           selectedObject[0],
@@ -108,7 +139,14 @@ export async function fetchImage(
           data[gottenRandNum].src.original,
         );
         const val = data[gottenRandNum].width / data[gottenRandNum].height;
-        updateObject(selectedObject[0], selectedObject[1], "aspectRatio", val, newSlide, false);
+        updateObject(
+          selectedObject[0],
+          selectedObject[1],
+          "aspectRatio",
+          val,
+          newSlide,
+          false,
+        );
       } else {
         await updateObject(
           undefined,
@@ -117,8 +155,9 @@ export async function fetchImage(
           data[gottenRandNum].src.original,
         );
       }
-    }).finally(() => {
-      return
+    })
+    .finally(() => {
+      return;
     });
 }
 

@@ -13,6 +13,7 @@ export function changeHistory(
   updateModal,
   updateCurrentlySelectedSlideId,
   changeCreateNewSlideId,
+  setSelectedObjectsVariables
 ) {
   if (Object.keys(history).includes(String(currentHistoryId + change)) && currentHistoryId + change >= 2) {
     currentHistoryId += change;
@@ -27,6 +28,7 @@ export function changeHistory(
     //}
     setUpdateVariable([])
     setSelectedObject(["", ""])
+    setSelectedObjectsVariables({})
     //if (history[currentHistoryId][3] != undefined) {
     //  setSelectedObject(history[currentHistoryId][3]);
     //}
