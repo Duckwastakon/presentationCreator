@@ -8,7 +8,7 @@ export const MiniSlideDisplay = ({
   onClick,
   startMovingSlide,
 }) => {
-  const { currentlySelectedSlideId, updateModal, saveNewChanges } =
+  const { currentlySelectedSlideId } =
     useVariables();
 
   const vars = slideVal[1];
@@ -24,16 +24,12 @@ export const MiniSlideDisplay = ({
   const { updateOpen, changeDropDownPos, updateDropDownSlideId } =
     useVariables();
 
-    console.log(slideVal)
   const objectElement = useRef(null);
   const [textSize, updateTextSize] = useState(24);
   useEffect(() => {
     function setTextSize() {
       let parentElement = objectElement.current;
-      updateTextSize(
-          (parentElement.getBoundingClientRect().width / 1920) *
-          2,
-      );
+      updateTextSize((parentElement.getBoundingClientRect().width / 1920) * 2);
     }
 
     setTextSize();
@@ -51,7 +47,6 @@ export const MiniSlideDisplay = ({
       }}
       className="miniSlideTab"
       onContextMenu={(event) => {
-        console.log("pressed");
         event.preventDefault();
 
         changeDropDownPos([event.clientX, event.clientY]);
@@ -63,7 +58,6 @@ export const MiniSlideDisplay = ({
         className="selectSlideButton"
         onPointerUp={() => {
           if (!selected) {
-            console.log("hey");
             onClick(slideVal[1], ind);
           }
           updateOpen(false);
@@ -79,9 +73,9 @@ export const MiniSlideDisplay = ({
         <button
           className="deleteSlideButton"
           onPointerUp={() => {
-            updateModal(true);
-
-            saveNewChanges({ modalActiveOverride: true });
+            changeDropDownPos([event.clientX, event.clientY]);
+            updateOpen(true);
+            updateDropDownSlideId(Number(slideVal[0]));
           }}
         >
           <svg

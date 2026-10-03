@@ -116,7 +116,6 @@ export const UndoRedo = () => {
           className="saveButton"
         >
           <img className="btnImage" src={saveButton} />
-          {/* <img className="btnImage" src={arrow} /> */}
         </button>
       </div>
       {saveWindow && (

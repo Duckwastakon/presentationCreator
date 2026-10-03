@@ -446,7 +446,11 @@ export const ActionPanel = ({ selectedObject }) => {
                     selectedObject[0],
                     selectedObject[1],
                     "outlineWidth",
-                    newOutlineWidth.target.value,
+                    clamp(
+                      Number(newOutlineWidth.target.value.replace(/\D/g, "")),
+                      0,
+                      10,
+                    ),
                   );
                 }}
                 type="text"
@@ -481,9 +485,267 @@ export const ActionPanel = ({ selectedObject }) => {
                 style={{
                   backgroundColor:
                     currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                      .layer == 0 && "#ff8181",
+                      .layer == 0 && "var(--accentColor1)",
                 }}
                 className="simpleInputButton"
+                onClick={() => {
+                  let val =
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .layer ?? 1;
+                  updateObject(
+                    selectedObject[0],
+                    selectedObject[1],
+                    "layer",
+                    clamp(val - 1, 0, 99),
+                  );
+                }}
+              >
+                <img className="submitImage" src={downArrow}></img>
+              </button>
+              <input
+                style={{ width: "50%" }}
+                className="simpleTextInput"
+                name="layerText"
+                value={
+                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                    .layer ?? 1
+                }
+                onInput={(newLayer) => {
+                  if (
+                    newLayer.target.value ==
+                    newLayer.target.value.replace(/\D/g, "")
+                  ) {
+                    let newObjData = structuredClone(selectedObjectsVariables);
+                    newObjData[1].layer = clamp(
+                      Number(newLayer.target.value.replace(/\D/g, "")),
+                      0,
+                      99,
+                    );
+                    setSelectedObjectsVariables(newObjData);
+
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "layer",
+                      clamp(
+                        Number(newLayer.target.value.replace(/\D/g, "")),
+                        0,
+                        99,
+                      ),
+                    );
+                  }
+                }}
+                type="text"
+                inputMode="numeric"
+              />
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .layer >= 99 && "var(--accentColor1)",
+                }}
+                onClick={() => {
+                  let val =
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .layer ?? 1;
+                  updateObject(
+                    selectedObject[0],
+                    selectedObject[1],
+                    "layer",
+                    clamp(val + 1, 0, 99),
+                  );
+                }}
+              >
+                <img className="submitImage" src={upArrow}></img>
+              </button>
+            </div>
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <div className="inLine">
+              <button
+                className="delBut"
+                onPointerUp={() => {
+                  delObj(
+                    selectedObject[0],
+                    selectedObject[1],
+                    currentSlideVariables,
+                    updateCurrentSlideVariables,
+                    save,
+                  );
+                  setUpdateVariable("");
+                  setSelectedObject(["", ""]);
+                }}
+              >
+                Delete
+              </button>
+              <button
+                className="dupBut"
+                onPointerUp={() =>
+                  dupObj(
+                    selectedObject[0],
+                    selectedObjectsVariables,
+                    currentSlideVariables,
+                    updateCurrentSlideVariables,
+                    save,
+                  )
+                }
+              >
+                Duplicate
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedObject[0] === "images") {
+    return (
+      <div className="actionPanel">
+        <div className="variableContainer">
+          <div className="sectionDiv">
+            <div className="simpleOptionContainer_Column">
+              <p className="simpleText">Set image</p>
+              <form
+                className="simpleOptionContainer_Row"
+                onSubmit={getNewImage}
+              >
+                <input
+                  className="simpleTextInput"
+                  placeholder="example `ducks`"
+                  name="query"
+                  type="text"
+                />
+                <button className="submitButton" type="submit">
+                  <img className="submitImage" src={search} />
+                </button>
+              </form>
+            </div>
+            <div className="simpleOptionContainer_Column">
+              <div className="inLine">
+                <button
+                  onPointerUp={() => {
+                    if (
+                      selectedObjectsVariables[1].src !== "" &&
+                      selectedObjectsVariables[1].src !== undefined
+                    ) {
+                      updateObject(
+                        selectedObject[0],
+                        selectedObject[1],
+                        "src",
+                        "",
+                      );
+                    }
+                  }}
+                  className="delBut"
+                >
+                  Remove image
+                </button>
+                <button
+                  className="dupBut"
+                  onMouseUp={() => {
+                    let newVals = structuredClone(selectedObject);
+                    const aspectRatio = newVals[2].aspectRatio || 1;
+
+                    if (newVals[2].x > newVals[2].y) {
+                      const val = newVals[2].w / aspectRatio;
+                      updateObject(
+                        selectedObject[0],
+                        selectedObject[1],
+                        "h",
+                        val,
+                      );
+                    } else {
+                      const val = newVals[2].h * aspectRatio;
+                      updateObject(
+                        selectedObject[0],
+                        selectedObject[1],
+                        "w",
+                        val,
+                      );
+                    }
+                  }}
+                >
+                  Restore aspect ratio
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <p className="simpleText">border width</p>
+            <div className="inLine">
+              <input
+                className="simpleSlider"
+                style={{ width: "7vw" }}
+                type="range"
+                value={selectedObjectsVariables[1]["borderWidth"] || 0}
+                min={0}
+                max={20}
+                step={1}
+                onInput={(newOutlineWidth) => {
+                  let newObjData = structuredClone(selectedObjectsVariables);
+                  newObjData[1].borderWidth = newOutlineWidth.target.value;
+                  setSelectedObjectsVariables(newObjData);
+                }}
+                onMouseUp={() => {
+                  saveTempValues();
+                }}
+              />
+              <input
+                style={{ width: "3vw" }}
+                className="simpleTextInput"
+                value={selectedObjectsVariables[1]["borderWidth"] || 0}
+                onInput={(newOutlineWidth) => {
+                  let newObjData = structuredClone(selectedObjectsVariables);
+                  newObjData[1].borderWidth = clamp(
+                    Number(newOutlineWidth.target.value.replace(/\D/g, "")),
+                    0,
+                    20,
+                  );
+                  setSelectedObjectsVariables(newObjData);
+                  updateObject(
+                    selectedObject[0],
+                    selectedObject[1],
+                    "borderWidth",
+                    clamp(
+                      Number(newOutlineWidth.target.value.replace(/\D/g, "")),
+                      0,
+                      20,
+                    ),
+                  );
+                }}
+                type="text"
+                inputMode="numeric"
+                max={"20"}
+              />
+            </div>
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <div className="inLine">
+              <p className="simpleText">border color</p>
+              <input
+                className="simpleColorInput"
+                type="color"
+                value={selectedObjectsVariables[1]["borderColor"] || "#000000"}
+                onChange={(newVal) => {
+                  let newObjData = structuredClone(selectedObjectsVariables);
+                  newObjData[1].borderColor = newVal.target.value;
+                  setSelectedObjectsVariables(newObjData);
+                }}
+              />
+            </div>
+          </div>
+          <div className="simpleOptionContainer_column">
+            <p className="simpleText">layer</p>
+            <div className="inLine">
+              <button
+                className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .layer == 0 && "var(--accentColor1)",
+                }}
                 onClick={() => {
                   let val =
                     currentSlideVariables[selectedObject[0]][selectedObject[1]]
@@ -503,12 +765,49 @@ export const ActionPanel = ({ selectedObject }) => {
               >
                 <img className="submitImage" src={downArrow}></img>
               </button>
-              <p className="simpleText">
-                {currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                  .layer ?? 1}
-              </p>
+              <input
+                style={{ width: "50%" }}
+                className="simpleTextInput"
+                name="layerText"
+                value={
+                  currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                    .layer ?? 1
+                }
+                onInput={(newLayer) => {
+                  if (
+                    newLayer.target.value ==
+                    newLayer.target.value.replace(/\D/g, "")
+                  ) {
+                    let newObjData = structuredClone(selectedObjectsVariables);
+                    newObjData[1].layer = clamp(
+                      Number(newLayer.target.value.replace(/\D/g, "")),
+                      0,
+                      99,
+                    );
+                    setSelectedObjectsVariables(newObjData);
+
+                    updateObject(
+                      selectedObject[0],
+                      selectedObject[1],
+                      "layer",
+                      clamp(
+                        Number(newLayer.target.value.replace(/\D/g, "")),
+                        0,
+                        99,
+                      ),
+                    );
+                  }
+                }}
+                type="text"
+                inputMode="numeric"
+              />
               <button
                 className="simpleInputButton"
+                style={{
+                  backgroundColor:
+                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
+                      .layer >= 99 && "var(--accentColor1)",
+                }}
                 onClick={() => {
                   let val =
                     currentSlideVariables[selectedObject[0]][selectedObject[1]]
@@ -533,7 +832,7 @@ export const ActionPanel = ({ selectedObject }) => {
           <div className="simpleOptionContainer_Column">
             <div className="inLine">
               <button
-              className="delBut"
+                className="delBut"
                 onPointerUp={() => {
                   delObj(
                     selectedObject[0],
@@ -549,7 +848,7 @@ export const ActionPanel = ({ selectedObject }) => {
                 Delete
               </button>
               <button
-              className="dupBut"
+                className="dupBut"
                 onPointerUp={() =>
                   dupObj(
                     selectedObject[0],
@@ -561,176 +860,6 @@ export const ActionPanel = ({ selectedObject }) => {
                 }
               >
                 Duplicate
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (selectedObject[0] === "images") {
-    return (
-      <div className="actionPanel">
-        <div className="variableContainer">
-          <div className="simpleOptionContainer_Column">
-            <p className="simpleText">Set image</p>
-            <form className="simpleOptionContainer_Row" onSubmit={getNewImage}>
-              <input
-                className="simpleTextInput"
-                placeholder="example `ducks`"
-                name="query"
-                type="text"
-              />
-              <button className="submitButton" type="submit">
-                <img className="submitImage" src={search} />
-              </button>
-            </form>
-          </div>
-          <div className="simpleOptionContainer_Column">
-            <p className="simpleText">Set image</p>
-            <button className="submitButton" type="submit">
-              <p>Delete current image</p>
-            </button>
-          </div>
-          <div className="simpleOptionContainer_Column">
-            <p className="simpleText">border width</p>
-            <div className="multipleOptions">
-              <input
-                style={{ width: "100px" }}
-                type="range"
-                value={selectedObjectsVariables[1]["borderWidth"] || 0}
-                min={0}
-                max={20}
-                step={1}
-                onInput={(newOutlineWidth) => {
-                  let newObjData = structuredClone(selectedObjectsVariables);
-                  newObjData[1].borderWidth = newOutlineWidth.target.value;
-                  setSelectedObjectsVariables(newObjData);
-                }}
-                onMouseUp={() => {
-                  saveTempValues();
-                }}
-              />
-              <input
-                style={{ width: "36px" }}
-                className="simpleTextInput"
-                value={selectedObjectsVariables[1]["borderWidth"] || 0}
-                onInput={(newOutlineWidth) => {
-                  let newObjData = structuredClone(selectedObjectsVariables);
-                  newObjData[1].borderWidth = clamp(
-                    Number(newOutlineWidth.target.value.replace(/\D/g, "")),
-                    0,
-                    20,
-                  );
-                  setSelectedObjectsVariables(newObjData);
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "borderWidth",
-                    newOutlineWidth.target.value,
-                  );
-                }}
-                type="text"
-                inputMode="numeric"
-                max={"20"}
-              />
-            </div>
-          </div>
-          <div className="simpleOptionContainer_Column">
-            <p className="simpleText">border color</p>
-            <input
-              className="simpleColorInput"
-              type="color"
-              value={selectedObjectsVariables[1]["borderColor"] || "#000000"}
-              onChange={(newVal) => {
-                let newObjData = structuredClone(selectedObjectsVariables);
-                newObjData[1].borderColor = newVal.target.value;
-                setSelectedObjectsVariables(newObjData);
-                //updateObject(
-                //  selectedObject[0],
-                //  selectedObject[1],
-                //  "borderColor",
-                //  newVal.target.value,
-                //);
-              }}
-            />
-          </div>
-          <div className="simpleOptionContainer_Row">
-            <p className="simpleText">aspect ratio</p>
-            <button
-              onMouseUp={() => {
-                let newVals = structuredClone(selectedObject);
-                const aspectRatio = newVals[2].aspectRatio || 1;
-
-                console.log(aspectRatio);
-
-                if (newVals[2].x > newVals[2].y) {
-                  const val = newVals[2].w / aspectRatio;
-                  updateObject(selectedObject[0], selectedObject[1], "h", val);
-                } else {
-                  const val = newVals[2].h * aspectRatio;
-                  updateObject(selectedObject[0], selectedObject[1], "w", val);
-                }
-              }}
-              className="submitButton"
-            >
-              <p className="simpleText">restore</p>
-            </button>
-          </div>
-          <div className="simpleOptionContainer_column">
-            <p className="simpleText">layer</p>
-            <div className="multipleOptions">
-              <button
-                style={{
-                  backgroundColor:
-                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                      .layer == 0 && "#ff8181",
-                }}
-                className="simpleInputButton"
-                onClick={() => {
-                  let val =
-                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                      .layer ?? 1;
-                  console.log(val);
-                  console.log(
-                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                      .layer,
-                  );
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "layer",
-                    clamp(val - 1, 0, 99),
-                  );
-                }}
-              >
-                <img src={downArrow}></img>
-              </button>
-              <p className="simpleTextSpecial">
-                {currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                  .layer ?? 1}
-              </p>
-              <button
-                className="simpleInputButton"
-                onClick={() => {
-                  let val =
-                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                      .layer ?? 1;
-                  console.log(val);
-                  console.log(
-                    currentSlideVariables[selectedObject[0]][selectedObject[1]]
-                      .layer,
-                  );
-                  updateObject(
-                    selectedObject[0],
-                    selectedObject[1],
-                    "layer",
-                    clamp(val + 1, 0, 99),
-                  );
-                }}
-              >
-                <img src={upArrow}></img>
               </button>
             </div>
           </div>
@@ -762,8 +891,23 @@ export const ActionPanel = ({ selectedObject }) => {
               </form>
             </div>
             <div className="simpleOptionContainer_Column">
-              <button className="deleteGeneratedImageButton">
-                <p>remove background image</p>
+              <button
+                onPointerUp={() => {
+                  if (
+                    currentSlideVariables.backgroundImageUrl !== "" &&
+                    currentSlideVariables.backgroundImageUrl !== undefined
+                  ) {
+                    updateObject(
+                      undefined,
+                      undefined,
+                      "backgroundImageUrl",
+                      undefined,
+                    );
+                  }
+                }}
+                className="deleteGeneratedImageButton"
+              >
+                remove background image
               </button>
             </div>
             <div className="simpleOptionContainer_Column">

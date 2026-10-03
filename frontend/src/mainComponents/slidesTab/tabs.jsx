@@ -22,7 +22,8 @@ export const SlideTab = () => {
     saveNewChanges,
     saveChangedVariables,
     setSelectedObject,
-    setUpdateVariable
+    setUpdateVariable,
+    setSelectedObjectsVariables
   } = useVariables();
 
   const [movingSlide, UpdateMovingSlide] = useState({});
@@ -41,19 +42,21 @@ export const SlideTab = () => {
     saveChangedVariables();
     setUpdateVariable("");
     setSelectedObject(["", ""]);
-    selectNewSlide(
-      slideVars,
-      slideId,
-      updateCurrentSlideVariables,
-      updateCurrentlySelectedSlideId,
-      changeCreateNewSlideId,
-    );
 
     saveNewChanges({
       currentlySelectedSlideIdOverride: slideId,
       CurrentSlideVariablesOverride: slideVars,
       createNewSlideIdOverride: -1,
     });
+
+    selectNewSlide(
+      slideVars,
+      slideId,
+      updateCurrentSlideVariables,
+      updateCurrentlySelectedSlideId,
+      changeCreateNewSlideId,
+      setSelectedObjectsVariables
+    );
   }
 
   function startMovingSlide(event, slide, slidePos) {

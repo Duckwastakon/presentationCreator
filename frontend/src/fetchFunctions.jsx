@@ -54,7 +54,7 @@ export async function getImage(
               await updateObject(
                 selectedObject[0],
                 selectedObject[1],
-                selectedObject[2],
+                "src",
                 entry[1][i + 1].src.original,
               );
               //const val = entry[1][i + 1].width / entry[1][i + 1].height;
@@ -88,7 +88,7 @@ export async function getImage(
         await updateObject(
           selectedObject[0],
           selectedObject[1],
-          selectedObject[2],
+          "src",
           entry[1][0].src.original,
         );
 
@@ -135,7 +135,7 @@ export async function fetchImage(
         let newSlide = await updateObject(
           selectedObject[0],
           selectedObject[1],
-          selectedObject[2],
+          "src",
           data[gottenRandNum].src.original,
         );
         const val = data[gottenRandNum].width / data[gottenRandNum].height;

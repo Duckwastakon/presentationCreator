@@ -4,10 +4,12 @@ export function selectNewSlide(
   updateSelectedSlide,
   updateCurrentSlideId,
   updateCreateNewSlideId,
+  setSelectedObjectsVariables,
 ) {
   updateCurrentSlideId(slideId);
   updateCreateNewSlideId(undefined);
   updateSelectedSlide(slideVariables);
+  setSelectedObjectsVariables({})
 }
 
 export function saveSlide(
