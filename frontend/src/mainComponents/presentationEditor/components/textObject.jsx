@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { updObj } from "../../../objectFunctions";
 import { useVariables } from "../../../presentationVariables";
-import { ObjectChanges } from "./objectChanges";
 import { ResizeDots } from "./resizeDots";
 
 export const TextObject = ({
@@ -104,6 +103,8 @@ export const TextObject = ({
           fontSize: textSize.toString() + "px",
           color: variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
+          WebkitAppearance: "none",
+          appearance: "none",
           WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,
           WebkitTextStrokeColor: variables[1].outlineColor || "black",
           textDecoration: variables[1].textDecoration || "none",
@@ -111,13 +112,6 @@ export const TextObject = ({
           textAlign: variables[1].textAlign || "left",
         }}
       />
-      {selected && (
-        <ObjectChanges
-          posX={variables[1].w}
-          objectIndex={ind}
-          objectData={variables}
-        />
-      )}
       {selected && (
         <ResizeDots
           startResizing={startResizing}

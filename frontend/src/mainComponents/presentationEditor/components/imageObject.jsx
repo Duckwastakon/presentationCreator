@@ -1,5 +1,4 @@
 import { useVariables } from "../../../presentationVariables";
-import { ObjectChanges } from "./objectChanges";
 import { ResizeDots } from "./resizeDots";
 import imageDefault from "../images/imagePrefab.png";
 
@@ -70,13 +69,6 @@ export const ImageObject = ({
           }
         }}
       />
-      {selected && (
-        <ObjectChanges
-          posX={variables[1].w}
-          objectIndex={ind}
-          objectData={variables}
-        />
-      )}
       {selected && (
         <ResizeDots
           startResizing={startResizing}

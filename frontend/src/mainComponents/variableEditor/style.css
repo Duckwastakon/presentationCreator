@@ -95,7 +95,7 @@
   padding: 0;
 }
 
-.simpleColorInput:hover{
+.simpleColorInput:hover {
   opacity: 0.9;
   border-color: var(--accentColor2);
 }
@@ -112,11 +112,6 @@ input[type="color"]::-webkit-color-swatch {
 input[type="color"]::-moz-color-swatch {
   border: none;
   border-radius: 50%;
-}
-
-.simpleInputCheckbox {
-  width: 24px;
-  height: 24px;
 }
 
 .simpleInputButton {
@@ -223,6 +218,86 @@ input[type="color"]::-moz-color-swatch {
 
 .incrementButton:hover {
   border-color: var(--accentColor2);
+  opacity: 0.8;
+}
+
+.dupBut {
+  width: 7vw;
+  height: auto;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+  color: var(--whiteColor);
+  border-radius: 8px;
+  font-size: 1vw;
+}
+
+.dupBut:hover{
+  opacity: 0.8;
+  border-color: var(--accentColor2);
+  color: var(--accentColor2);
+}
+
+.delBut {
+  width: 7vw;
+  height: auto;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+  color: var(--whiteColor);
+  border-radius: 8px;
+  font-size: 1vw;
+}
+
+.delBut:hover{
+  opacity: 0.8;
+  border-color: var(--accentColor1);
+  color: var(--accentColor1);
+}
+
+.simpleSlider {
+  appearance: none;
+  border-radius: 8px;
+  height: 0.8vw;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+}
+
+.simpleSlider:hover {
+  opacity: 0.8;
+  cursor: pointer;
+  border-color: var(--accentColor2);
+}
+
+
+.simpleSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1.2vw;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background: var(--accentColor2);
+  cursor: pointer;
+}
+
+.simpleSlider::-webkit-slider-thumb:hover {
+  opacity: 0.8;
+}
+
+.simpleSlider::-moz-range-thumb {
+  height: 1.2vw;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background: var(--accentColor2);
+  cursor: pointer;
+}
+
+.simpleSlider::-moz-range-thumb:hover {
   opacity: 0.8;
 }
 

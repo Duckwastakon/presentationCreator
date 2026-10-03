@@ -2,10 +2,14 @@ import "./style.css";
 import upArrow from "./images/changeUp.png";
 import downArrow from "./images/changeDown.png";
 import search from "./images/search.png";
+import alignRight from "./images/alignRight.png";
+import alignLeft from "./images/alignLeft.png";
+import alignCenter from "./images/alignCenter.png";
 import { useVariables } from "../../presentationVariables";
-import { createObj, updObj } from "../../objectFunctions";
+import { createObj, delObj, dupObj, updObj } from "../../objectFunctions";
 import { getImage } from "../../fetchFunctions";
 import { clamp } from "../../extraFunctions";
+import { saveSlide } from "../../slideFunctions";
 
 export const ActionPanel = ({ selectedObject }) => {
   const {
@@ -23,6 +27,8 @@ export const ActionPanel = ({ selectedObject }) => {
     changeLoading,
     imageArtists,
     updateArtists,
+    setUpdateVariable,
+    setSelectedObject,
   } = useVariables();
 
   function updateObject(
@@ -52,6 +58,19 @@ export const ActionPanel = ({ selectedObject }) => {
       });
     }
     return newSaveables[0];
+  }
+
+  function save(newSlide) {
+    let newAllSlides = saveSlide(
+      newSlide,
+      updateAllSlides,
+      allSlides,
+      currentlySelectedSlideId,
+    );
+    saveNewChanges({
+      allSlidesOverride: newAllSlides,
+      currentSlideVariablesOverride: newSlide,
+    });
   }
 
   async function getNewImage(event) {
@@ -193,7 +212,7 @@ export const ActionPanel = ({ selectedObject }) => {
                       currentSlideVariables[selectedObject[0]][
                         selectedObject[1]
                       ].textAlign == "left"
-                        ? 0.8
+                        ? 0.5
                         : currentSlideVariables[selectedObject[0]][
                             selectedObject[1]
                           ].textAlign == undefined && 0.5,
@@ -216,7 +235,7 @@ export const ActionPanel = ({ selectedObject }) => {
                     );
                   }}
                 >
-                  L
+                  <img className="submitImage" src={alignLeft} />
                 </button>
                 <button
                   className="simpleInputButton"
@@ -240,7 +259,7 @@ export const ActionPanel = ({ selectedObject }) => {
                     );
                   }}
                 >
-                  C
+                  <img className="submitImage" src={alignCenter} />
                 </button>
                 <button
                   className="simpleInputButton"
@@ -264,7 +283,7 @@ export const ActionPanel = ({ selectedObject }) => {
                     );
                   }}
                 >
-                  R
+                  <img className="submitImage" src={alignRight} />
                 </button>
               </div>
             </div>
@@ -392,9 +411,10 @@ export const ActionPanel = ({ selectedObject }) => {
           </div>
           <div className="simpleOptionContainer_Column">
             <p className="simpleText">outline width</p>
-            <div className="multipleOptions">
+            <div className="inLine">
               <input
-                style={{ width: "100px" }}
+                style={{ width: "7vw" }}
+                className="simpleSlider"
                 value={selectedObjectsVariables[1]["outlineWidth"] || 0}
                 onInput={(newOutlineWidth) => {
                   let newObjData = structuredClone(selectedObjectsVariables);
@@ -410,7 +430,7 @@ export const ActionPanel = ({ selectedObject }) => {
                 type="range"
               />
               <input
-                style={{ width: "36px" }}
+                style={{ width: "3vw" }}
                 className="simpleTextInput"
                 value={selectedObjectsVariables[1]["outlineWidth"] || 0}
                 onInput={(newOutlineWidth) => {
@@ -481,9 +501,9 @@ export const ActionPanel = ({ selectedObject }) => {
                   );
                 }}
               >
-                <img src={downArrow}></img>
+                <img className="submitImage" src={downArrow}></img>
               </button>
-              <p className="simpleTextSpecial">
+              <p className="simpleText">
                 {currentSlideVariables[selectedObject[0]][selectedObject[1]]
                   .layer ?? 1}
               </p>
@@ -506,7 +526,41 @@ export const ActionPanel = ({ selectedObject }) => {
                   );
                 }}
               >
-                <img src={upArrow}></img>
+                <img className="submitImage" src={upArrow}></img>
+              </button>
+            </div>
+          </div>
+          <div className="simpleOptionContainer_Column">
+            <div className="inLine">
+              <button
+              className="delBut"
+                onPointerUp={() => {
+                  delObj(
+                    selectedObject[0],
+                    selectedObject[1],
+                    currentSlideVariables,
+                    updateCurrentSlideVariables,
+                    save,
+                  );
+                  setUpdateVariable("");
+                  setSelectedObject(["", ""]);
+                }}
+              >
+                Delete
+              </button>
+              <button
+              className="dupBut"
+                onPointerUp={() =>
+                  dupObj(
+                    selectedObject[0],
+                    selectedObjectsVariables,
+                    currentSlideVariables,
+                    updateCurrentSlideVariables,
+                    save,
+                  )
+                }
+              >
+                Duplicate
               </button>
             </div>
           </div>
