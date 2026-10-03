@@ -9,66 +9,7 @@ const designs = {
           x: 1,
           y: 2,
           w: 3,
-          h: 1.5,
-          fontSize: 24,
-          text: "Hey",
-        },
-        1: {
-          x: 1,
-          y: 3,
-          w: 1.5,
-          h: 1.5,
-          fontSize: 16,
-          text: "Hi",
-        },
-      },
-      images: {
-        0: {
-          x: 4,
-          y: 2,
-          w: 3,
-          h: 0.75,
-        },
-      },
-    },
-    1: {
-      backgroundImageUrl: "",
-      text: {
-        0: {
-          x: 1,
-          y: 2,
-          w: 3,
-          h: 1.5,
-          fontSize: 24,
-          text: "Text2",
-        },
-        1: {
-          x: 1,
-          y: 3,
-          w: 1.5,
-          h: 1.5,
-          fontSize: 16,
-          text: "good design",
-        },
-      },
-      images: {
-        0: {
-          x: 4,
-          y: 2,
-          w: 3,
-          h: 0.5,
-          src: "",
-        },
-      },
-    },
-    2: {
-      backgroundImageUrl: "",
-      text: {
-        0: {
-          x: 1,
-          y: 2,
-          w: 3,
-          h: 1.5,
+          h: 0.5666,
           fontSize: 24,
           text: "Title",
         },
@@ -76,8 +17,55 @@ const designs = {
           x: 1,
           y: 3,
           w: 1.5,
-          h: 1.5,
+          h: 0.4333,
           fontSize: 16,
+          text: "name",
+        },
+      },
+      images: {
+      },
+    },
+    1: {
+      backgroundImageUrl: "",
+      text: {
+        0: {
+          x: (13.333 / 2) - (3/2),
+          y: 3.75 - 1.1,
+          w: 3,
+          h: 1.1,
+          fontSize: 52,
+          text: "Title",
+          textAlign: "center"
+        },
+        1: {
+          x: (13.333 / 2) - (1.5/2),
+          y: 3.75 + 0.4333,
+          w: 1.5,
+          h: 0.4333,
+          fontSize: 16,
+          text: "name",
+          textAlign: "center"
+        },
+      },
+      images: {
+      },
+    },
+    2: {
+      backgroundImageUrl: "",
+      text: {
+        0: {
+          x: 13.333 - 1 - 3,
+          y: 7.5 / 2 - 1.111/2,
+          w: 3,
+          h: 1.111,
+          fontSize: 56,
+          text: "Title",
+        },
+        1: {
+                    x: 1 + 3,
+          y: 7.5 / 2 - 1.111/2,
+          w: 3,
+          h: 1.111,
           text: "Name",
         },
       },

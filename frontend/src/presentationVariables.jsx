@@ -102,7 +102,6 @@ export function VariableContainer({ children }) {
           allSlidesOverride: newSlides,
           currentSlideVariablesOverride: slideClone,
         });
-        console.log("changed");
       }
     }
 
@@ -113,7 +112,7 @@ export function VariableContainer({ children }) {
         val[1] !==
         currentVariables[selectedObject[0]][selectedObject[1]][val[0]]
       ) {
-        if (val[0] != "x" && val[0] != "y" && val[0] != "w" && val[0] != "h") {
+        if (val[0] != "x" && val[0] != "y" && val[0] != "w" && val[0] != "h" && val[0] != "fontSize") {
           changed = true;
         }
       }
@@ -151,6 +150,10 @@ export function VariableContainer({ children }) {
     currentlySelectedSlideIdOverride,
     createNewSlideIdOverride,
   } = {}) {
+    console.log(allSlidesOverride)
+    console.log(allSlides)
+    console.log(currentSlideVariables)
+    console.log(currentSlideVariablesOverride)
     saveChange({
       allSlides: allSlidesOverride || allSlides,
       currentSlideVariables:

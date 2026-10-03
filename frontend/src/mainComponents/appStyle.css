@@ -1,10 +1,15 @@
 :root {
-  --backgroundColor: #4b484b;
-  --whiteColor: #ffffff;
-  --blackColor: #000000;
-  --lightBackground: #948c94;
-  --accentColor1: #fb4b4e;
-  --accentColor2: #06aed5;
+  --bgColor: #22252C;
+  --editorColor: #2B2F38;
+  --whiteColor: #FBFAF6;
+  --accentColor1: #F1614F;
+  --accentColor2: #2CB8B0;
+
+  --disabledColor: #9BA0AC;
+  --hoverColor: #3B404B;
+
+  --lightText: #FBFAF6;
+  --darkText: #1B1D22;
 
   --gapSmall: 4px;
   --gapMedium: 8px;
@@ -20,24 +25,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--backgroundColor);
-}
-
-.redoundoButton {
-  height: 32px;
-  width: 64px;
-  border-radius: 8px;
-  border: 4px solid #000000;
-  background-color: #ffffff;
-  touch-action: manipulation;
-}
-
-.redoundoButton:hover {
-  background-color: #d2d2d2;
-}
-
-.redoundoButton:disabled {
-  background-color: #d2d2d2;
+  background-color: var(--bgColor);
 }
 
 .container {
@@ -47,13 +35,12 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--backgroundColor);
+  background-color: var(--bgColor);
 }
 
 .creatorContainer {
   width: 100vw;
-  height: 70vh;
-  max-height: 450px;
+  max-height: 100%;
   justify-content: center;
   display: flex;
   flex-direction: row;
@@ -80,9 +67,9 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-top: 10vh;
   margin-bottom: 17.5vh;
-  margin-top: 2.5vh;
-  height: 80%;
+  height: 72.5vh;
   width: 100%;
   gap: var(--gapBig);
 }

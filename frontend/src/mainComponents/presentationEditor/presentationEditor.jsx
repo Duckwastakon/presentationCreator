@@ -66,7 +66,8 @@ export const MainPresentationDisplay = () => {
   }
 
   function unselectObject() {
-    saveChangedVariables()
+    console.log("unselected")
+    saveChangedVariables({currentSlideVariablesOverride: undefined})
     setUpdateVariable("");
     setSelectedObject(["", ""]);
   }
@@ -107,8 +108,6 @@ export const MainPresentationDisplay = () => {
     if (changingState.current === 0) return;
 
     if (changingState.current < 9) {
-      console.log(selectedObjectsVariables);
-      console.log(currentSlideVariables[selectedObject[0]][selectedObject[1]]);
       handleMouseResize(event);
     } else {
       handleObjectMove(event);
@@ -137,7 +136,7 @@ export const MainPresentationDisplay = () => {
     let newVars = structuredClone(
       currentSlideVariables[selectedObject[0]][selectedObject[1]],
     );
-    console.log(newVars);
+
     newVars.x = selectedObjectsVariables[1].x;
     newVars.y = selectedObjectsVariables[1].y;
     newVars.w = selectedObjectsVariables[1].w;
@@ -165,8 +164,6 @@ export const MainPresentationDisplay = () => {
       allSlidesOverride: structuredClone(updateValues[1]),
     });
   }
-
-  
 
   function handleMouseResize(event) {
     let xDiff = (lastX.current - event.clientX) * slideSizeMultiplier;
@@ -305,10 +302,6 @@ export const MainPresentationDisplay = () => {
 
     lastX.current = event.clientX;
     lastY.current = event.clientY;
-
-    console.log(selectedObjectsVariables);
-    console.log(currentSlideVariables);
-    console.log(newVals);
 
     setSelectedObjectsVariables(newVals);
   }
@@ -624,7 +617,7 @@ export const MainPresentationDisplay = () => {
       {Object.entries(currentSlideVariables.text).map((variables) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
-        const gottenVariables = structuredClone(variables);
+        const gottenVariables = structuredClone(variables)
         if (selected) {
           gottenVariables[1].x = selectedObjectsVariables[1].x;
           gottenVariables[1].y = selectedObjectsVariables[1].y;

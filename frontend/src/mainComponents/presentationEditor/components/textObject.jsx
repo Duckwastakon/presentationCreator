@@ -23,7 +23,7 @@ export const TextObject = ({
     setUpdateVariable,
     saveNewChanges,
     updateOpen,
-    saveChangedVariables
+    saveChangedVariables,
   } = useVariables();
   let ExtraVariables = {};
   if (selected) {
@@ -31,15 +31,20 @@ export const TextObject = ({
   }
   const objectElement = useRef(null);
   const [textSize, updateTextSize] = useState(24);
-
   useEffect(() => {
-    const parentElement = objectElement.current.parentElement;
+    function setTextSize() {
+      let parentElement = objectElement.current.parentElement;
+      updateTextSize(
+        variables[1].fontSize *
+          (parentElement.getBoundingClientRect().width / 1920) *
+          2,
+      );
+    }
+    
+    setTextSize()
 
-    updateTextSize(
-      variables[1].fontSize *
-        (parentElement.getBoundingClientRect().width / 800),
-    );
-  }, []);
+    window.addEventListener("resize", setTextSize);
+  }, variables);
 
   return (
     <div
@@ -56,11 +61,10 @@ export const TextObject = ({
       }}
       key={ind}
     >
-      <input
-        type="text"
+      <textarea
         value={variables[1].text}
         onChange={(newVal) => {
-          let newAllSlides = updObj( 
+          let newAllSlides = updObj(
             "text",
             variables[0],
             "text",
@@ -83,7 +87,7 @@ export const TextObject = ({
         }}
         onSelect={() => {
           if (!selected) {
-            saveChangedVariables()
+            saveChangedVariables();
             setUpdateVariable(["text", variables[0], undefined]);
             setSelectedObjectsVariables(structuredClone(variables));
             setSelectedObject(["text", variables[0]]);

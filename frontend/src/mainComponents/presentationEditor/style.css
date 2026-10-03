@@ -1,24 +1,21 @@
 .presentationBackground {
-  max-width: 800px;
-  max-height: 450px;
-  aspect-ratio: 800 / 450;
+  max-width: 1920px;
+  max-height: 1080px;
+  width: 60vw;
+  aspect-ratio: 16 / 9;
   margin: var(--gapMassive);
-  box-shadow: 0px 0px 10px gray;
   position: relative;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   background-color: white;
+  align-self: flex-start;
+  overflow: hidden;
 }
 
 @media (max-width: 1000px) {
   .presentationBackground {
-    max-width: 800px;
-    max-height: 450px;
-    aspect-ratio: 800 / 450;
-    width: 80vw;
     margin: var(--gapMassive);
-    box-shadow: 0px 0px 10px gray;
     position: relative;
     background-repeat: no-repeat;
     background-position: center;
@@ -60,6 +57,7 @@
   border-width: 0px;
   resize: none;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .extraButtonContainer {

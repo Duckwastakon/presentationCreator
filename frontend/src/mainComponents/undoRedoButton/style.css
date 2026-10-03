@@ -1,0 +1,118 @@
+.saveButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+  width: auto;
+  border-radius: 8px;
+  border: 2px solid var(--hoverColor);
+  touch-action: manipulation;
+  gap: var(--gapMedium);
+  padding-bottom: 2px;
+  padding-top: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  background-color: var(--accentColor2);
+}
+
+.saveButton:hover {
+  border-color: var(--accentColor2);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+  width: auto;
+  border-radius: 8px;
+  border: 2px solid var(--hoverColor);
+  touch-action: manipulation;
+  gap: var(--gapMedium);
+  padding-bottom: 2px;
+  padding-top: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+  background-color: var(--accentColor1);
+}
+
+.clearButton:hover {
+  border-color: var(--accentColor1);
+}
+
+.redoundoButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+  width: auto;
+  border-radius: 8px;
+  background-color: var(--editorColor);
+  border: 2px solid var(--hoverColor);
+  touch-action: manipulation;
+  gap: var(--gapMedium);
+  padding-bottom: 2px;
+  padding-top: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+}
+
+.redoundoButton:hover {
+  border-color: var(--accentColor2);
+}
+
+.redoundoButton:disabled {
+  opacity: 0.5;
+}
+
+.redoundoButton:disabled:hover {
+  border-color: var(--hoverColor);
+}
+
+.btnImage {
+  height: 90%;
+  aspect-ratio: 1/1;
+}
+
+@media (max-width: 1000px)  {
+.btnImage {
+  width: 24px;
+}
+}
+
+.btnText {
+  height: auto;
+  color: var(--lightText);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: 2vh;
+}
+
+.headerDiv {
+  width: 95vw;
+  height: 7.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  z-index: 500;
+  padding-left: 2.5vw;
+  padding-right: 2.5vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-bottom: 2px solid var(--hoverColor);
+  gap: var(--gapMedium);
+}
+
+.buttonContainer {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gapMedium);
+}

@@ -5,13 +5,14 @@ import { ActionPanel } from "./mainComponents/variableEditor/actionPanel";
 import { dupObj } from "./objectFunctions";
 import { fetchAllStyles, fetchStyles } from "./fetchFunctions";
 import { useVariables } from "./presentationVariables";
-import { changeHistory, getButtonStates } from "./keyBindFunctions";
-import { HeaderBar } from "./mainComponents/headerComponent/headerBar";
+import { changeHistory } from "./keyBindFunctions";
 import { MainPresentationDisplay } from "./mainComponents/presentationEditor/presentationEditor";
 import { Modal } from "./mainComponents/deleteModal/modal";
 import { LoadingDiv } from "./mainComponents/loadingComponent/loadingDiv";
 import { EditingDropDown } from "./mainComponents/slidesTab/components/editingDropdown";
 import { SlideStylePicker } from "./mainComponents/chooseNewSlides/slideStylePicker";
+
+import { UndoRedo } from "./mainComponents/undoRedoButton/undoRedoButton";
 
 function App() {
   const {
@@ -149,72 +150,10 @@ function App() {
     };
   }, [currentSlideVariables]);
 
-  let buttonStates = getButtonStates();
-
   if (Object.keys(currentSlideVariables).length > 0) {
     return (
       <div className="background">
-        <div
-          style={{
-            background: "transparent",
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            position: "fixed",
-            width: "50%",
-            height: "auto",
-            top: "8px",
-            left: "25%",
-            zIndex: "500",
-          }}
-        >
-          <button
-            disabled={buttonStates[0]}
-            onPointerDown={() => {
-              if (buttonStates[0]) return;
-              changeHistory(
-                -1,
-                updateAllSlides,
-                updateCurrentSlideVariables,
-                setUpdateVariable,
-                setSelectedObject,
-                updateNewSlidePrefabs,
-                updatePageNumber,
-                changeSelectedPrefabType,
-                updateModal,
-                updateCurrentlySelectedSlideId,
-                changeCreateNewSlideId,
-                setSelectedObjectsVariables
-              );
-            }}
-            className="redoundoButton"
-          >
-            <p>undo</p>
-          </button>
-          <button
-            disabled={buttonStates[1]}
-            onPointerDown={() => {
-              if (buttonStates[1]) return;
-              changeHistory(
-                1,
-                updateAllSlides,
-                updateCurrentSlideVariables,
-                setUpdateVariable,
-                setSelectedObject,
-                updateNewSlidePrefabs,
-                updatePageNumber,
-                changeSelectedPrefabType,
-                updateModal,
-                updateCurrentlySelectedSlideId,
-                changeCreateNewSlideId,
-                setSelectedObjectsVariables
-              );
-            }}
-            className="redoundoButton"
-          >
-            <p>redo</p>
-          </button>
-        </div>
+        <UndoRedo/>
         <div className="container">
           {modalActive && <Modal />}
           {MenuOpen && (
@@ -232,7 +171,6 @@ function App() {
               <MainPresentationDisplay />
               <ActionPanel selectedObject={getSelectedObjectVariables()} />
             </div>
-            <HeaderBar />
           </div>
           <SlideTab />
         </div>
@@ -241,67 +179,7 @@ function App() {
   } else {
     return (
       <div className="container">
-        <div
-          style={{
-            background: "transparent",
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            position: "fixed",
-            width: "50%",
-            height: "auto",
-            top: "8px",
-            left: "25%",
-            zIndex: "500",
-          }}
-        >
-          <button
-            disabled={buttonStates[0]}
-            onPointerDown={() => {
-              if (buttonStates[0]) return;
-              changeHistory(
-                -1,
-                updateAllSlides,
-                updateCurrentSlideVariables,
-                setUpdateVariable,
-                setSelectedObject,
-                updateNewSlidePrefabs,
-                updatePageNumber,
-                changeSelectedPrefabType,
-                updateModal,
-                updateCurrentlySelectedSlideId,
-                changeCreateNewSlideId,
-                setSelectedObjectsVariables
-              );
-            }}
-            className="redoundoButton"
-          >
-            <p>undo</p>
-          </button>
-          <button
-            disabled={buttonStates[1]}
-            onPointerDown={() => {
-              if (buttonStates[1]) return;
-              changeHistory(
-                1,
-                updateAllSlides,
-                updateCurrentSlideVariables,
-                setUpdateVariable,
-                setSelectedObject,
-                updateNewSlidePrefabs,
-                updatePageNumber,
-                changeSelectedPrefabType,
-                updateModal,
-                updateCurrentlySelectedSlideId,
-                changeCreateNewSlideId,
-                setSelectedObjectsVariables
-              );
-            }}
-            className="redoundoButton"
-          >
-            <p>redo</p>
-          </button>
-        </div>
+        <UndoRedo/>
         <div className="SlideTypePicker">
           {prefabTypes.map((val, i) => {
             let bgColor = val === selectedPrefabType ? "#62cdff" : "#f5f5f5";

@@ -1,5 +1,6 @@
 import cross from "../images/delete.png";
 import { useVariables } from "../../../presentationVariables";
+import { useEffect, useRef, useState } from "react";
 
 export const MiniSlideDisplay = ({
   slideVal,
@@ -23,8 +24,26 @@ export const MiniSlideDisplay = ({
   const { updateOpen, changeDropDownPos, updateDropDownSlideId } =
     useVariables();
 
+    console.log(slideVal)
+  const objectElement = useRef(null);
+  const [textSize, updateTextSize] = useState(24);
+  useEffect(() => {
+    function setTextSize() {
+      let parentElement = objectElement.current;
+      updateTextSize(
+          (parentElement.getBoundingClientRect().width / 1920) *
+          2,
+      );
+    }
+
+    setTextSize();
+
+    window.addEventListener("resize", setTextSize);
+  }, slideVal);
+
   return (
     <div
+      ref={objectElement}
       style={{
         boxShadow: `0px 0px 10px ${shadowColor}`,
         backgroundImage: `url(${vars.backgroundImageUrl})`,
@@ -47,7 +66,7 @@ export const MiniSlideDisplay = ({
             console.log("hey");
             onClick(slideVal[1], ind);
           }
-          updateOpen(false)
+          updateOpen(false);
         }}
         onPointerDown={(event) => {
           if (selected) {
@@ -92,7 +111,7 @@ export const MiniSlideDisplay = ({
               height: (100 * (variables[1].h / 7.5)).toString() + "%",
               left: (100 * (variables[1].x / 13.333)).toString() + "%",
               width: (100 * (variables[1].w / 13.333)).toString() + "%",
-              fontSize: (variables[1].fontSize / 2).toString() + "px",
+              fontSize: (variables[1].fontSize * textSize).toString() + "px",
               color: variables[1].textColor || "black",
               fontWeight: variables[1].bold || "400",
               textShadow: `${outlineWidth}px ${outlineWidth}px 0px ${outlineColor},
