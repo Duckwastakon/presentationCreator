@@ -91,13 +91,15 @@ export const ActionPanel = ({ selectedObject }) => {
     changeLoading(false);
   }
 
-  function saveTempValues() {
-    let currentObject = structuredClone(selectedObjectsVariables);
-    let slideClone = structuredClone(currentSlideVariables);
+  function saveTempValues(curSlide, curObj) {
+    console.log(curSlide);
+    console.log(curObj);
 
-    console.log(currentObject);
+    let currentObject = structuredClone(curObj);
+    let slideClone = structuredClone(curSlide);
 
-    slideClone[selectedObject[0]][selectedObject[1]] = currentObject[1];
+    slideClone[selectedObject[0]][selectedObject[1]].outlineWidth =
+      currentObject[1].outlineWidth;
 
     updateCurrentSlideVariables(slideClone);
 
@@ -422,7 +424,10 @@ export const ActionPanel = ({ selectedObject }) => {
                   setSelectedObjectsVariables(newObjData);
                 }}
                 onMouseUp={() => {
-                  saveTempValues();
+                  saveTempValues(
+                    currentSlideVariables,
+                    selectedObjectsVariables,
+                  );
                 }}
                 min={0}
                 max={10}
@@ -627,8 +632,12 @@ export const ActionPanel = ({ selectedObject }) => {
                 <button
                   onPointerUp={() => {
                     if (
-                      selectedObjectsVariables[1].src !== "" &&
-                      selectedObjectsVariables[1].src !== undefined
+                      currentSlideVariables[selectedObject[0]][
+                        selectedObject[1]
+                      ].src !== "" &&
+                      currentSlideVariables[selectedObject[0]][
+                        selectedObject[1]
+                      ].src !== undefined
                     ) {
                       updateObject(
                         selectedObject[0],
@@ -645,25 +654,45 @@ export const ActionPanel = ({ selectedObject }) => {
                 <button
                   className="dupBut"
                   onMouseUp={() => {
-                    let newVals = structuredClone(selectedObject);
-                    const aspectRatio = newVals[2].aspectRatio || 1;
+                    let newVals = structuredClone(selectedObjectsVariables);
+                    let aspectRatio =
+                      currentSlideVariables[selectedObject[0]][
+                        selectedObject[1]
+                      ].aspectRatio || 1;
 
-                    if (newVals[2].x > newVals[2].y) {
-                      const val = newVals[2].w / aspectRatio;
-                      updateObject(
-                        selectedObject[0],
-                        selectedObject[1],
-                        "h",
-                        val,
-                      );
-                    } else {
-                      const val = newVals[2].h * aspectRatio;
+                    if (
+                      currentSlideVariables[selectedObject[0]][
+                        selectedObject[1]
+                      ].src == "" ||
+                      currentSlideVariables[selectedObject[0]][
+                        selectedObject[1]
+                      ].src == undefined
+                    ) {
+                      aspectRatio = 1;
+                    }
+
+                    if (newVals[1].x > newVals[1].y) {
+                      const val = newVals[1].h * aspectRatio;
                       updateObject(
                         selectedObject[0],
                         selectedObject[1],
                         "w",
                         val,
                       );
+
+                      newVals[1].w = val;
+                      setSelectedObjectsVariables(newVals);
+                    } else {
+                      const val = newVals[1].w / aspectRatio;
+                      updateObject(
+                        selectedObject[0],
+                        selectedObject[1],
+                        "h",
+                        val,
+                      );
+
+                      newVals[1].h = val;
+                      setSelectedObjectsVariables(newVals);
                     }
                   }}
                 >
@@ -689,7 +718,10 @@ export const ActionPanel = ({ selectedObject }) => {
                   setSelectedObjectsVariables(newObjData);
                 }}
                 onMouseUp={() => {
-                  saveTempValues();
+                  saveTempValues(
+                    currentSlideVariables,
+                    selectedObjectsVariables,
+                  );
                 }}
               />
               <input

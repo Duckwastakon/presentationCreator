@@ -5,7 +5,7 @@ import { updObj } from "../../objectFunctions";
 import { ImageObject } from "./components/imageObject";
 import { TextObject } from "./components/textObject";
 
-const lockTolerance = 0.01;
+const lockTolerance = 0.04;
 
 export const MainPresentationDisplay = () => {
   const {
@@ -22,7 +22,7 @@ export const MainPresentationDisplay = () => {
     currentlySelectedSlideId,
     saveNewChanges,
     updateOpen,
-    saveChangedVariables
+    saveChangedVariables,
   } = useVariables();
 
   const slideSizeRef = useRef(null);
@@ -50,6 +50,7 @@ export const MainPresentationDisplay = () => {
   const [yBars, updateYBars] = useState([]);
 
   function addXBar(pos) {
+    console.log("added x bar");
     updateXBars([pos]);
   }
 
@@ -58,6 +59,7 @@ export const MainPresentationDisplay = () => {
   }
 
   function addYBar(pos) {
+    console.log("added bar");
     updateYBars([pos]);
   }
 
@@ -66,8 +68,8 @@ export const MainPresentationDisplay = () => {
   }
 
   function unselectObject() {
-    console.log("unselected")
-    saveChangedVariables({currentSlideVariablesOverride: undefined})
+    console.log("unselected");
+    saveChangedVariables({ currentSlideVariablesOverride: undefined });
     setUpdateVariable("");
     setSelectedObject(["", ""]);
   }
@@ -309,6 +311,20 @@ export const MainPresentationDisplay = () => {
   function checkXLock(xPos, xWidth, event) {
     if (xLocked.current) return xPos;
 
+    if (Math.abs(13.333 - (xPos + xWidth)) < lockTolerance) {
+      xLocked.current = true;
+      lockedX.current = event.clientX;
+      addXBar(800);
+      return 13.333 - xWidth;
+    }
+
+    if (Math.abs(xPos) < lockTolerance) {
+      xLocked.current = true;
+      lockedX.current = event.clientX;
+      addXBar(0);
+      return 0;
+    }
+
     if (Math.abs(13.333 / 2 - xWidth / 2 - xPos) < lockTolerance) {
       xLocked.current = true;
       lockedX.current = event.clientX;
@@ -362,7 +378,6 @@ export const MainPresentationDisplay = () => {
             addXBar((800 / 13.333) * (variables[1].x + variables[1].w / 2));
             return variables[1].x + variables[1].w / 2 - xWidth;
           }
-
           if (Math.abs(variables[1].x - xPos) < lockTolerance) {
             xLocked.current = true;
             lockedX.current = event.clientX;
@@ -418,6 +433,20 @@ export const MainPresentationDisplay = () => {
   function checkYLock(yPos, yHeight, event) {
     if (yLocked.current) return yPos;
 
+    if (Math.abs(7.5 - (yPos + yHeight)) < lockTolerance) {
+      yLocked.current = true;
+      lockedY.current = event.clientY;
+      addYBar(450);
+      return 7.5 - yHeight;
+    }
+
+    if (Math.abs(yPos) < lockTolerance) {
+      yLocked.current = true;
+      lockedY.current = event.clientY;
+      addYBar(0);
+      return 0;
+    }
+
     if (Math.abs(7.5 / 2 - yHeight / 2 - yPos) < lockTolerance) {
       yLocked.current = true;
       lockedY.current = event.clientY;
@@ -444,7 +473,8 @@ export const MainPresentationDisplay = () => {
 
     for (let type of Object.keys(allObjects)) {
       for (let variables of Object.entries(allObjects[type])) {
-        if (selectedObject[0] !== type && selectedObject[1] !== variables[0]) {
+        if (selectedObject[0] !== type || selectedObject[1] !== variables[0]) {
+          console.log(variables);
           if (
             Math.abs(variables[1].y + variables[1].h / 2 - yPos) < lockTolerance
           ) {
@@ -617,7 +647,7 @@ export const MainPresentationDisplay = () => {
       {Object.entries(currentSlideVariables.text).map((variables) => {
         const selected =
           "text" == selectedObject[0] && variables[0] == selectedObject[1];
-        const gottenVariables = structuredClone(variables)
+        const gottenVariables = structuredClone(variables);
         if (selected) {
           gottenVariables[1].x = selectedObjectsVariables[1].x;
           gottenVariables[1].y = selectedObjectsVariables[1].y;

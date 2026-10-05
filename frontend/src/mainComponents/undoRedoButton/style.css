@@ -77,10 +77,10 @@
   aspect-ratio: 1/1;
 }
 
-@media (max-width: 1000px)  {
-.btnImage {
-  width: 24px;
-}
+@media (max-width: 1000px) {
+  .btnImage {
+    width: 24px;
+  }
 }
 
 .btnText {
@@ -115,4 +115,89 @@
   align-items: center;
   justify-content: center;
   gap: var(--gapMedium);
+}
+
+.backgroundDiv {
+  width: auto;
+  height: auto;
+  padding-left: 2.5vw;
+  padding-right: 2.5vw;
+  padding-top: 2vw;
+  padding-bottom: 2vw;
+  background-color: var(--editorColor);
+  border: 2px solid var(--accentColor2);
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.closeButton {
+  width: 2.5vw;
+  aspect-ratio: 1/1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.closeButton:hover {
+  opacity: 0.8;
+}
+
+.closeImage {
+  width: 100%;
+  height: 100%;
+}
+
+.savePresentationText {
+  font-size: 2vw;
+  color: var(--whiteColor);
+}
+
+.smallInfoText {
+  font-size: 1vw;
+  color: var(--whiteColor);
+}
+
+.presentationNameInput {
+  font-size: 1.25vw;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-top-left-radius: 8px;
+  border-end-start-radius: 8px;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+  color: var(--whiteColor);
+}
+
+.presentationNameInput:hover {
+  border-color: var(--accentColor2);
+}
+
+.confirmButton {
+  font-size: 1.25vw;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-top-right-radius: 8px;
+  border-end-end-radius: 8px;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+  color: var(--accentColor2);
+}
+
+.confirmButton:hover {
+  border-color: var(--accentColor2);
+  background-color: var(--accentColor2);
+  color: var(--whiteColor);
 }

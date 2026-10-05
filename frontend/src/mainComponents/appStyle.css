@@ -1,15 +1,15 @@
 :root {
-  --bgColor: #22252C;
-  --editorColor: #2B2F38;
-  --whiteColor: #FBFAF6;
-  --accentColor1: #F1614F;
-  --accentColor2: #2CB8B0;
+  --bgColor: #22252c;
+  --editorColor: #2b2f38;
+  --whiteColor: #fbfaf6;
+  --accentColor1: #f1614f;
+  --accentColor2: #2cb8b0;
 
-  --disabledColor: #9BA0AC;
-  --hoverColor: #3B404B;
+  --disabledColor: #9ba0ac;
+  --hoverColor: #3b404b;
 
-  --lightText: #FBFAF6;
-  --darkText: #1B1D22;
+  --lightText: #fbfaf6;
+  --darkText: #1b1d22;
 
   --gapSmall: 4px;
   --gapMedium: 8px;
@@ -74,10 +74,6 @@
   gap: var(--gapBig);
 }
 
-.miniPresentation:hover {
-  background-color: rgb(210, 210, 210);
-}
-
 .headerText {
   font-size: var(--headerSize);
   text-align: center;
@@ -122,30 +118,46 @@
   gap: 4px;
 }
 
+.selectorDiv {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 10vh;
+  margin-bottom: 17.5vh;
+  height: 72.5vh;
+  width: 100%;
+  gap: var(--gapBig);
+}
+
 .SlideTypePicker {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  background-color: white;
-  border-radius: 16px;
-  width: 80%;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  padding-top: 8px;
-  padding-right: 16px;
-  padding-left: 16px;
-  gap: 8px;
+  background-color: var(--editorColor);
+  border-radius: 8px;
+  width: 80vw;
+  gap: 4px;
+  border: 2px solid var(--hoverColor);
+  padding-bottom: 4px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 8px;
 }
 
 .slideTypeButton {
   flex: 1;
   border-radius: 8px;
-  outline-width: 0px;
-  border-width: 0px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 1.25vw;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 8px;
 }
 
 .slideTypeButton:hover {
-  background-color: #d4d4d4;
+  opacity: 0.8;
+  cursor: pointer;
 }

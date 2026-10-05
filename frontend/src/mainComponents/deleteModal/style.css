@@ -14,9 +14,9 @@
   display: flex;
   width: 100%;
   height: 100%;
-  background-color: #00000018;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(10px);
 }
 
 .modalContentBox {
@@ -24,42 +24,71 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: white;
-  border-radius: 16px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  padding-right: 32px;
-  padding-left: 32px;
-  gap: 4px;
-  width: 35%;
+  background-color: var(--editorColor);
+  border-radius: 12px;
+  padding-top: 2vw;
+  padding-bottom: 2vw;
+  padding-right: 2.5vw;
+  padding-left: 2.5vw;
+  gap: 8px;
+  width: auto;
+  height: auto;
+  border: 2px solid var(--accentColor2);
 }
 
 .modalText {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 24px;
+  font-size: 1.5vw;
+  color: var(--whiteColor);
+  font-weight: bold;
+  text-align: center;
 }
 
-.buttonText {
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    color: white;
+.buttonCont {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  gap: 2vw;
 }
 
 .cancelButton {
-    width: 100%;
-    background-color: rgb(84, 133, 213);
-    border-radius: 16px;
-    justify-content: center;
-    align-items: center;
+  flex: 1;
+  font-size: 1.5vw;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--whiteColor);
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  padding-top: 0.25vw;
+  padding-bottom: 0.25vw;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+}
+
+.cancelButton:hover {
+  border-color: var(--accentColor2);
+  color: var(--accentColor2);
 }
 
 .continueButton {
-    width: 100%;
-    background-color: rgb(221, 93, 93);
-    border-radius: 16px;
-    justify-content: center;
-    align-items: center;
+  flex: 1;
+  font-size: 1.5vw;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--whiteColor);
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  padding-top: 0.25vw;
+  padding-bottom: 0.25vw;
+  background-color: var(--bgColor);
+  border: 2px solid var(--hoverColor);
+}
+
+.continueButton:hover {
+  border-color: var(--accentColor1);
+  color: var(--accentColor1);
 }

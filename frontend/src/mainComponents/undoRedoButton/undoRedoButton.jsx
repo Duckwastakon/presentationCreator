@@ -8,7 +8,6 @@ import redoIcon from "./images/redo.png";
 import { useState } from "react";
 
 import saveButton from "./images/save.png";
-import arrow from "./images/arrow.png";
 import closeCross from "./images/close.png";
 import { savePresentation } from "../../fetchFunctions";
 
@@ -142,7 +141,7 @@ export const UndoRedo = () => {
             >
               <img className="closeImage" src={closeCross} />
             </button>
-            <p>Save presentation to files</p>
+            <p className="savePresentationText">Save presentation to files</p>
             <div
               style={{
                 display: "flex",
@@ -170,7 +169,7 @@ export const UndoRedo = () => {
                 <p>save</p>
               </button>
             </div>
-            <p>Exporting might take a few moments</p>
+            <p className="smallInfoText">Exporting might take a few moments</p>
           </div>
         </div>
       )}

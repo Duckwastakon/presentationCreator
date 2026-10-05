@@ -41,7 +41,7 @@ function App() {
     dropDownPos,
     duplicateSlide,
     dropDownSlideId,
-    setSelectedObjectsVariables
+    setSelectedObjectsVariables,
   } = useVariables();
 
   function getSelectedObjectVariables() {
@@ -90,7 +90,7 @@ function App() {
   useEffect(() => {
     fetchAllStyles(updatePrefabTypes);
     fetchStyles("intro slides", updateNewSlidePrefabs, saveNewChanges);
-    changeSelectedPrefabType("intro slides")
+    changeSelectedPrefabType("intro slides");
   }, []);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ function App() {
           updateModal,
           updateCurrentlySelectedSlideId,
           changeCreateNewSlideId,
-          setSelectedObjectsVariables
+          setSelectedObjectsVariables,
         );
       }
       if (
@@ -134,7 +134,7 @@ function App() {
           updateModal,
           updateCurrentlySelectedSlideId,
           changeCreateNewSlideId,
-          setSelectedObjectsVariables
+          setSelectedObjectsVariables,
         );
       }
 
@@ -153,7 +153,7 @@ function App() {
   if (Object.keys(currentSlideVariables).length > 0) {
     return (
       <div className="background">
-        <UndoRedo/>
+        <UndoRedo />
         <div className="container">
           {modalActive && <Modal />}
           {MenuOpen && (
@@ -179,27 +179,40 @@ function App() {
   } else {
     return (
       <div className="container">
-        <UndoRedo/>
-        <div className="SlideTypePicker">
-          {prefabTypes.map((val, i) => {
-            let bgColor = val === selectedPrefabType ? "#62cdff" : "#f5f5f5";
+        <UndoRedo />
+        <div className="selectorDiv">
+          <div className="SlideTypePicker">
+            {prefabTypes.map((val, i) => {
+              let fontCol =
+                val === selectedPrefabType
+                  ? "var(--accentColor2)"
+                  : "var(--whiteColor)";
+              let borderColor =
+                val === selectedPrefabType
+                  ? "var(--accentColor2)"
+                  : "var(--hoverColor)";
 
-            return (
-              <button
-                key={i}
-                className="slideTypeButton"
-                onMouseDown={() => {
-                  fetchStyles(val, updateNewSlidePrefabs, saveNewChanges);
-                  changeSelectedPrefabType(val);
-                }}
-                style={{ backgroundColor: bgColor }}
-              >
-                {val}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={i}
+                  className="slideTypeButton"
+                  onMouseDown={() => {
+                    fetchStyles(val, updateNewSlidePrefabs, saveNewChanges);
+                    changeSelectedPrefabType(val);
+                  }}
+                  style={{
+                    backgroundColor: "var(--bgColor)",
+                    color: fontCol,
+                    border: `2px solid ${borderColor}`,
+                  }}
+                >
+                  {val}
+                </button>
+              );
+            })}
+          </div>
+          <SlideStylePicker />
         </div>
-        <SlideStylePicker />
         <SlideTab />
       </div>
     );

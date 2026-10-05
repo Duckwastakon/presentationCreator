@@ -20,39 +20,41 @@ export const Modal = () => {
           <p className="modalText">
             Are you sure you would like to delete the current slide?
           </p>
-          <button
-            onMouseUp={() => {
-              updateModal(false);
-              saveNewChanges({ modalActiveOverride: false });
-            }}
-            className="cancelButton"
-          >
-            <p className="buttonText">cancel</p>
-          </button>
-          <button
-            onMouseUp={() => {
-              let newValues = deleteSelectedSlide(
-                allSlides,
-                updateAllSlides,
-                currentlySelectedSlideId,
-                updateCurrentlySelectedSlideId,
-                changeCreateNewSlideId,
-                updateCurrentSlideVariables,
-              );
-              updateModal(false);
+          <div className="buttonCont">
+            <button
+              onMouseUp={() => {
+                updateModal(false);
+                saveNewChanges({ modalActiveOverride: false });
+              }}
+              className="cancelButton"
+            >
+              cancel
+            </button>
+            <button
+              onMouseUp={() => {
+                let newValues = deleteSelectedSlide(
+                  allSlides,
+                  updateAllSlides,
+                  currentlySelectedSlideId,
+                  updateCurrentlySelectedSlideId,
+                  changeCreateNewSlideId,
+                  updateCurrentSlideVariables,
+                );
+                updateModal(false);
 
-              saveNewChanges({
-                modalActiveOverride: false,
-                allSlidesOverride: newValues[0],
-                currentlySelectedSlideIdOverride: -1,
-                createNewSlideIdOverride: newValues[1],
-                currentSlideVariablesOverride: {},
-              });
-            }}
-            className="continueButton"
-          >
-            <p className="buttonText">delete</p>
-          </button>
+                saveNewChanges({
+                  modalActiveOverride: false,
+                  allSlidesOverride: newValues[0],
+                  currentlySelectedSlideIdOverride: -1,
+                  createNewSlideIdOverride: newValues[1],
+                  currentSlideVariablesOverride: {},
+                });
+              }}
+              className="continueButton"
+            >
+              delete
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ export const EditingDropDown = ({
       style={{ left: `${xPos}px`, top: `${yPos - 60}px` }}
     >
       <button
-        className="option"
+        className="option1"
         onMouseDown={() => {
           duplicateSlide();
           hideDropDown(false);
@@ -23,7 +23,7 @@ export const EditingDropDown = ({
         duplicate
       </button>
       <button
-        className="option"
+        className="option2"
         onMouseDown={() => {
           deleteSlide(true);
           hideDropDown(false);

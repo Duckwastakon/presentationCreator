@@ -68,7 +68,6 @@ export function VariableContainer({ children }) {
       updateAllSlides,
     );
 
-    console.log(newVals);
     saveNewChanges({
       allSlidesOverride: newVals[0],
       currentlySelectedSlideIdOverride: newVals[1],
@@ -85,11 +84,7 @@ export function VariableContainer({ children }) {
     let currentObject = structuredClone(selectedObjectsVariables);
     let slideClone = structuredClone(currentSlideVariables);
 
-    console.log(slideClone)
-    console.log(currentObject)
-
     if (currentObject.backgroundColor != undefined) {
-      console.log(currentVariables.backgroundColor);
       if (currentObject.backgroundColor != currentVariables.backgroundColor) {
         slideClone.backgroundColor = currentObject.backgroundColor;
 
@@ -121,8 +116,12 @@ export function VariableContainer({ children }) {
           val[0] != "w" &&
           val[0] != "h" &&
           val[0] != "fontSize" &&
-          val[0] != "src"
+          val[0] != "src" &&
+          val[0] != "textDecoration" &&
+          val[0] != "bold" &&
+          val[0] != "fontStyle"
         ) {
+          console.log(val[0])
           changed = true;
           slideClone[selectedObject[0]][selectedObject[1]][val[0]] = val[1];
         }

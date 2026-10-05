@@ -39,8 +39,8 @@ export const TextObject = ({
           2,
       );
     }
-    
-    setTextSize()
+
+    setTextSize();
 
     window.addEventListener("resize", setTextSize);
   }, variables);

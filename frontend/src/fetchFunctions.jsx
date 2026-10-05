@@ -21,7 +21,6 @@ export async function getImage(
   if (savedImages.length > 0) {
     await savedImages.map(async (entry) => {
       if (entry[0] === query) {
-        console.log(selectedObject);
         found = true;
         let currentImageId;
         if (selectedObject[0] != undefined && selectedObject[0] != "") {
@@ -33,10 +32,8 @@ export async function getImage(
         let i = 0;
         for (const img of entry[1]) {
           if (img.src.original === currentImageId) {
-            console.log("got same pic");
             var a = [];
             var remove = false;
-            console.log(imageArtists);
             imageArtists.map((val) => {
               if (remove || val != img.photographer) {
                 a.push(val);
@@ -48,22 +45,23 @@ export async function getImage(
 
             a.push(entry[1][i + 1].photographer);
             updateArtists(a);
-            console.log(a);
 
             if (selectedObject.length > 0 && selectedObject[0] !== "") {
-              await updateObject(
+              let newSlide = await updateObject(
                 selectedObject[0],
                 selectedObject[1],
                 "src",
                 entry[1][i + 1].src.original,
               );
-              //const val = entry[1][i + 1].width / entry[1][i + 1].height;
-              //updateObject(
-              //  selectedObject[0],
-              //  selectedObject[1],
-              //  "aspectRatio",
-              //  val,
-              //);
+              const val = entry[1][i + 1].width / entry[1][i + 1].height;
+              updateObject(
+                selectedObject[0],
+                selectedObject[1],
+                "aspectRatio",
+                val,
+                newSlide,
+                false,
+              );
             } else {
               console.log("bg");
               console.log(entry[1][i + 1].src.original);
@@ -85,12 +83,30 @@ export async function getImage(
         console.log("cant find next image");
         console.log(entry);
 
-        await updateObject(
-          selectedObject[0],
-          selectedObject[1],
-          "src",
-          entry[1][0].src.original,
-        );
+        if (selectedObject[0] == "" || selectedObject[0] == undefined) {
+          await updateObject(
+            undefined,
+            undefined,
+            "backgroundImageUrl",
+            entry[1][0].src.original,
+          );
+        } else {
+          let newSlide = await updateObject(
+            selectedObject[0],
+            selectedObject[1],
+            "src",
+            entry[1][0].src.original,
+          );
+          const val = entry[1][0].width / entry[1][0].height;
+          updateObject(
+            selectedObject[0],
+            selectedObject[1],
+            "aspectRatio",
+            val,
+            newSlide,
+            false,
+          );
+        }
 
         console.log(savedImages);
       }

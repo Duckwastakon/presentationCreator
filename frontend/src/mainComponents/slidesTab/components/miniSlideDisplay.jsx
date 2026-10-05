@@ -1,4 +1,4 @@
-import cross from "../images/delete.png";
+import cross from "../images/edit.png";
 import { useVariables } from "../../../presentationVariables";
 import { useEffect, useRef, useState } from "react";
 
@@ -14,11 +14,11 @@ export const MiniSlideDisplay = ({
   const vars = slideVal[1];
   const selected = Number(slideVal[0]) == currentlySelectedSlideId.current;
 
-  let shadowColor;
+  let borderCol;
   if (selected) {
-    shadowColor = "white";
+    borderCol = "var(--accentColor2)";
   } else {
-    shadowColor = "grey";
+    borderCol = "var(--bgColor)";
   }
 
   const { updateOpen, changeDropDownPos, updateDropDownSlideId } =
@@ -41,7 +41,7 @@ export const MiniSlideDisplay = ({
     <div
       ref={objectElement}
       style={{
-        boxShadow: `0px 0px 10px ${shadowColor}`,
+        border: `2px solid ${borderCol}`,
         backgroundImage: `url(${vars.backgroundImageUrl})`,
         backgroundColor: vars.backgroundColor || "white",
       }}

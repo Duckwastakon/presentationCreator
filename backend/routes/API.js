@@ -16,7 +16,6 @@ APIRouter.get("/", async (req, res) => {
     },
   });
 
-  console.log(i)
   i+=1
 
   const data = await resp.json();

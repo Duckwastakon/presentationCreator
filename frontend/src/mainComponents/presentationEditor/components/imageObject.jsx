@@ -1,6 +1,6 @@
 import { useVariables } from "../../../presentationVariables";
 import { ResizeDots } from "./resizeDots";
-import imageDefault from "../images/imagePrefab.png";
+import imageDefault from "../images/defaultImage.png";
 
 export const ImageObject = ({
   startResizing,
@@ -32,20 +32,39 @@ export const ImageObject = ({
         outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
       }}
     >
-      <img
-        className="slideImage"
-        style={{
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          padding: "0px",
-          margin: "0px",
-        }}
-        src={variables[1].src || imageDefault}
-      />
+      {variables[1].src == "" || variables[1].src == undefined ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            padding: "0px",
+            margin: "0px",
+            backgroundImage: `url(${imageDefault})`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "128px 128px"
+          }}
+
+        />
+      ) : (
+        <img
+          className="slideImage"
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            padding: "0px",
+            margin: "0px",
+          }}
+          src={variables[1].src || imageDefault}
+        />
+      )}
 
       <button
         className="imageButton"
