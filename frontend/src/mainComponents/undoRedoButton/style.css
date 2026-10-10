@@ -77,12 +77,6 @@
   aspect-ratio: 1/1;
 }
 
-@media (max-width: 1000px) {
-  .btnImage {
-    width: 24px;
-  }
-}
-
 .btnText {
   height: auto;
   color: var(--lightText);
@@ -200,4 +194,26 @@
   border-color: var(--accentColor2);
   background-color: var(--accentColor2);
   color: var(--whiteColor);
+}
+
+@media (max-width: 800px) {
+  .closeButton {
+    width: 2.5vh;
+  }
+
+  .savePresentationText {
+    font-size: 2vh;
+  }
+
+  .smallInfoText {
+    font-size: 1vh;
+  }
+
+  .presentationNameInput {
+    font-size: 1.25vh;
+  }
+
+  .confirmButton {
+    font-size: 1.25vh;
+  }
 }

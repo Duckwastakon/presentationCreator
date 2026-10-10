@@ -100,7 +100,6 @@ function App() {
         event.key.toLowerCase() === "z" &&
         !event.repeat
       ) {
-        console.log("undo");
         changeHistory(
           -1,
           updateAllSlides,
@@ -121,7 +120,6 @@ function App() {
         event.key.toLowerCase() === "y" &&
         !event.repeat
       ) {
-        console.log("redo");
         changeHistory(
           1,
           updateAllSlides,
@@ -197,6 +195,7 @@ function App() {
                   key={i}
                   className="slideTypeButton"
                   onMouseDown={() => {
+                    updatePageNumber(0)
                     fetchStyles(val, updateNewSlidePrefabs, saveNewChanges);
                     changeSelectedPrefabType(val);
                   }}

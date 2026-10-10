@@ -15,6 +15,8 @@
   --gapMedium: 8px;
   --gapBig: 12px;
 
+  --phoneLimit: 800px;
+
   overflow: hidden;
 }
 
@@ -46,19 +48,6 @@
   flex-direction: row;
   align-items: stretch;
   overflow: hidden;
-}
-
-@media (max-width: 1000px) {
-  .creatorContainer {
-    width: 100vw;
-    height: 70vh;
-    justify-content: space-between;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
-    gap: 8px;
-  }
 }
 
 .editorWindow {
@@ -160,4 +149,16 @@
 .slideTypeButton:hover {
   opacity: 0.8;
   cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .creatorContainer {
+    width: auto;
+    height: 70vh;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+  }
 }

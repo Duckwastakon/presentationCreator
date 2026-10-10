@@ -162,6 +162,8 @@ export function VariableContainer({ children }) {
     console.log(allSlides);
     console.log(currentSlideVariables);
     console.log(currentSlideVariablesOverride);
+    console.log(selectedPrefabType)
+    console.log(selectedPrefabTypeOverride)
     saveChange({
       allSlides: allSlidesOverride || allSlides,
       currentSlideVariables:

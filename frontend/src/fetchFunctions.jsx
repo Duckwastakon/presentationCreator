@@ -12,8 +12,11 @@ export async function getImage(
 
   const form = event.target;
   const formData = new FormData(form);
-  const query = formData.get("query");
+  let query = formData.get("query");
 
+  //  query = query || "cosmos"
+  //if(query.replace(/\s/g, "") == ""){query = "cosmos"}
+  
   let found = false;
 
   const savedImages = Object.entries(usedImages.current);
@@ -140,7 +143,6 @@ export async function fetchImage(
     .then(async (data) => {
       updateUsedImages(data, query);
       var gottenRandNum = Math.floor(Math.random() * 4);
-      console.log(gottenRandNum, data[gottenRandNum]);
 
       var a = structuredClone(imageArtists);
       a.push(data[gottenRandNum].photographer);
@@ -186,7 +188,7 @@ export function fetchStyles(type, updateNewSlidePrefabs, SaveNewChanges) {
       updateNewSlidePrefabs(data);
       SaveNewChanges({
         newSlidePrefabsOverride: data,
-        selectedPrefabType: type,
+        selectedPrefabTypeOverride: type,
       });
     });
 }

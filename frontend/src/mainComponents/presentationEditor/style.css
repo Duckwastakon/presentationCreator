@@ -13,17 +13,6 @@
   overflow: hidden;
 }
 
-@media (max-width: 1000px) {
-  .presentationBackground {
-    margin: var(--gapMassive);
-    position: relative;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-color: white;
-  }
-}
-
 .backgroundButton {
   position: fixed;
   width: 100%;
@@ -125,4 +114,15 @@
   height: 60vh;
   top: 20vh;
   left: 25vw;
+}
+
+@media (max-width: 800px) {
+  .presentationBackground {
+    width: 90vw;
+    aspect-ratio: 16 / 9;
+    align-self: center;
+    align-self: center;
+    overflow: hidden;
+    position: relative;
+  }
 }

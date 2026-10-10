@@ -92,3 +92,17 @@
   border-color: var(--accentColor1);
   color: var(--accentColor1);
 }
+
+@media (max-width: 800px) {
+  .modalText {
+    font-size: 1.5vh;
+  }
+
+  .cancelButton {
+    font-size: 1.5vh;
+  }
+
+  .continueButton {
+    font-size: 1.5vh;
+  }
+}

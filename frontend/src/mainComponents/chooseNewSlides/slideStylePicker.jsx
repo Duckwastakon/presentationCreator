@@ -30,28 +30,31 @@ export const SlideStylePicker = () => {
   const [maxDisplayedPrefabs, updateMaxDisplayedPrefabs] = useState(4);
   const prefabContainer = useRef(null);
 
-  function changePage(allObj, objPerPage, newPageVal, changeFunc) {
-    const possiblePages = Math.ceil(allObj / objPerPage);
-    if (newPageVal > possiblePages) {
-      newPageVal = 0;
+  function changePage(change) {
+    let amountOfStyles = Object.entries(possibleStyles).length
+    let newPage = currentPageNumber+change
+
+    const possiblePages = Math.ceil(amountOfStyles / maxDisplayedPrefabs);
+    if (newPage > possiblePages) {
+      newPage = 0
     }
-    if (newPageVal < 0) {
-      newPageVal = possiblePages;
+    else if (newPage < 0) {
+      newPage = possiblePages
     }
 
-    changeFunc(newPageVal);
-    getNewStyles(objPerPage);
+    updatePageNumber(newPage);
+    getNewStyles(maxDisplayedPrefabs, newPage);
   }
 
   const [possibleStyles, updateStyles] = useState({});
 
-  function getNewStyles(maxStyles) {
+  function getNewStyles(maxStyles, currentPage = currentPageNumber) {
     let newPrefabs = {};
     for (let i = 0; i < maxStyles; i++) {
-      if (newSlidePrefabs[i + currentPageNumber * maxStyles] != null) {
+      if (newSlidePrefabs[i + currentPage * maxStyles] != null) {
         newPrefabs = {
           ...newPrefabs,
-          [i]: newSlidePrefabs[i + currentPageNumber * maxStyles],
+          [i]: newSlidePrefabs[i + currentPage * maxStyles],
         };
       }
     }
@@ -166,10 +169,14 @@ export const SlideStylePicker = () => {
     function setMaxRowAndColumn() {
       let fullWidth =
         prefabContainer.current.getBoundingClientRect().width * 0.7;
-      let prefabsRows = Math.floor(fullWidth / 245);
+      let prefabsRows = clamp(Math.floor(fullWidth / 280), 1, 2)
 
-      updateMaxDisplayedPrefabs(clamp(prefabsRows * 2, 1, 4));
-      getNewStyles(clamp(prefabsRows * 2, 1, 4));
+      let fullHeight =
+        prefabContainer.current.parentElement.getBoundingClientRect().height;
+      let amountInRows = clamp(Math.floor(fullHeight / 138), 1, 4)
+
+      updateMaxDisplayedPrefabs(clamp(prefabsRows * amountInRows, 1, 4));
+      getNewStyles(clamp(prefabsRows * amountInRows, 1, 4));
     }
 
     setMaxRowAndColumn();
@@ -191,12 +198,7 @@ export const SlideStylePicker = () => {
     >
       <button
         onClick={() => {
-          changePage(
-            Object.entries(possibleStyles).length,
-            maxDisplayedPrefabs,
-            currentPageNumber - 1,
-            updatePageNumber,
-          );
+          changePage(-1);
         }}
         className="changePageButton"
       >
@@ -219,12 +221,7 @@ export const SlideStylePicker = () => {
       </div>
       <button
         onClick={() => {
-          changePage(
-            Object.entries(possibleStyles).length,
-            maxDisplayedPrefabs,
-            currentPageNumber + 1,
-            updatePageNumber,
-          );
+          changePage(1);
         }}
         className="changePageButton"
       >
