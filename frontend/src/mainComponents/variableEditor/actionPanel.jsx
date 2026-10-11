@@ -29,6 +29,7 @@ export const ActionPanel = ({ selectedObject }) => {
     updateArtists,
     setUpdateVariable,
     setSelectedObject,
+    setError
   } = useVariables();
 
   function updateObject(
@@ -84,7 +85,8 @@ export const ActionPanel = ({ selectedObject }) => {
       updateObject,
       imageArtists,
       updateArtists,
-    );
+      setError,
+    )
     changeLoading(false);
   }
 

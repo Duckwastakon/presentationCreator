@@ -7,6 +7,7 @@ export async function getImage(
   updateObject,
   imageArtists,
   updateArtists,
+  setError
 ) {
   event.preventDefault();
 
@@ -14,9 +15,9 @@ export async function getImage(
   const formData = new FormData(form);
   let query = formData.get("query");
 
-  //  query = query || "cosmos"
-  //if(query.replace(/\s/g, "") == ""){query = "cosmos"}
-  
+  query = query || "cosmos"
+  if(query.replace(/\s/g, "") == ""){query = "cosmos"}
+
   let found = false;
 
   const savedImages = Object.entries(usedImages.current);
@@ -124,6 +125,7 @@ export async function getImage(
       updateObject,
       imageArtists,
       updateArtists,
+      setError
     );
   }
 }
@@ -135,7 +137,9 @@ export async function fetchImage(
   updateObject,
   imageArtists,
   updateArtists,
+  setError,
 ) {
+  try {
   await fetch(`/API?query=${query}`, {
     method: "get",
   })
@@ -147,7 +151,6 @@ export async function fetchImage(
       var a = structuredClone(imageArtists);
       a.push(data[gottenRandNum].photographer);
       updateArtists(a);
-      console.log(a);
 
       if (selectedObject.length > 0 && selectedObject[0] !== "") {
         let newSlide = await updateObject(
@@ -177,6 +180,11 @@ export async function fetchImage(
     .finally(() => {
       return;
     });
+  } catch(err){
+    console.error(err.message)
+    console.log(err)
+    setError(true)
+  }
 }
 
 export function fetchStyles(type, updateNewSlidePrefabs, SaveNewChanges) {

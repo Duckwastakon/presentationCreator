@@ -1,4 +1,6 @@
 import cross from "../images/edit.png";
+import imageDefault from "../images/defaultImage.png"
+
 import { useVariables } from "../../../presentationVariables";
 import { useEffect, useRef, useState } from "react";
 
@@ -8,8 +10,7 @@ export const MiniSlideDisplay = ({
   onClick,
   startMovingSlide,
 }) => {
-  const { currentlySelectedSlideId } =
-    useVariables();
+  const { currentlySelectedSlideId } = useVariables();
 
   const vars = slideVal[1];
   const selected = Number(slideVal[0]) == currentlySelectedSlideId.current;
@@ -30,6 +31,8 @@ export const MiniSlideDisplay = ({
     function setTextSize() {
       let parentElement = objectElement.current;
       updateTextSize((parentElement.getBoundingClientRect().width / 1920) * 2);
+
+      console.log((parentElement.getBoundingClientRect().width / 1920) * 2);
     }
 
     setTextSize();
@@ -92,32 +95,28 @@ export const MiniSlideDisplay = ({
         </button>
       )}
       {Object.entries(vars.text).map((variables, indv) => {
-        const outlineWidth = variables[1].outlineWidth || 0;
-        const outlineColor = variables[1].outlineColor || "black";
-
         return (
           <p
             key={indv}
+            className="textOverlay"
             style={{
-              display: "flex",
-              position: "absolute",
+              fontSize: (variables[1].fontSize * textSize).toString() + "px",
+              color: variables[1].textColor || "black",
+              fontWeight: variables[1].bold || "400",
+              WebkitAppearance: "none",
+              appearance: "none",
+              WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,
+              WebkitTextStrokeColor: variables[1].outlineColor || "black",
+              textDecoration: variables[1].textDecoration || "none",
+              fontStyle: variables[1].fontStyle || "normal",
+              textAlign: variables[1].textAlign || "left",
+              overflow: "hidden",
+              padding: (variables[1].outlineWidth / 2 || 0).toString() + "px",
+              lineHeight: (variables[1].fontSize * textSize).toString() + "px",
               top: (100 * (variables[1].y / 7.5)).toString() + "%",
               height: (100 * (variables[1].h / 7.5)).toString() + "%",
               left: (100 * (variables[1].x / 13.333)).toString() + "%",
               width: (100 * (variables[1].w / 13.333)).toString() + "%",
-              fontSize: (variables[1].fontSize * textSize).toString() + "px",
-              color: variables[1].textColor || "black",
-              fontWeight: variables[1].bold || "400",
-              textShadow: `${outlineWidth}px ${outlineWidth}px 0px ${outlineColor},
-                      ${-outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
-                      ${outlineWidth}px ${-outlineWidth}px 0px ${outlineColor},
-                      ${-outlineWidth}px ${outlineWidth}px 0px ${outlineColor}`,
-              textDecoration: variables[1].textDecoration || "none",
-              fontStyle: variables[1].fontStyle || "normal",
-              textAlign: variables[1].textAlign || "left",
-              alignItems: "center",
-              overflow: "hidden",
-              textWrap: "nowrap",
             }}
           >
             {variables[1].text}
@@ -126,9 +125,8 @@ export const MiniSlideDisplay = ({
       })}
       {Object.entries(vars.images).map((variables, indv) => {
         return (
-          <img
+          <div
             key={indv}
-            className="slideImage"
             style={{
               position: "absolute",
               top: (100 * (variables[1].y / 7.5)).toString() + "%",
@@ -137,12 +135,43 @@ export const MiniSlideDisplay = ({
               width: (100 * (variables[1].w / 13.333)).toString() + "%",
               alignItems: "center",
               justifyContent: "center",
-              padding: 0,
-              border: `solid ${variables[1].borderColor || "#000000"} ${variables[1].borderWidth || 0}px`,
-              borderRadius: (variables[1].cornerRadius || 0).toString() + "px",
+              zIndex: variables[1].layer || 1,
+              outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
             }}
-            src={variables[1].src}
-          />
+          >
+            {variables[1].src == "" || variables[1].src == undefined ? (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  padding: "0px",
+                  margin: "0px",
+                  backgroundImage: `url(${imageDefault})`,
+                  backgroundRepeat: "repeat",
+                  backgroundSize: "32px 32px",
+                }}
+              />
+            ) : (
+              <img
+                className="slideImage"
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  padding: "0px",
+                  margin: "0px",
+                }}
+                src={variables[1].src || imageDefault}
+              />
+            )}
+          </div>
         );
       })}
     </div>

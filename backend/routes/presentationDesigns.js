@@ -40,13 +40,16 @@ const designs = {
           w: 3,
           h: 1.111,
           fontSize: 56,
+          textAlign: "right",
           text: "Title",
         },
         1: {
-          x: 1 + 3,
-          y: 7.5 / 2 - 1.111 / 2,
+          x: 13.333 - 1 - 3,
+          y: 7.5 / 2 - 1.111 / 2 + 1,
           w: 3,
-          h: 1.111,
+          h: 1.111/2,
+          fontSize: 28,
+          textAlign: "right",
           text: "Name",
         },
       },
@@ -75,43 +78,6 @@ const designs = {
       images: {},
     },
     4: {
-      backgroundImageUrl: "",
-      text: {
-        0: {
-          x: 1,
-          y: 2,
-          w: 3,
-          h: 0.5,
-          fontSize: 24,
-          text: "fifth design",
-        },
-        1: {
-          x: 1,
-          y: 3,
-          w: 1.5,
-          h: 0.5,
-          fontSize: 16,
-          text: "Hi",
-        },
-      },
-      images: {
-        0: {
-          x: 4,
-          y: 2,
-          w: 3,
-          h: 3,
-          src: "",
-        },
-        1: {
-          x: 5,
-          y: 4,
-          w: 3,
-          h: 3,
-          src: "",
-        },
-      },
-    },
-    5: {
       backgroundImageUrl: "",
       text: {
         0: {

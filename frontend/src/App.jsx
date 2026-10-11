@@ -13,6 +13,7 @@ import { EditingDropDown } from "./mainComponents/slidesTab/components/editingDr
 import { SlideStylePicker } from "./mainComponents/chooseNewSlides/slideStylePicker";
 
 import { UndoRedo } from "./mainComponents/undoRedoButton/undoRedoButton";
+import { ErrorText } from "./mainComponents/errorSlide/errorText";
 
 function App() {
   const {
@@ -42,6 +43,7 @@ function App() {
     duplicateSlide,
     dropDownSlideId,
     setSelectedObjectsVariables,
+    errorGotten,
   } = useVariables();
 
   function getSelectedObjectVariables() {
@@ -153,6 +155,7 @@ function App() {
       <div className="background">
         <UndoRedo />
         <div className="container">
+          {errorGotten && <ErrorText />}
           {modalActive && <Modal />}
           {MenuOpen && (
             <EditingDropDown

@@ -25,6 +25,8 @@ export function VariableContainer({ children }) {
 
   const [imageArtists, updateArtists] = useState([]);
 
+  const [errorGotten, setError] = useState(false)
+
   const currentlySelectedSlideId = useRef();
   function updateCurrentlySelectedSlideId(NewVal) {
     currentlySelectedSlideId.current = NewVal;
@@ -158,12 +160,6 @@ export function VariableContainer({ children }) {
     currentlySelectedSlideIdOverride,
     createNewSlideIdOverride,
   } = {}) {
-    console.log(allSlidesOverride);
-    console.log(allSlides);
-    console.log(currentSlideVariables);
-    console.log(currentSlideVariablesOverride);
-    console.log(selectedPrefabType)
-    console.log(selectedPrefabTypeOverride)
     saveChange({
       allSlides: allSlidesOverride || allSlides,
       currentSlideVariables:
@@ -227,6 +223,8 @@ export function VariableContainer({ children }) {
         saveChangedVariables,
         imageArtists,
         updateArtists,
+        errorGotten,
+        setError,
       }}
     >
       {children}

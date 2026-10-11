@@ -82,8 +82,6 @@ export function updObj(
   }
 
   updateCurrentSlideVariables(newSlide);
-  console.log("updated")
-  console.log(newSlide)
   return [newSlide, saveSlide(newSlide, updateAllSlides, allSlides, currentlySelectedSlideId)];
 }
 

@@ -4,6 +4,7 @@ import { useVariables } from "../../presentationVariables";
 import { updObj } from "../../objectFunctions";
 import { ImageObject } from "./components/imageObject";
 import { TextObject } from "./components/textObject";
+import { clamp } from "../../extraFunctions";
 
 const lockTolerance = 0.04;
 
@@ -182,54 +183,54 @@ export const MainPresentationDisplay = () => {
 
     switch (changingState.current) {
       case 1:
-        dotTLPos[0] -= valDifference[0];
-        dotTLPos[1] -= valDifference[1];
+        dotTLPos[0] = clamp(dotTLPos[0] - valDifference[0], 0, dotTRPos[0] - 0.15);
+        dotTLPos[1] = clamp(dotTLPos[1] - valDifference[1], 0, dotBLPos[1] - 0.1);
 
         dotBLPos[0] = dotTLPos[0];
         dotTRPos[1] = dotTLPos[1];
         break;
       case 2:
-        dotTRPos[0] -= valDifference[0];
-        dotTRPos[1] -= valDifference[1];
+        dotTRPos[0] = clamp(dotTRPos[0] - valDifference[0], dotTLPos[0] + 0.15, 13.333);
+        dotTRPos[1] = clamp(dotTRPos[1] - valDifference[1], 0, dotBRPos[1] - 0.1);
 
         dotBRPos[0] = dotTRPos[0];
         dotTLPos[1] = dotTRPos[1];
         break;
       case 3:
-        dotBLPos[0] -= valDifference[0];
-        dotBLPos[1] -= valDifference[1];
+        dotBLPos[0] = clamp(dotBLPos[0] - valDifference[0], 0, dotBRPos[0] - 0.15);
+        dotBLPos[1] = clamp(dotBLPos[1] - valDifference[1], dotTLPos[1] + 0.1, 7.5);
 
         dotTLPos[0] = dotBLPos[0];
         dotBRPos[1] = dotBLPos[1];
         break;
       case 4:
-        dotBRPos[0] -= valDifference[0];
-        dotBRPos[1] -= valDifference[1];
+        dotBRPos[0] = clamp(dotBRPos[0] - valDifference[0], dotBLPos[0] + 0.15, 13.33);
+        dotBRPos[1] = clamp(dotBRPos[1] - valDifference[1], dotTRPos[1] + 0.1, 7.5);
 
         dotTRPos[0] = dotBRPos[0];
         dotBLPos[1] = dotBRPos[1];
         break;
 
       case 5:
-        dotTLPos[1] -= valDifference[1];
+        dotTLPos[1] = clamp(dotTLPos[1] - valDifference[1], 0, dotBLPos[1] - 0.1);
         dotTRPos[1] = dotTLPos[1];
 
         break;
 
       case 6:
-        dotTRPos[0] -= valDifference[0];
+        dotTRPos[0] = clamp(dotTRPos[0] - valDifference[0], dotTLPos[0] + 0.15, 13.33);
         dotBRPos[0] = dotTRPos[0];
 
         break;
 
       case 7:
-        dotBRPos[1] -= valDifference[1];
+        dotBRPos[1] = clamp(dotBRPos[1] - valDifference[1], dotTRPos[1] + 0.1, 7.5);
         dotBLPos[1] = dotBRPos[1];
 
         break;
 
       case 8:
-        dotBLPos[0] -= valDifference[0];
+        dotBLPos[0] = clamp(dotBLPos[0] - valDifference[0], 0, dotBRPos[0] - 0.15);
         dotTLPos[0] = dotBLPos[0];
 
         break;
