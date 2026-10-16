@@ -39,7 +39,7 @@ export const UndoRedo = () => {
       <div className="buttonContainer">
         <button
           disabled={buttonStates[0]}
-          onPointerDown={() => {
+          onPointerUp={() => {
             if (buttonStates[0]) return;
             changeHistory(
               -1,
@@ -63,7 +63,7 @@ export const UndoRedo = () => {
         </button>
         <button
           disabled={buttonStates[1]}
-          onPointerDown={() => {
+          onPointerUp={() => {
             if (buttonStates[1]) return;
             changeHistory(
               1,
@@ -88,7 +88,7 @@ export const UndoRedo = () => {
       </div>
       <div className="buttonContainer">
         <button
-          onMouseUp={() => {
+          onPointerUp={() => {
             updateAllSlides({});
             updateCurrentSlideVariables({});
             updateCurrentlySelectedSlideId(-1);
@@ -109,7 +109,7 @@ export const UndoRedo = () => {
         </button>
 
         <button
-          onMouseUp={() => {
+          onPointerUp={() => {
             updateSave(true);
           }}
           className="saveButton"
@@ -135,7 +135,7 @@ export const UndoRedo = () => {
           <div className="backgroundDiv">
             <button
               className="closeButton"
-              onMouseDown={() => {
+              onPointerUp={() => {
                 updateSave(false);
               }}
             >
@@ -158,7 +158,7 @@ export const UndoRedo = () => {
                 }}
               />
               <button
-                onMouseUp={async () => {
+                onPointerUp={async () => {
                   changeLoading(true);
                   await savePresentation(allSlides, presentationName);
                   updateSave(false);

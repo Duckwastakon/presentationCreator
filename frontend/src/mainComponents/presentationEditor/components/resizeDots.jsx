@@ -2,15 +2,27 @@ import { useEffect, useRef, useState } from "react";
 import whiteDot from "../images/whiteDot.png";
 
 export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
-  const slideSizeRef = useRef(null)
-  
-  const [yResizePos, updateY] = useState(0)
-  const [xResizePos, updateX] = useState(0)
+  const slideSizeRef = useRef(null);
 
-  useEffect(()=> {
-    updateY((slideSizeRef.current.parentElement.parentElement.getBoundingClientRect().height / 7.5) * (objectSize[1] / 2) - 7.5)
-    updateX((slideSizeRef.current.parentElement.parentElement.getBoundingClientRect().width / 13.333) * (objectSize[0] / 2) - 7.5)
-  }, [objectSize])
+  const [yResizePos, updateY] = useState(0);
+  const [xResizePos, updateX] = useState(0);
+
+  useEffect(() => {
+    updateY(
+      (slideSizeRef.current.parentElement.parentElement.getBoundingClientRect()
+        .height /
+        7.5) *
+        (objectSize[1] / 2) -
+        7.5,
+    );
+    updateX(
+      (slideSizeRef.current.parentElement.parentElement.getBoundingClientRect()
+        .width /
+        13.333) *
+        (objectSize[0] / 2) -
+        7.5,
+    );
+  }, [objectSize]);
 
   return (
     <div ref={slideSizeRef} style={{ width: "100%", height: "100%" }}>
@@ -68,7 +80,6 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
       />
 
       <button
-        onPointerUp={() => stopResizing()}
         onPointerDown={(event) => {
           startResizing(event, 1);
         }}
@@ -330,7 +341,7 @@ export const ResizeDots = ({ startResizing, stopResizing, objectSize }) => {
         />
       </button>
       <button
-      className="horizontal"
+        className="horizontal"
         onPointerDown={(event) => {
           startResizing(event, 8);
         }}

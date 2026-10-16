@@ -32,9 +32,9 @@ presentationFileRouter.post("/", async (req, res) => {
         color: textVariables[1].textColor || "#000000",
         outline: {
           color: textVariables[1].outlineColor || "#000000",
-          size: textVariables[1].outlineWidth || 0,
+          size: textVariables[1].outlineWidth / 5 || 0,
         },
-        fontSize: textVariables[1].fontSize,
+        fontSize: textVariables[1].fontSize + textVariables[1].outlineWidth / 1.333,
         bold: textVariables[1].bold == "700",
         italic: textVariables[1].fontStyle == "italic",
         underline: textVariables[1].textDecoration == "underline",
@@ -57,7 +57,7 @@ presentationFileRouter.post("/", async (req, res) => {
 
           line: {
             color: imageVariables[1].borderColor || "#000000",
-            width: borderWidth * 1.5
+            width: borderWidth / 1.333
           }
         });
       }

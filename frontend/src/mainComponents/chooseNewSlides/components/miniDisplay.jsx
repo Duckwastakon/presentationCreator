@@ -18,7 +18,7 @@ export const MiniDisplay = ({ vars, ind }) => {
   return (
     <button
       key={ind}
-      onClick={() => {
+      onPointerUp={() => {
         const slideClone = structuredClone(vars);
         updateCurrentSlideVariables(slideClone);
         let newValues = createNewSlide(
@@ -51,10 +51,10 @@ export const MiniDisplay = ({ vars, ind }) => {
     >
       <div className="miniPresentation">
         {Object.entries(vars.text).map((variables, indv) => (
-          <MiniDisplayText variables={variables} indv={indv} />
+          <MiniDisplayText variables={variables} key={indv} indv={indv} />
         ))}
         {Object.entries(vars.images).map((variables, indv) => (
-          <MiniDisplayImage variables={variables} indv={indv} />
+          <MiniDisplayImage variables={variables} key={indv} indv={indv} />
         ))}
       </div>
     </button>

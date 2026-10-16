@@ -51,7 +51,6 @@ export const MainPresentationDisplay = () => {
   const [yBars, updateYBars] = useState([]);
 
   function addXBar(pos) {
-    console.log("added x bar");
     updateXBars([pos]);
   }
 
@@ -60,7 +59,6 @@ export const MainPresentationDisplay = () => {
   }
 
   function addYBar(pos) {
-    console.log("added bar");
     updateYBars([pos]);
   }
 
@@ -69,7 +67,6 @@ export const MainPresentationDisplay = () => {
   }
 
   function unselectObject() {
-    console.log("unselected");
     saveChangedVariables({ currentSlideVariablesOverride: undefined });
     setUpdateVariable("");
     setSelectedObject(["", ""]);
@@ -475,7 +472,6 @@ export const MainPresentationDisplay = () => {
     for (let type of Object.keys(allObjects)) {
       for (let variables of Object.entries(allObjects[type])) {
         if (selectedObject[0] !== type || selectedObject[1] !== variables[0]) {
-          console.log(variables);
           if (
             Math.abs(variables[1].y + variables[1].h / 2 - yPos) < lockTolerance
           ) {
@@ -639,7 +635,7 @@ export const MainPresentationDisplay = () => {
     >
       <button
         className="backgroundButton"
-        onPointerDown={() => {
+        onPointerUp={() => {
           unselectObject();
           updateOpen(false);
         }}
@@ -665,6 +661,7 @@ export const MainPresentationDisplay = () => {
             startResizing={startResizing}
             stopResizing={stopResizing}
             variables={gottenVariables}
+            key={variables[0]}
             ind={variables[0]}
             selected={selected}
           />
@@ -691,6 +688,7 @@ export const MainPresentationDisplay = () => {
             startResizing={startResizing}
             stopResizing={stopResizing}
             variables={gottenVariables}
+            key={variables[0]}
             ind={variables[0]}
             selected={selected}
           />

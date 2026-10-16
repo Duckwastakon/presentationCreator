@@ -1,5 +1,5 @@
 import cross from "../images/edit.png";
-import imageDefault from "../images/defaultImage.png"
+import imageDefault from "../images/defaultImage.png";
 
 import { useVariables } from "../../../presentationVariables";
 import { useEffect, useRef, useState } from "react";
@@ -31,8 +31,6 @@ export const MiniSlideDisplay = ({
     function setTextSize() {
       let parentElement = objectElement.current;
       updateTextSize((parentElement.getBoundingClientRect().width / 1920) * 2);
-
-      console.log((parentElement.getBoundingClientRect().width / 1920) * 2);
     }
 
     setTextSize();
@@ -105,13 +103,15 @@ export const MiniSlideDisplay = ({
               fontWeight: variables[1].bold || "400",
               WebkitAppearance: "none",
               appearance: "none",
-              WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,
+              WebkitTextStrokeWidth: `${(variables[1].outlineWidth * textSize) / 2 || 0}px`,
               WebkitTextStrokeColor: variables[1].outlineColor || "black",
               textDecoration: variables[1].textDecoration || "none",
               fontStyle: variables[1].fontStyle || "normal",
               textAlign: variables[1].textAlign || "left",
               overflow: "hidden",
-              padding: (variables[1].outlineWidth / 2 || 0).toString() + "px",
+              padding:
+                ((variables[1].outlineWidth * textSize) / 4 || 0).toString() +
+                "px",
               lineHeight: (variables[1].fontSize * textSize).toString() + "px",
               top: (100 * (variables[1].y / 7.5)).toString() + "%",
               height: (100 * (variables[1].h / 7.5)).toString() + "%",
@@ -136,7 +136,7 @@ export const MiniSlideDisplay = ({
               alignItems: "center",
               justifyContent: "center",
               zIndex: variables[1].layer || 1,
-              outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
+              outline: `${(variables[1].borderWidth * textSize) / 2 || 0}px solid ${variables[1].borderColor || "#000000"}`,
             }}
           >
             {variables[1].src == "" || variables[1].src == undefined ? (

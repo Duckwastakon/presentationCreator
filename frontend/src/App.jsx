@@ -73,7 +73,6 @@ function App() {
 
   function pasteObject() {
     Object.entries(copiedObject.current).map((entry) => {
-      console.log(entry);
       if (entry[0] == "" || entry[1] == {}) return;
       dupObj(
         entry[0],
@@ -141,6 +140,10 @@ function App() {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "v") {
         pasteObject();
       }
+
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "q") {
+        console.log(currentSlideVariables);
+      }
     }
 
     window.addEventListener("keydown", handleKeyCombo);
@@ -197,8 +200,8 @@ function App() {
                 <button
                   key={i}
                   className="slideTypeButton"
-                  onMouseDown={() => {
-                    updatePageNumber(0)
+                  onPointerUp={() => {
+                    updatePageNumber(0);
                     fetchStyles(val, updateNewSlidePrefabs, saveNewChanges);
                     changeSelectedPrefabType(val);
                   }}

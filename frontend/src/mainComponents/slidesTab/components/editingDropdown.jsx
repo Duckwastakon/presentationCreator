@@ -15,7 +15,7 @@ export const EditingDropDown = ({
     >
       <button
         className="option1"
-        onMouseDown={() => {
+        onPointerUp={() => {
           duplicateSlide();
           hideDropDown(false);
         }}
@@ -24,7 +24,7 @@ export const EditingDropDown = ({
       </button>
       <button
         className="option2"
-        onMouseDown={() => {
+        onPointerUp={() => {
           deleteSlide(true);
           hideDropDown(false);
           saveNewChanges({ modalActiveOverride: true });

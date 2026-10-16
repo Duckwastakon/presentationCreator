@@ -123,7 +123,6 @@ export function VariableContainer({ children }) {
           val[0] != "bold" &&
           val[0] != "fontStyle"
         ) {
-          console.log(val[0])
           changed = true;
           slideClone[selectedObject[0]][selectedObject[1]][val[0]] = val[1];
         }

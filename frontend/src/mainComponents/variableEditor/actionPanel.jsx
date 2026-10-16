@@ -91,9 +91,6 @@ export const ActionPanel = ({ selectedObject }) => {
   }
 
   function saveTempValues(curSlide, curObj) {
-    console.log(curSlide);
-    console.log(curObj);
-
     let currentObject = structuredClone(curObj);
     let slideClone = structuredClone(curSlide);
 
@@ -230,7 +227,7 @@ export const ActionPanel = ({ selectedObject }) => {
                             ].textAlign == undefined && "var(--accentColor2)",
                       fontWeight: "500",
                     }}
-                    onClick={() => {
+                    onPointerUp={() => {
                       updateObject(
                         selectedObject[0],
                         selectedObject[1],
@@ -254,7 +251,7 @@ export const ActionPanel = ({ selectedObject }) => {
                         ].textAlign == "center" && "var(--accentColor2)",
                       fontWeight: "500",
                     }}
-                    onClick={() => {
+                    onPointerUp={() => {
                       updateObject(
                         selectedObject[0],
                         selectedObject[1],
@@ -278,7 +275,7 @@ export const ActionPanel = ({ selectedObject }) => {
                         ].textAlign == "right" && "var(--accentColor2)",
                       fontWeight: "500",
                     }}
-                    onClick={() => {
+                    onPointerUp={() => {
                       updateObject(
                         selectedObject[0],
                         selectedObject[1],
@@ -307,7 +304,7 @@ export const ActionPanel = ({ selectedObject }) => {
                         ].bold == "700" && "var(--accentColor2)",
                       fontWeight: "bold",
                     }}
-                    onClick={() => {
+                    onPointerUp={() => {
                       let currentVal =
                         currentSlideVariables[selectedObject[0]][
                           selectedObject[1]
@@ -347,7 +344,7 @@ export const ActionPanel = ({ selectedObject }) => {
                       textDecoration: "underline",
                       fontWidth: "500",
                     }}
-                    onClick={() => {
+                    onPointerUp={() => {
                       let currentVal =
                         currentSlideVariables[selectedObject[0]][
                           selectedObject[1]
@@ -386,7 +383,7 @@ export const ActionPanel = ({ selectedObject }) => {
                       fontStyle: "italic",
                       fontWidth: "500",
                     }}
-                    onClick={() => {
+                    onPointerUp={() => {
                       let currentVal =
                         currentSlideVariables[selectedObject[0]][
                           selectedObject[1]
@@ -435,8 +432,8 @@ export const ActionPanel = ({ selectedObject }) => {
                     );
                   }}
                   min={0}
-                  max={10}
-                  step={0.5}
+                  max={5}
+                  step={0.1}
                   type="range"
                 />
                 <input
@@ -448,7 +445,7 @@ export const ActionPanel = ({ selectedObject }) => {
                     newObjData[1].outlineWidth = clamp(
                       Number(newOutlineWidth.target.value.replace(/\D/g, "")),
                       0,
-                      10,
+                      5,
                     );
 
                     setSelectedObjectsVariables(newObjData);
@@ -459,13 +456,13 @@ export const ActionPanel = ({ selectedObject }) => {
                       clamp(
                         Number(newOutlineWidth.target.value.replace(/\D/g, "")),
                         0,
-                        10,
+                        5,
                       ),
                     );
                   }}
                   type="text"
                   inputMode="numeric"
-                  max={"10"}
+                  max={"5"}
                 />
               </div>
             </div>
@@ -501,7 +498,7 @@ export const ActionPanel = ({ selectedObject }) => {
                       ].layer == 0 && "var(--accentColor1)",
                   }}
                   className="simpleInputButton"
-                  onClick={() => {
+                  onPointerUp={() => {
                     let val =
                       currentSlideVariables[selectedObject[0]][
                         selectedObject[1]
@@ -562,7 +559,7 @@ export const ActionPanel = ({ selectedObject }) => {
                         selectedObject[1]
                       ].layer >= 99 && "var(--accentColor1)",
                   }}
-                  onClick={() => {
+                  onPointerUp={() => {
                     let val =
                       currentSlideVariables[selectedObject[0]][
                         selectedObject[1]
@@ -664,7 +661,7 @@ export const ActionPanel = ({ selectedObject }) => {
                 </button>
                 <button
                   className="dupBut"
-                  onMouseUp={() => {
+                  onPointerUp={() => {
                     let newVals = structuredClone(selectedObjectsVariables);
                     let aspectRatio =
                       currentSlideVariables[selectedObject[0]][
@@ -722,7 +719,7 @@ export const ActionPanel = ({ selectedObject }) => {
                   type="range"
                   value={selectedObjectsVariables[1]["borderWidth"] || 0}
                   min={0}
-                  max={20}
+                  max={50}
                   step={1}
                   onInput={(newOutlineWidth) => {
                     let newObjData = structuredClone(selectedObjectsVariables);
@@ -745,7 +742,7 @@ export const ActionPanel = ({ selectedObject }) => {
                     newObjData[1].borderWidth = clamp(
                       Number(newOutlineWidth.target.value.replace(/\D/g, "")),
                       0,
-                      20,
+                      50,
                     );
                     setSelectedObjectsVariables(newObjData);
                     updateObject(
@@ -755,7 +752,7 @@ export const ActionPanel = ({ selectedObject }) => {
                       clamp(
                         Number(newOutlineWidth.target.value.replace(/\D/g, "")),
                         0,
-                        20,
+                        50,
                       ),
                     );
                   }}
@@ -793,7 +790,7 @@ export const ActionPanel = ({ selectedObject }) => {
                         selectedObject[1]
                       ].layer == 0 && "var(--accentColor1)",
                   }}
-                  onClick={() => {
+                  onPointerUp={() => {
                     let val =
                       currentSlideVariables[selectedObject[0]][
                         selectedObject[1]
@@ -860,7 +857,7 @@ export const ActionPanel = ({ selectedObject }) => {
                         selectedObject[1]
                       ].layer >= 99 && "var(--accentColor1)",
                   }}
-                  onClick={() => {
+                  onPointerUp={() => {
                     let val =
                       currentSlideVariables[selectedObject[0]][
                         selectedObject[1]
@@ -993,7 +990,7 @@ export const ActionPanel = ({ selectedObject }) => {
           <div className="simpleOptionContainer_Column">
             <div className="simpleOptionContainer_Column">
               <button
-                onMouseDown={() => {
+                onPointerUp={() => {
                   const [newInd, newObj] = createObj(
                     "text",
                     24,
@@ -1009,7 +1006,7 @@ export const ActionPanel = ({ selectedObject }) => {
             </div>
             <div className="simpleOptionContainer_Column">
               <button
-                onMouseDown={() => {
+                onPointerUp={() => {
                   const [newInd, newObj] = createObj(
                     "images",
                     24,

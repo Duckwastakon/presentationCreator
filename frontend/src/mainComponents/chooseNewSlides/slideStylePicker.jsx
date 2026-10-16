@@ -167,6 +167,8 @@ export const SlideStylePicker = () => {
 
   useEffect(() => {
     function setMaxRowAndColumn() {
+      if(prefabContainer.current == null) return
+      
       let fullWidth =
         prefabContainer.current.getBoundingClientRect().width * 0.7;
       let prefabsRows = clamp(Math.floor(fullWidth / 280), 1, 2)
@@ -197,7 +199,7 @@ export const SlideStylePicker = () => {
       }}
     >
       <button
-        onClick={() => {
+        onPointerUp={() => {
           changePage(-1);
         }}
         className="changePageButton"
@@ -207,7 +209,7 @@ export const SlideStylePicker = () => {
       <div className="styleChoiceContainer">
         {selectedPrefabType == "credit slide" && (
           <button
-            onClick={() => {
+            onPointerUp={() => {
               generateCreditSlide();
             }}
             className="generateCreditsButton"
@@ -220,7 +222,7 @@ export const SlideStylePicker = () => {
         ))}
       </div>
       <button
-        onClick={() => {
+        onPointerUp={() => {
           changePage(1);
         }}
         className="changePageButton"

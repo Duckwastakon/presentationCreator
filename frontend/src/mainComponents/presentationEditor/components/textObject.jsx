@@ -121,14 +121,14 @@ export const TextObject = ({
         className="presentationTextEditBox"
         style={{
           fontSize: textSize.toString() + "px",
-          color: variables[1].textColor || "black",
+          color: "transparent",
           fontWeight: variables[1].bold || "400",
           WebkitAppearance: "none",
           appearance: "none",
           textDecoration: variables[1].textDecoration || "none",
           fontStyle: variables[1].fontStyle || "normal",
           textAlign: variables[1].textAlign || "left",
-          padding: (variables[1].outlineWidth / 2 || 0).toString() + "px",
+          padding: (variables[1].outlineWidth * (textSize/variables[1].fontSize) / 4 || 0).toString() + "px",
           lineHeight: textSize.toString() + "px",
         }}
       />
@@ -136,18 +136,18 @@ export const TextObject = ({
         className="textOverlay"
         style={{
           fontSize: textSize.toString() + "px",
-          color: "transparent",
+          color: variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
           WebkitAppearance: "none",
           appearance: "none",
-          WebkitTextStrokeWidth: `${variables[1].outlineWidth || 0}px`,
+          WebkitTextStrokeWidth: `${variables[1].outlineWidth * ((textSize/variables[1].fontSize) / 2) || 0}px`,
           WebkitTextStrokeColor: variables[1].outlineColor || "black",
           textDecoration: variables[1].textDecoration || "none",
           fontStyle: variables[1].fontStyle || "normal",
           textAlign: variables[1].textAlign || "left",
           zIndex: -1,
           overflow: "hidden",
-          padding: (variables[1].outlineWidth / 2 || 0).toString() + "px",
+          padding: (variables[1].outlineWidth * ((textSize/variables[1].fontSize) / 2) / 2 || 0).toString() + "px",
           lineHeight: textSize.toString() + "px",
         }}
       >

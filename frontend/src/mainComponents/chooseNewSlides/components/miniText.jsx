@@ -6,6 +6,8 @@ export const MiniDisplayText = ({ variables, indv }) => {
 
   useEffect(() => {
     function setTextSize() {
+      if(objectElement.current == null) return
+      
       let parentElement = objectElement.current.parentElement;
       updateTextSize(
         variables[1].fontSize *

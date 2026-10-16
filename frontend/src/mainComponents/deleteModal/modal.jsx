@@ -22,7 +22,7 @@ export const Modal = () => {
           </p>
           <div className="buttonCont">
             <button
-              onMouseUp={() => {
+              onPointerUp={() => {
                 updateModal(false);
                 saveNewChanges({ modalActiveOverride: false });
               }}
@@ -31,7 +31,7 @@ export const Modal = () => {
               cancel
             </button>
             <button
-              onMouseUp={() => {
+              onPointerUp={() => {
                 let newValues = deleteSelectedSlide(
                   allSlides,
                   updateAllSlides,

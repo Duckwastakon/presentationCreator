@@ -121,12 +121,8 @@ export const SlideTab = () => {
       let newSlideOrder = {};
       let moved = false;
 
-      console.log(newSlidePos);
-
       Object.entries(allSlides).map((slideVal, ind) => {
         if (newSlidePos == ind && newSlidePos <= startingSlidePos.current) {
-          console.log(newSlidePos);
-          console.log(ind, "placed");
           newSlideOrder = {
             ...newSlideOrder,
             [Object.keys(newSlideOrder).length]: movingSlide,
@@ -141,7 +137,6 @@ export const SlideTab = () => {
         }
 
         if (newSlidePos == ind && newSlidePos > startingSlidePos.current) {
-          console.log(ind, "placed");
           newSlideOrder = {
             ...newSlideOrder,
             [Object.keys(newSlideOrder).length]: movingSlide,

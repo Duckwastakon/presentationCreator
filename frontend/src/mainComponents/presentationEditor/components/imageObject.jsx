@@ -1,6 +1,7 @@
 import { useVariables } from "../../../presentationVariables";
 import { ResizeDots } from "./resizeDots";
 import imageDefault from "../images/defaultImage.png";
+import { useEffect, useRef, useState } from "react";
 
 export const ImageObject = ({
   startResizing,
@@ -17,8 +18,29 @@ export const ImageObject = ({
     saveChangedVariables,
   } = useVariables();
 
+  const sizeRefChild = useRef(null)
+  const [sizeMulti, updateSizeMult] = useState(24);
+
+  useEffect(() => {
+    function setSize() {
+      if (sizeRefChild.current == null) return;
+      let parentElement = sizeRefChild.current.parentElement;
+      if (parentElement == null) return;
+
+      updateSizeMult(
+          (parentElement.getBoundingClientRect().width / 1920)
+      );
+    }
+
+    setSize();
+
+    window.addEventListener("resize", setSize);
+  }, variables);
+
+
   return (
     <div
+    ref={sizeRefChild}
       key={ind}
       style={{
         position: "absolute",
@@ -29,7 +51,7 @@ export const ImageObject = ({
         alignItems: "center",
         justifyContent: "center",
         zIndex: variables[1].layer || 1,
-        outline: `${variables[1].borderWidth || 0}px solid ${variables[1].borderColor || "#000000"}`,
+        outline: `${variables[1].borderWidth * sizeMulti || 0}px solid ${variables[1].borderColor || "#000000"}`,
       }}
     >
       {variables[1].src == "" || variables[1].src == undefined ? (

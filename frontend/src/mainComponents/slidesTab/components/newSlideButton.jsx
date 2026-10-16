@@ -14,7 +14,7 @@ export const NewSlideButton = ({ backgroundColor, onClickVal }) => {
   } = useVariables();
   return (
     <button
-      onClick={() => {
+      onPointerUp={() => {
         if (backgroundColor == "blue") return;
         saveChangedVariables();
         setUpdateVariable("");
