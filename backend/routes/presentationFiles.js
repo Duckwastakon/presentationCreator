@@ -1,15 +1,11 @@
 import express, { json, text } from "express";
-import dotenv from "dotenv";
 import pptxgenjs from "pptxgenjs";
-
-dotenv.config();
 
 const presentationFileRouter = express.Router();
 
 presentationFileRouter.post("/", async (req, res) => {
   const gottenBody = req.body.slides;
   const presentationName = JSON.stringify(req.body.presentationName)
-  console.log(presentationName)
 
   const pptgen = new pptxgenjs();
 

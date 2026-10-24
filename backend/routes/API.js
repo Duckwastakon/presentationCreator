@@ -1,8 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
 import { env } from "cloudflare:workers";
-
-dotenv.config();
 
 const APIRouter = express.Router();
 

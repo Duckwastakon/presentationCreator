@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "presentation-backend",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-24",
+  "observability": {
+    "enabled": true
+  }
+}
