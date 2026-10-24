@@ -7,15 +7,15 @@ export default defineConfig({
   server: {
     proxy: {
       "/API": {
-        target: "http://localhost:5000",
+        target: "https://presentationcreator.vitolsrinalds4.workers.dev/",
         changeOrigin: true,
       },
       "/styles": {
-        target: "http://localhost:5000",
+        target: "https://presentationcreator.vitolsrinalds4.workers.dev/",
         changeOrigin: true,
       },
       "/generateFile" : {
-        target: "http://localhost:5000",
+        target: "https://presentationcreator.vitolsrinalds4.workers.dev/",
         changeOrigin: true,
       }
     },
