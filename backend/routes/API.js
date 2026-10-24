@@ -17,7 +17,7 @@ APIRouter.get("/", async (req, res) => {
   i+=1
 
   const data = await resp.json();
-  print(data)
+  console.log(data)
   res.json(data.photos);
 });
 

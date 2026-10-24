@@ -140,7 +140,7 @@ export async function fetchImage(
   setError,
 ) {
   try {
-  await fetch(`/API?query=${query}`, {
+  await fetch(`https://presentationcreator.vitolsrinalds4.workers.dev/API?query=${query}`, {
     method: "get",
   })
     .then((res) => res.json())
