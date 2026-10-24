@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import APIRouter from "./routes/API.js"
 import presentationFileRouter from "./routes/presentationFiles.js"
 import styleRouter from "./routes/presentationDesigns.js";
+import { env } from "cloudflare:workers";
+import { httpServerHandler } from "cloudflare:node";
 
 dotenv.config();
 
@@ -18,11 +20,13 @@ app.use("/generateFile", presentationFileRouter)
 app.use("/styles", styleRouter)
 
 app.get("/", (req, res) => {
-    res.json({ message: "Hello from Express!" });
+    res.json({ message: "Hello app is working!" });
 });
 
-const Port = process.env.PORT || 5000
+const Port = process.env.PORT || 3000
 
 app.listen(Port, ()=>{
-    console.log(`App is listening on http://localhost:${Port}`)
+    console.log(`App is listening on port ${Port}`)
 })
+
+export default httpServerHandler({ port: 3000 });
