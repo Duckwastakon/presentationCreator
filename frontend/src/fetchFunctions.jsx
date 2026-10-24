@@ -140,7 +140,8 @@ export async function fetchImage(
   setError,
 ) {
   try {
-  await fetch(`https://presentationcreator.vitolsrinalds4.workers.dev/API?query=${query}`, {
+  const link = import.meta.env.VITE_BACKEND_API
+  await fetch(`${link}/API?query=${query}`, {
     method: "get",
   })
     .then((res) => res.json())
@@ -188,7 +189,8 @@ export async function fetchImage(
 }
 
 export function fetchStyles(type, updateNewSlidePrefabs, SaveNewChanges) {
-  fetch(`/styles?type=${type}`, {
+  const link = import.meta.env.VITE_BACKEND_API
+  fetch(`${link}/styles?type=${type}`, {
     method: "get",
   })
     .then((res) => res.json())
@@ -202,7 +204,8 @@ export function fetchStyles(type, updateNewSlidePrefabs, SaveNewChanges) {
 }
 
 export function fetchAllStyles(updatePrefabTypes) {
-  fetch(`/styles/all`, {
+  const APIlink = import.meta.env.VITE_BACKEND_API
+  fetch(`${APIlink}/styles/all`, {
     method: "get",
   })
     .then((res) => res.json())
@@ -212,7 +215,9 @@ export function fetchAllStyles(updatePrefabTypes) {
 }
 
 export async function savePresentation(allSlides, presentationsName) {
-  const resp = await fetch("/generateFile/", {
+  const APIlink = import.meta.env.VITE_BACKEND_API
+  
+  const resp = await fetch(`${APIlink}/generateFile/`, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -227,12 +232,12 @@ export async function savePresentation(allSlides, presentationsName) {
 
   const url = window.URL.createObjectURL(blob);
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${presentationsName}.pptx`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
+  const newlink = document.createElement("a");
+  newlink.href = url;
+  newlink.download = `${presentationsName}.pptx`;
+  document.body.appendChild(newlink);
+  newlink.click();
+  newlink.remove();
 
   window.URL.revokeObjectURL(url);
 }
