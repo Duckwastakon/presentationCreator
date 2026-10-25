@@ -106,6 +106,7 @@ export function createObj(
       h: newHeight,
       fontSize: size,
       text: "new Text",
+      layer: 3,
     };
   }
 
@@ -122,6 +123,7 @@ export function createObj(
       w: newWidth,
       h: newHeight,
       src: undefined,
+      layer: 0,
     };
   }
 

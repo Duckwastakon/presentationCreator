@@ -168,7 +168,6 @@ export const SlideTab = () => {
     <div
       style={{ touchAction: "none" }}
       className="slideMovingContainer"
-      onPointerLeave={stopMovingSlide}
       onPointerMove={moveSlide}
       onPointerUp={stopMovingSlide}
     >

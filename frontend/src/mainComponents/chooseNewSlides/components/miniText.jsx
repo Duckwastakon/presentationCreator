@@ -33,6 +33,7 @@ export const MiniDisplayText = ({ variables, indv }) => {
         width: (100 * (variables[1].w / 13.333)).toString() + "%",
         fontSize: textSize.toString() + "px",
         textAlign: variables[1].textAlign || "left",
+        color: "black",
         overflow: "hidden",
       }}
     >

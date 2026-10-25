@@ -169,7 +169,8 @@ export const UndoRedo = () => {
                 <p>save</p>
               </button>
             </div>
-            <p className="smallInfoText">Exporting might take a few moments</p>
+            <p style={{opacity: 0.6}} className="smallInfoText">Exporting might take a few moments</p>
+            <p style={{opacity: 0.6}} className="smallInfoText">Some backgrounds may get compressed</p>
           </div>
         </div>
       )}

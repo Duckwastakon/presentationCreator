@@ -121,7 +121,7 @@ export const TextObject = ({
         className="presentationTextEditBox"
         style={{
           fontSize: textSize.toString() + "px",
-          color: "transparent",
+          color: variables[1].textColor || "black",
           fontWeight: variables[1].bold || "400",
           WebkitAppearance: "none",
           appearance: "none",
@@ -136,7 +136,7 @@ export const TextObject = ({
         className="textOverlay"
         style={{
           fontSize: textSize.toString() + "px",
-          color: variables[1].textColor || "black",
+          color: "transparent",
           fontWeight: variables[1].bold || "400",
           WebkitAppearance: "none",
           appearance: "none",

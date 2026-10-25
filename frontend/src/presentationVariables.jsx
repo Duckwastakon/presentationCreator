@@ -121,7 +121,8 @@ export function VariableContainer({ children }) {
           val[0] != "src" &&
           val[0] != "textDecoration" &&
           val[0] != "bold" &&
-          val[0] != "fontStyle"
+          val[0] != "fontStyle" &&
+          val[0] != "textAlign"
         ) {
           changed = true;
           slideClone[selectedObject[0]][selectedObject[1]][val[0]] = val[1];
