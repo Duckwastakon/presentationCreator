@@ -6,7 +6,7 @@ import { ImageObject } from "./components/imageObject";
 import { TextObject } from "./components/textObject";
 import { clamp } from "../../extraFunctions";
 
-const lockTolerance = 0.04;
+const lockTolerance = 0.03;
 
 export const MainPresentationDisplay = () => {
   const {

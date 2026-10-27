@@ -25,6 +25,7 @@ export const MiniDisplayText = ({ variables, indv }) => {
     <p
       ref={objectElement}
       key={indv}
+      className="SlideChoosePrefabText"
       style={{
         position: "absolute",
         top: (100 * (variables[1].y / 7.5)).toString() + "%",
