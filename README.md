@@ -61,7 +61,7 @@ Example 1 was made on mobile, while Examples 2 and 3 were made on a PC.
 
 ### 1. Choose a title prefab
 
-<img width="30%" src="readmeImages/ChooseASlide.png" alt="Choosing a slide template">
+<img width="30%" src="readmeImages/chooseASlide.png" alt="Choosing a slide template">
 
 The website offers predefined slide templates organized by category. You can change the category by clicking the options above the templates. All templates can be freely customized and edited.
 
