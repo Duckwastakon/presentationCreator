@@ -98,7 +98,7 @@ The website sends a request to the backend, which fetches an image using the Pex
 <img width="30%" src="readmeImages/createNewSlides.png" alt="Creating new slides">
 
 - To create a new slide, click the `+` button in the slide selection bar at the bottom of the screen.
-- Clicking the magic wand on the currently selected slide opens a menu with options to duplicate or delete the slide. You can also open this menu by right-clicking the slide.
+- Clicking the magic wand on the currently selected slide opens a menu with options to duplicate or delete the slide. You can also open this menu by left-clicking the slide.
 
 ### 6. Undo, redo, export, and restart buttons
 
