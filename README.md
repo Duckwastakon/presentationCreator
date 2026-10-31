@@ -1,4 +1,4 @@
- <h1 align="center">Prestyly <img align="center" height="64px" src="readmeImages/icon.svg" alt="Prestyly icon"></h1>
+<h1 align="center">Prestyly <img align="center" height="64px" src="readmeImages/icon.svg" alt="Prestyly icon"></h1>
 
 <p align="center">A browser-based presentation editor with slide templates, quick image search powered by Pexels, and PowerPoint export.</p>
 
@@ -8,11 +8,7 @@
 
 <br>
 
-<div align="center">
-  <a href="https://prestyly.com/">
-    <img src="readmeImages/hero.png" width="80%" alt="Prestyly presentation editor">
-  </a>
-</div>
+https://github.com/user-attachments/assets/cf2e0948-8b5c-461d-bcde-88729f0d0f50
 
 ## Why does Prestyly exist?
 
