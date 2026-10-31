@@ -126,7 +126,7 @@ cd presentationCreator
 
 ### 2. Set up the backend
 
-You'll need a `backend/.env` file containing your Pexels API key:
+You'll need a .env file in the backend folder containing your Pexels API key:
 
 ```env
 IMAGE_API_KEY=YOUR_API_KEY
@@ -153,13 +153,13 @@ Example terminal output:
 
 ### 3. Set up the frontend
 
-Create a `frontend/.env` file containing the backend URL:
+Create a .env file in the frontend folder containing the backend URL:
 
 ```env
 VITE_BACKEND_API=YOUR_BACKEND_URL
 ```
 
-Open a **new terminal** and run:
+On a new terminal run:
 
 ```bash
 cd frontend
@@ -169,17 +169,15 @@ npm run dev
 
 Once the frontend starts, a URL will appear in the terminal. Open it in your browser to access your locally hosted version of Prestyly.
 
-Example terminal output:
-
 ```text
 ➜ Local: YOUR_FRONTEND_URL
 ```
 
-**Troubleshooting:** If the `VITE_BACKEND_API` variable is configured correctly, the slide templates should appear when the website loads. If they don't, this may indicate a backend connection problem, since the frontend fetches the slide templates from the backend when it starts.
+If the `VITE_BACKEND_API` variable is configured correctly, the slide templates should appear when the website loads. If they don't, this may indicate a backend connection problem, since the frontend fetches the slide templates from the backend when it starts.
 
 ## What was Prestyly built with?
 
-Prestyly was built using the following technologies:
+Prestyly was built using:
 
 - **React and Vite:** Frontend development.
 - **Express:** Backend application framework.
